@@ -8,12 +8,12 @@ namespace Exercise
         public static List<string> Analyze(string[] lines)
         {
             List<string> result = new List<string>();
-            List<string> resultToDo = AddTODOLines(lines);
+            List<string> resultToDo = GetTodoLines(lines);
             result.AddRange(resultToDo);
             return result;
         }
 
-        private static List<string> AddTODOLines(string[] lines)
+        private static List<string> GetTodoLines(string[] lines)
         {
             List<string> result = new List<string>();
             for (int i = 0; i < lines.Length; i++)
