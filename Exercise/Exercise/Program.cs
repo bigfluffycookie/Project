@@ -7,10 +7,19 @@
             DisplayWelcomeText();
             string filePath = ReadUserInputForFilePath(".txt");
             string[] fileContent = GetFileContentFromPath(filePath);
-            Analyzer.Analyze(fileContent);
-
+            Analyzer analyzer = new Analyzer();
+            analyzer.Analyze(fileContent);
+            PrintResult(analyzer.GetResult());
             Console.Write("Press any key to close App");
             Console.ReadKey();
+        }
+
+        private static void PrintResult(List<string> linesToPrint)
+        {
+            foreach (string line in linesToPrint)
+            {
+                Console.WriteLine(line);
+            }
         }
 
         private static void DisplayWelcomeText()
@@ -34,5 +43,7 @@
         {
             return File.ReadAllLines(filePath);
         }
+
+        // TODO maybe print result should be here? 
     }
 }
