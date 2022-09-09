@@ -7,9 +7,9 @@
             DisplayWelcomeText();
             string filePath = ReadUserInputForFilePath(".txt");
             string[] fileContent = GetFileContentFromPath(filePath);
-            Analyzer analyzer = new Analyzer();
-            analyzer.Analyze(fileContent);
-            PrintResult(analyzer.GetResult());
+            
+            List<string> result = Analyzer.Analyze(fileContent);
+            PrintResult(result);
             Console.Write("Press any key to close App");
             Console.ReadKey();
         }
@@ -35,7 +35,7 @@
             {
                 // TODO: If FilePathIsNullOfEmpty should loop be broken? Should check fo null?
                 filePath = Console.ReadLine();
-            } while (!ValidateInput.IsUserInputValidFilePath(filePath, fileExtension));
+            } while (!InputValidator.IsValidFilePath(filePath, fileExtension));
             return filePath;
         }
 

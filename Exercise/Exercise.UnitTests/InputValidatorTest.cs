@@ -1,21 +1,21 @@
 namespace Exercise.UnitTests
 {
     [TestClass]
-    public class ValidateInputTest
+    public class InputValidatorTest
     {
         [TestMethod]
-        public void InputValidator_WhenPathExtensionIsWrong()
+        public void FileHasCorrectExtension_WithWrongExtension_ReturnsFalse()
         {
             string filePath = System.IO.Directory.GetCurrentDirectory() + @"\TestProject1\Test.txt";
-            bool hasCorrectExtension = ValidateInput.FileHasCorrectExtension(filePath, ".exr");
+            bool hasCorrectExtension = InputValidator.FileHasCorrectExtension(filePath, ".exr");
             Assert.IsFalse(hasCorrectExtension);
         }
 
         [TestMethod]
-        public void InputValidator_WhenPathDoesNotExist()
+        public void FileExists_WithEmptyPath_ReturnsFalse()
         {
             string filePath = "";
-            bool isValidTextFile = ValidateInput.FileExists(filePath);
+            bool isValidTextFile = InputValidator.FileExists(filePath);
             Assert.IsFalse(isValidTextFile);
         }
     }

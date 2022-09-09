@@ -4,26 +4,18 @@ namespace Exercise
 {
     public class Analyzer
     {
-        private List<string> result;
-
-        public Analyzer()
-        {
-            result = new List<string>();
-        }
-
         // TODO: Could add another parameter "rule" to filter
-        public void Analyze(string[] lines)
+        public static List<string> Analyze(string[] lines)
         {
-            AddTODOLines(lines);
-        }
-
-        public List<string> GetResult()
-        {
+            List<string> result = new List<string>();
+            List<string> resultToDo = AddTODOLines(lines);
+            result.AddRange(resultToDo);
             return result;
         }
 
-        private void AddTODOLines(string[] lines)
+        private static List<string> AddTODOLines(string[] lines)
         {
+            List<string> result = new List<string>();
             for (int i = 0; i < lines.Length; i++)
             {
                 string line = lines[i];
@@ -39,6 +31,8 @@ namespace Exercise
                 todoLine += "'" + line[indexOfTodo..] + "'";
                 result.Add(todoLine);
             }
+
+            return result;
         }
     }
 }

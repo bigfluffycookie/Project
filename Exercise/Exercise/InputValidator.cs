@@ -1,8 +1,8 @@
 ﻿namespace Exercise
 {
-    public class ValidateInput
+    public class InputValidator
     {
-        public static bool IsUserInputValidFilePath(string filePath, string fileExtension)
+        public static bool IsValidFilePath(string filePath, string fileExtension)
         {
             return FileExists(filePath) && FileHasCorrectExtension(filePath, fileExtension);
         }
