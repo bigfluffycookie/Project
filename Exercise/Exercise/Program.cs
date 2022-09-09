@@ -1,13 +1,11 @@
-﻿using System.IO;
-
-namespace Exercise
+﻿namespace Exercise
 {
     public class Program
     {
         public static void Main(string[] args)
         {
             DisplayWelcomeText();
-            string filePath = ReadUserInput();
+            string filePath = ReadUserInputForFilePath(".txt");
             string[] fileContent = GetFileContentFromPath(filePath);
             Analyzer.Analyze(fileContent);
 
@@ -21,10 +19,15 @@ namespace Exercise
             Console.WriteLine("Please Input Text File path to Analyze");
         }
 
-        private static string ReadUserInput()
+        private static string ReadUserInputForFilePath(string fileExtension)
         {
-            // TODO(leyla.buechel): Check if input is correct,eg exists
-            return Console.ReadLine();
+            string filePath;
+            do
+            {
+                // TODO: If FilePathIsNullOfEmpty should loop be broken? Should check fo null?
+                filePath = Console.ReadLine();
+            } while (!ValidateInput.IsUserInputValidFilePath(filePath, fileExtension));
+            return filePath;
         }
 
         private static string[] GetFileContentFromPath(string filePath)
