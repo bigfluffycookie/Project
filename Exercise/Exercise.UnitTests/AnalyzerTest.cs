@@ -12,7 +12,7 @@
         }
 
         [TestMethod]
-        public void Analyzer_WithOneLineNoTodo_ReturnsEmptyList()
+        public void Analyze_WithOneLineNoTodo_ReturnsEmptyList()
         {
             string[] lines = new string[] { "" };
             List<string> result = Analyzer.Analyze(lines);
@@ -20,7 +20,7 @@
         }
 
         [TestMethod]
-        public void Analyzer_WithOneLineWithTodo_ReturnsListWithOneLine()
+        public void Analyze_WithOneLineWithTodo_ReturnsListWithOneLine()
         {
             string[] lines = new string[] { "TODO" };
             List<string> result = Analyzer.Analyze(lines);
@@ -28,7 +28,7 @@
         }
 
         [TestMethod]
-        public void Analyzer_WithTwoLinesNoTodo_ReturnsEmptyList()
+        public void Analyze_WithTwoLinesNoTodo_ReturnsEmptyList()
         {
             string[] lines = new string[] { "", "" };
             List<string> result = Analyzer.Analyze(lines);
@@ -36,7 +36,7 @@
         }
 
         [TestMethod]
-        public void Analyzer_WithTwoLinesOneTodo_ReturnsListWithOneLine()
+        public void Analyze_WithTwoLinesOneTodo_ReturnsListWithOneLine()
         {
             string[] lines = new string[] { "TODO", "" };
             List<string> result = Analyzer.Analyze(lines);
@@ -44,7 +44,7 @@
         }
 
         [TestMethod]
-        public void Analyzer_WithTwoLinesTwoTodo_ReturnsListWithTwoLines()
+        public void Analyze_WithTwoLinesTwoTodo_ReturnsListWithTwoLines()
         {
             string[] lines = new string[] { "TODO", "TODO" };
             List<string> result = Analyzer.Analyze(lines);
