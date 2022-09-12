@@ -8,17 +8,21 @@
             string filePath = ReadUserInputForFilePath(".txt");
             string[] fileContent = GetFileContentFromPath(filePath);
             
-            List<string> result = Analyzer.Analyze(fileContent);
+            List<Issue> result = Analyzer.Analyze(fileContent);
             PrintResult(result);
             Console.Write("Press any key to close App");
             Console.ReadKey();
         }
 
-        private static void PrintResult(List<string> linesToPrint)
+        private static void PrintResult(List<Issue> issues)
         {
-            foreach (string line in linesToPrint)
+            foreach (Issue issue in issues)
             {
-                Console.WriteLine(line);
+                string print = "";
+                print += "Line: " + issue.line + ", ";
+                print += "Column: " + issue.column + ", ";
+                print += "'" + issue.text + "'";
+                Console.WriteLine(print);
             }
         }
 
