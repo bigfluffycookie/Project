@@ -6,9 +6,17 @@ namespace Exercise.UnitTests
         [TestMethod]
         public void FileHasCorrectExtension_WithWrongExtension_ReturnsFalse()
         {
-            string filePath = System.IO.Directory.GetCurrentDirectory() + @"\TestProject1\Test.txt";
+            string filePath = System.IO.Directory.GetCurrentDirectory() + @"\Test.txt";
             bool hasCorrectExtension = InputValidator.FileHasCorrectExtension(filePath, ".exr");
             Assert.IsFalse(hasCorrectExtension);
+        }
+
+        [TestMethod]
+        public void FileHasCorrectExtension_WithCorrectExtension_ReturnsTrue()
+        {
+            string filePath =  "Test.txt";
+            bool hasCorrectExtension = InputValidator.FileHasCorrectExtension(filePath, ".txt");
+            Assert.IsTrue(hasCorrectExtension);
         }
 
         [TestMethod]
@@ -17,6 +25,15 @@ namespace Exercise.UnitTests
             string filePath = "";
             bool isValidTextFile = InputValidator.FileExists(filePath);
             Assert.IsFalse(isValidTextFile);
+        }
+
+        [TestMethod]
+        public void FileExists_WithCorrectPath_ReturnsTrue()
+        {
+            string filePath = System.IO.Directory.GetCurrentDirectory() + @"\Test.txt";
+            System.IO.File.Create(filePath);
+            bool isValidTextFile = InputValidator.FileExists(filePath);
+            Assert.IsTrue(isValidTextFile);
         }
     }
 }
