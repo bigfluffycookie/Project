@@ -19,9 +19,9 @@
             foreach (Issue issue in issues)
             {
                 string print = "";
-                print += "Line: " + issue.line + ", ";
-                print += "Column: " + issue.column + ", ";
-                print += "'" + issue.text + "'";
+                print += "Line: " + issue.Line + ", ";
+                print += "Column: " + issue.Column + ", ";
+                print += "'" + issue.Text + "'";
                 Console.WriteLine(print);
             }
         }

@@ -29,7 +29,7 @@
             string[] lines = new string[] { content };
             List<Issue> result = Analyzer.Analyze(lines);
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(result[0].column, column);
+            Assert.AreEqual(result[0].Column, column);
         }
 
         [TestMethod]
@@ -52,7 +52,7 @@
             string[] lines = new string[] { firstLine, secondLine };
             List<Issue> result = Analyzer.Analyze(lines);
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(line, result[0].line);
+            Assert.AreEqual(line, result[0].Line);
         }
 
         [TestMethod]
