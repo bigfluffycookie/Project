@@ -30,11 +30,16 @@
 
         private static string ReadUserInputForFilePath(string fileExtension)
         {
-            string filePath;
+            string filePath = "";
             do
             {
-                // TODO: If FilePathIsNullOfEmpty should loop be broken? Should check fo null?
-                filePath = Console.ReadLine();
+                var input = Console.ReadLine();
+                if (input == null)
+                {
+                    Console.WriteLine("Exiting Analyzer");
+                    break;
+                }
+                filePath = input;
             } while (!InputValidator.IsValidFilePath(filePath, fileExtension));
             return filePath;
         }
@@ -43,7 +48,5 @@
         {
             return File.ReadAllLines(filePath);
         }
-
-        // TODO maybe print result should be here? 
     }
 }

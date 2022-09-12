@@ -4,7 +4,6 @@ namespace Exercise
 {
     public class Analyzer
     {
-        // TODO: Could add another parameter "rule" to filter
         public static List<string> Analyze(string[] lines)
         {
             List<string> result = new List<string>();
@@ -24,7 +23,6 @@ namespace Exercise
                 {
                     continue;
                 }
-                // TODO stringbuilder
                 string todoLine = "";
                 todoLine += "Line: " + i.ToString() + ", ";
                 todoLine += "Column: " + indexOfTodo.ToString() + ", ";
