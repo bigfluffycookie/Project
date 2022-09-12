@@ -1,20 +1,18 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace Exercise
+﻿namespace Exercise
 {
     public class Analyzer
     {
-        public static List<string> Analyze(string[] lines)
+        public static List<Issue> Analyze(string[] lines)
         {
-            List<string> result = new List<string>();
-            List<string> resultToDo = GetTodoLines(lines);
+            List<Issue> result = new List<Issue>();
+            List<Issue> resultToDo = GetTodoLines(lines);
             result.AddRange(resultToDo);
             return result;
         }
 
-        private static List<string> GetTodoLines(string[] lines)
+        private static List<Issue> GetTodoLines(string[] lines)
         {
-            List<string> result = new List<string>();
+            List<Issue> result = new List<Issue>();
             for (int i = 0; i < lines.Length; i++)
             {
                 string line = lines[i];
@@ -23,11 +21,8 @@ namespace Exercise
                 {
                     continue;
                 }
-                string todoLine = "";
-                todoLine += "Line: " + i.ToString() + ", ";
-                todoLine += "Column: " + indexOfTodo.ToString() + ", ";
-                todoLine += "'" + line[indexOfTodo..] + "'";
-                result.Add(todoLine);
+                Issue issue = new Issue(line[indexOfTodo..], i + 1, indexOfTodo + 1);
+                result.Add(issue);
             }
 
             return result;
