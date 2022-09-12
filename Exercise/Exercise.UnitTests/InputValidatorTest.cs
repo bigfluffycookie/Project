@@ -7,6 +7,7 @@ namespace Exercise.UnitTests
         public void FileHasCorrectExtension_WithWrongExtension_ReturnsFalse()
         {
             string filePath = System.IO.Directory.GetCurrentDirectory() + @"\Test.txt";
+            Console.WriteLine(filePath);
             bool hasCorrectExtension = InputValidator.FileHasCorrectExtension(filePath, ".exr");
             Assert.IsFalse(hasCorrectExtension);
         }
