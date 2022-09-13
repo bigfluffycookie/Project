@@ -21,7 +21,7 @@
                 {
                     continue;
                 }
-                Issue issue = new Issue(line[indexOfTodo..], i + 1, indexOfTodo + 1);
+                Issue issue = new Issue(text:line[indexOfTodo..],line:i + 1, column:indexOfTodo + 1) ;
                 result.Add(issue);
             }
 
