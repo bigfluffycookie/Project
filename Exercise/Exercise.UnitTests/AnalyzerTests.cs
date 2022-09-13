@@ -4,32 +4,35 @@
     public class AnalyzerTests
     {
         [TestMethod]
-        public void Analyze_WithNoLines_ReturnsEmptyList()
+        public void Analyze_HasNoLines_ReturnsEmptyList()
         {
-            string[] lines = new string[0];
-            List<Issue> result = Analyzer.Analyze(lines);
+            var lines = new string[0];
+            var result = Analyzer.Analyze(lines);
             Assert.AreEqual(0, result.Count);
         }
 
         [TestMethod]
         [DataRow("")]
         [DataRow("Hello :)")]
-        public void Analyze_WithOneLine_NoTodo_ReturnsEmptyList(string content)
+        public void Analyze_HasOneLine_NoTodo_ReturnsEmptyList(string content)
         {
-            string[] lines = new string[] { content };
-            List<Issue> result = Analyzer.Analyze(lines);
+            var lines = new string[] { content };
+            var result = Analyzer.Analyze(lines);
             Assert.AreEqual(0, result.Count);
         }
 
         [TestMethod]
-        [DataRow("TODO: Hello", 1)]
-        [DataRow("12345TODO: Hello", 6)]
-        public void Analyze_WithOneLine_WithTodo_ReturnsListWithOneLine(string content, int column)
+        [DataRow("TODO: Hello", 1, 1, "TODO: Hello")]
+        [DataRow("12345TODO: Hello", 1, 6, "TODO: Hello")]
+        public void Analyze_HasOneLine_WithTodo_ReturnsListWithOneLine(string content, int expectedLine,
+                                                                       int expectedColumn, string expectedContent)
         {
-            string[] lines = new string[] { content };
-            List<Issue> result = Analyzer.Analyze(lines);
+            var lines = new string[] { content };
+            var result = Analyzer.Analyze(lines);
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(result[0].Column, column);
+            Assert.AreEqual(expectedLine, result[0].Line);
+            Assert.AreEqual(expectedColumn, result[0].Column);
+            Assert.AreEqual(expectedContent, result[0].Text);
         }
 
         [TestMethod]
@@ -37,30 +40,34 @@
         [DataRow("Hello :)", "")]
         [DataRow("", "Hello :)")]
         [DataRow("Hello :)", "Hello :)")]
-        public void Analyze_WithTwoLines_NoTodo_ReturnsEmptyList(string firstLine, string secondLine)
+        public void Analyze_HasTwoLines_NoTodo_ReturnsEmptyList(string firstLineContent, string secondLineContent)
         {
-            string[] lines = new string[] { firstLine, secondLine };
-            List<Issue> result = Analyzer.Analyze(lines);
+            var lines = new string[] { firstLineContent, secondLineContent };
+            var result = Analyzer.Analyze(lines);
             Assert.AreEqual(0, result.Count);
         }
 
         [TestMethod]
-        [DataRow("TODO: Hello", "", 1)]
-        [DataRow("", "TODO: Hello", 2)]
-        public void Analyze_WithTwoLines_OneTodo_ReturnsListWithOneLine(string firstLine, string secondLine, int line)
+        [DataRow("TODO: Hello", "", 1, 1, "TODO: Hello")]
+        [DataRow("", "TODO: Hello", 2, 1, "TODO: Hello")]
+        public void Analyze_HasTwoLines_OneTodo_ReturnsListWithOneLine(string firstLineContent, string secondLineContent, int expectedLine,
+                                                                       int expectedColumn, string expectedContent)
         {
-            string[] lines = new string[] { firstLine, secondLine };
-            List<Issue> result = Analyzer.Analyze(lines);
+            var lines = new string[] { firstLineContent, secondLineContent };
+            var result = Analyzer.Analyze(lines);
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(line, result[0].Line);
+            Assert.AreEqual(expectedLine, result[0].Line);
+            Assert.AreEqual(expectedColumn, result[0].Column);
+            Assert.AreEqual(expectedContent, result[0].Text);
         }
 
         [TestMethod]
-        public void Analyze_WithTwoLines_TwoTodo_ReturnsListWithTwoLines()
+        public void Analyze_HasTwoLines_TwoTodo_ReturnsListWithTwoLines()
         {
-            string[] lines = new string[] { "TODO", "TODO" };
-            List<Issue> result = Analyzer.Analyze(lines);
+            var lines = new string[] { "TODO", "TODO" };
+            var result = Analyzer.Analyze(lines);
             Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("TODO", result[0].Text);
         }
     }
 }

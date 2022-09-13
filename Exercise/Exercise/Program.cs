@@ -5,10 +5,10 @@
         public static void Main(string[] args)
         {
             DisplayWelcomeText();
-            string filePath = ReadUserInputForFilePath(".txt");
-            string[] fileContent = GetFileContentFromPath(filePath);
-            
-            List<Issue> result = Analyzer.Analyze(fileContent);
+            var filePath = ReadUserInputForFilePath(".txt");
+            var fileContent = GetFileContentFromPath(filePath);
+
+            var result = Analyzer.Analyze(fileContent);
             PrintResult(result);
             Console.Write("Press any key to close App");
             Console.ReadKey();
@@ -18,7 +18,7 @@
         {
             foreach (Issue issue in issues)
             {
-                string print = "";
+                var print = "";
                 print += "Line: " + issue.Line + ", ";
                 print += "Column: " + issue.Column + ", ";
                 print += "'" + issue.Text + "'";
@@ -34,7 +34,7 @@
 
         private static string ReadUserInputForFilePath(string fileExtension)
         {
-            string filePath = "";
+            var filePath = "";
             do
             {
                 var input = Console.ReadLine();
