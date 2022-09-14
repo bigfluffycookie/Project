@@ -1,30 +1,17 @@
-﻿namespace Exercise
+﻿using Exercise.Rules;
+
+namespace Exercise
 {
     public class Analyzer
     {
-        public static List<Issue> Analyze(string[] lines)
+        public static List<Issue> Analyze(File file, List<IRule> rules)
         {
             var result = new List<Issue>();
-            var resultToDo = GetTodoLines(lines);
-            result.AddRange(resultToDo);
-            return result;
-        }
-
-        private static List<Issue> GetTodoLines(string[] lines)
-        {
-            List<Issue> result = new List<Issue>();
-            for (int i = 0; i < lines.Length; i++)
+            foreach (var rule in rules)
             {
-                var line = lines[i];
-                var indexOfTodo = line.IndexOf("TODO");
-                if (indexOfTodo == -1)
-                {
-                    continue;
-                }
-                var issue = new Issue(text:line[indexOfTodo..],line:i + 1, column:indexOfTodo + 1) ;
-                result.Add(issue);
+                var resultFromRule = rule.Execute(file);
+                result.AddRange(resultFromRule);
             }
-
             return result;
         }
     }
