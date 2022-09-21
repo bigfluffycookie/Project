@@ -11,7 +11,7 @@ namespace Exercise.UnitTests.Rules
         {
             var ruleParamConfig = new RuleParameterConfig();
             int max = 1;
-            ruleParamConfig.AddRuleParam("maxLineLength", max);
+            ruleParamConfig.AddRuleParam("maxLineLength", max.ToString());
             var file = new File("", new string[] { "", "" });
             var rule = new MaxLineLengthRule();
             var result = rule.Execute(file, ruleParamConfig);
@@ -26,7 +26,7 @@ namespace Exercise.UnitTests.Rules
         {
             var ruleParamConfig = new RuleParameterConfig();
             int max = 1;
-            ruleParamConfig.AddRuleParam("maxLineLength", max);
+            ruleParamConfig.AddRuleParam("maxLineLength", max.ToString());
             var file = new File("", new string[] { "" });
             var rule = new MaxFilePathLengthRule();
             var result = rule.Execute(file, ruleParamConfig);

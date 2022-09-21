@@ -12,7 +12,7 @@ namespace Exercise.UnitTests.Rules
         public void Execute_BreakRule_ReturnsOneIssue(string path, int max)
         {
             var ruleParamConfig = new RuleParameterConfig();
-            ruleParamConfig.AddRuleParam("maxPathLength", max);
+            ruleParamConfig.AddRuleParam("maxPathLength", max.ToString());
             var file = new File(path, Array.Empty<string>());
             var rule = new MaxFilePathLengthRule();
             var result = rule.Execute(file, ruleParamConfig);
@@ -28,7 +28,7 @@ namespace Exercise.UnitTests.Rules
         public void Execute_DontBreakRule_ReturnsNoIssue(string path, int max)
         {
             var ruleParamConfig = new RuleParameterConfig();
-            ruleParamConfig.AddRuleParam("maxPathLength", max);
+            ruleParamConfig.AddRuleParam("maxPathLength", "2");
             var file = new File(path, Array.Empty<string>());
             var rule = new MaxFilePathLengthRule();
             var result = rule.Execute(file, ruleParamConfig);

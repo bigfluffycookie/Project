@@ -1,4 +1,5 @@
 ﻿using Exercise.Rules;
+using Newtonsoft.Json;
 
 namespace Exercise
 {
@@ -7,10 +8,21 @@ namespace Exercise
         public static void Main(string[] args)
         {
             DisplayWelcomeText();
-            var filePath = ReadUserInputForFilePath(".txt");
+            var ruleConfigFile = ReadUserInputForFilePath();
+            var ruleFileContent = System.IO.File.ReadAllText(ruleConfigFile);
+            var ruleConfig = JsonConvert.DeserializeObject<SerializedRuleConfig>(ruleFileContent);
+            if (ruleConfig == null)
+            {
+                throw new Exception("Rule Configeration could not be Serialized, Exiting Analyzer");
+            }
+            var filePath = ruleConfig.fileToAnalyze;
+            if (System.IO.File.Exists(filePath))
+            {
+                throw new Exception("File to analyze does not exist: " + filePath);
+            }
             File file = new File(filePath, System.IO.File.ReadAllLines(filePath));
 
-            var ruleParameterConfig = ReadUserInputForRules();
+            var ruleParameterConfig = InitializeRuleParameterConfig(ruleConfig);
             var rules = GetRules();
             var result = Analyzer.Analyze(file, rules, ruleParameterConfig);
             PrintResult(result);
@@ -31,42 +43,13 @@ namespace Exercise
             return rules;
         }
 
-        private static RuleParameterConfig ReadUserInputForRules()
+        private static RuleParameterConfig InitializeRuleParameterConfig(SerializedRuleConfig ruleConfig)
         {
-            Console.WriteLine("Please input rules to run with parameters like rule=param" +
-                              "if there are no parameters just input rule name.");
-            Console.WriteLine("To finish inputing rules press 'x'");
-            Console.WriteLine("Available rules are:");
-            Console.WriteLine("todoLines");
-            Console.WriteLine("maxPathLength");
-            Console.WriteLine("maxLineLength");
-
             var ruleParameterConfig = new RuleParameterConfig();
-            while (true)
+            foreach (var rule in ruleConfig.rules)
             {
-                var input = Console.ReadLine();
-                if (input == null) { break; }
-                var ruleAndParam = input.Split('=');
-                if (ruleAndParam[0] == "x")
-                {
-                    Console.WriteLine("Finished adding rules, starting analyzer.");
-                    break;
-                }
-                if (ruleAndParam.Length == 1)
-                {
-                    ruleParameterConfig.AddRuleParam(ruleAndParam[0], null);
-                    continue;
-                }
-                if (!Int32.TryParse(ruleAndParam[1], out int nr))
-                {
-                    Console.WriteLine("Parameter for rule: " + ruleAndParam[0] + " needs to be an integer. " +
-                                      " please try again.");
-                    continue;
-                }
-                ruleParameterConfig.AddRuleParam(ruleAndParam[0], nr);
-                Console.WriteLine("Succesfully added rule");
+                ruleParameterConfig.AddRuleParam(rule.id, rule.paramaters);
             }
-
             return ruleParameterConfig;
         }
 
@@ -87,9 +70,9 @@ namespace Exercise
             Console.WriteLine("Welcome to the Analyzer");
         }
 
-        private static string ReadUserInputForFilePath(string fileExtension)
+        private static string ReadUserInputForFilePath()
         {
-            Console.WriteLine("Please Input Text File path to Analyze");
+            Console.WriteLine("Please Input the file path to the rule configuration");
             var filePath = "";
             do
             {
@@ -100,7 +83,7 @@ namespace Exercise
                     break;
                 }
                 filePath = input;
-            } while (!InputValidator.IsValidFilePath(filePath, fileExtension));
+            } while (!InputValidator.FileExists(filePath));
             return filePath;
         }
     }

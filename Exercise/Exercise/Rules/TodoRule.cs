@@ -2,7 +2,7 @@
 {
     public class TodoRule : IRule
     {
-        private const string paramId = "todoLines";
+        private const string paramId = "todo";
 
         public bool ShouldExecute(RuleParameterConfig ruleParameterConfig)
         {

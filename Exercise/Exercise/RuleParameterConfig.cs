@@ -2,13 +2,13 @@
 {
     public class RuleParameterConfig
     {
-        private readonly Dictionary<string, int?> ruleIdToParam;
+        private readonly Dictionary<string, string> ruleIdToParam;
         public RuleParameterConfig()
         {
-            ruleIdToParam = new Dictionary<string, int?>();
+            ruleIdToParam = new Dictionary<string, string>();
         }
 
-        public void AddRuleParam(string key, int? value)
+        public void AddRuleParam(string key, string value)
         {
             if (ruleIdToParam.ContainsKey(key)) { return; }
             ruleIdToParam.Add(key, value);
@@ -19,7 +19,7 @@
             return ruleIdToParam.ContainsKey(key);
         }
 
-        public int? GetRuleParam(string key)
+        public string GetRuleParam(string key)
         {
             if (!ruleIdToParam.TryGetValue(key, out var value))
             {
