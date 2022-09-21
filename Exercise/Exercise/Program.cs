@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-using Exercise.Rules;
+﻿using Exercise.Rules;
 
 namespace Exercise
 {
@@ -9,12 +8,24 @@ namespace Exercise
         {
             DisplayWelcomeText();
             var filePath = ReadUserInputForFilePath(".txt");
-            File file = new File(filePath);
+            File file = new File(filePath, System.IO.File.ReadAllLines(filePath));
+
+            var ruleParameterConfig = InitializeRuleParameterConfig();
             var rules = GetRules();
-            var result = Analyzer.Analyze(file, rules);
+            var result = Analyzer.Analyze(file, rules, ruleParameterConfig);
             PrintResult(result);
             Console.Write("Press any key to close App");
             Console.ReadKey();
+        }
+
+        private static RuleParameterConfig InitializeRuleParameterConfig()
+        {
+            var ruleParameterConfig = new RuleParameterConfig();
+            var maxLines = GetInputParams("Input the maximum number of lines");
+            ruleParameterConfig.AddRuleParam("maxLineLength", maxLines);
+            var maxPathLength = GetInputParams("Enter the max number of characters for the file path");
+            ruleParameterConfig.AddRuleParam("maxPathLength", maxPathLength);
+            return ruleParameterConfig;
         }
 
         private static List<IRule> GetRules()
@@ -62,6 +73,18 @@ namespace Exercise
                 filePath = input;
             } while (!InputValidator.IsValidFilePath(filePath, fileExtension));
             return filePath;
+        }
+
+        private static int GetInputParams(string displayText)
+        {
+            Console.WriteLine(displayText);
+            var input = "";
+            int nr;
+            do
+            {
+                input = Console.ReadLine();
+            } while (!Int32.TryParse(input, out nr));
+            return nr;
         }
     }
 }

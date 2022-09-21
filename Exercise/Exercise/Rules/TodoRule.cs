@@ -1,8 +1,8 @@
 ﻿namespace Exercise.Rules
 {
-    internal class TodoRule : IRule
+    public class TodoRule : IRule
     {
-        public List<Issue> Execute(File file)
+        public List<Issue> Execute(File file, RuleParameterConfig ruleParameterConfig)
         {
             var result = GetTodoLines(file.FileContent);
             return result;

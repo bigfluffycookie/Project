@@ -2,6 +2,6 @@
 {
     public interface IRule
     {
-        List<Issue> Execute(File file);
+        List<Issue> Execute(File file, RuleParameterConfig ruleParameterConfig);
     }
 }

@@ -5,10 +5,10 @@
         public string FilePath { get; private set; }
         public string[] FileContent { get; private set; }
 
-        public File(string filePath)
+        public File(string filePath, string[] fileContent)
         {
             FilePath = filePath;
-            FileContent = System.IO.File.ReadAllLines(filePath);
+            FileContent = fileContent;
         }
     }
 }
