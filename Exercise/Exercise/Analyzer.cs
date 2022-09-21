@@ -9,6 +9,7 @@ namespace Exercise
             var result = new List<Issue>();
             foreach (var rule in rules)
             {
+                if (!rule.ShouldExecute(ruleParameterConfig)) { continue; }
                 var resultFromRule = rule.Execute(file, ruleParameterConfig);
                 result.AddRange(resultFromRule);
             }

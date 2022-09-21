@@ -3,10 +3,15 @@
     public class MaxFilePathLengthRule : IRule
     {
         private const string paramId = "maxPathLength";
+
+        public bool ShouldExecute(RuleParameterConfig ruleParameterConfig)
+        {
+            return ruleParameterConfig.HasRule(paramId);
+        }
+
         public List<Issue> Execute(File file, RuleParameterConfig ruleParameterConfig)
         {
             var result = new List<Issue>();
-
             var param = ruleParameterConfig.GetRuleParam(paramId);
             if (param < file.FilePath.Length)
             {

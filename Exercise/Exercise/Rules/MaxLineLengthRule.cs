@@ -3,9 +3,16 @@
     public class MaxLineLengthRule : IRule
     {
         private const string paramId = "maxLineLength";
+
+        public bool ShouldExecute(RuleParameterConfig ruleParameterConfig)
+        {
+            return ruleParameterConfig.HasRule(paramId);
+        }
+
         public List<Issue> Execute(File file, RuleParameterConfig ruleParameterConfig)
         {
             var result = new List<Issue>();
+            if (!ruleParameterConfig.HasRule(paramId)) { return null; }
             var param = ruleParameterConfig.GetRuleParam(paramId);
             if (param < file.FileContent.Length)
             {

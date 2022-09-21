@@ -2,6 +2,13 @@
 {
     public class TodoRule : IRule
     {
+        private const string paramId = "todoLines";
+
+        public bool ShouldExecute(RuleParameterConfig ruleParameterConfig)
+        {
+            return ruleParameterConfig.HasRule(paramId);
+        }
+
         public List<Issue> Execute(File file, RuleParameterConfig ruleParameterConfig)
         {
             var result = GetTodoLines(file.FileContent);

@@ -71,5 +71,38 @@ namespace Exercise.UnitTests
             Assert.AreEqual(line, result[0].Line);
             Assert.AreEqual(column, result[0].Column);
         }
+
+        [TestMethod]
+        public void Analyze_OneRule_HasOneIssue_NoRulesSpecifiedToRun_ReturnsNoIssue()
+        {
+            var issue = new Issue("", 0, 0);
+            Mock<IRule> rule = new Mock<IRule>();
+            rule.Setup(p => p.Execute(It.IsAny<File>(),
+                                      It.IsAny<RuleParameterConfig>())).Returns(new List<Issue>() { issue });
+            Mock<RuleParameterConfig> ruleParamConfig = new Mock<RuleParameterConfig>();
+            ruleParamConfig.Setup(p => p.HasRule(It.IsAny<string>())).Returns(false);
+            var result = Analyzer.Analyze(It.IsAny<File>(),
+                                          new List<IRule>() { rule.Object},
+                                          It.IsAny<RuleParameterConfig>());
+
+            Assert.AreEqual(0, result.Count);
+        }
+
+        [TestMethod]
+        public void Analyze_OneRule_HasOneIssue_RuleIsSpecifiedToRun_ReturnsOneIssue()
+        {
+            var issue = new Issue("", 0, 0);
+            Mock<IRule> rule = new Mock<IRule>();
+            rule.Setup(p => p.Execute(It.IsAny<File>(),
+                                      It.IsAny<RuleParameterConfig>())).Returns(new List<Issue>() { issue });
+
+            Mock<RuleParameterConfig> ruleParamConfig = new Mock<RuleParameterConfig>();
+            ruleParamConfig.Setup(p => p.HasRule(It.IsAny<string>())).Returns(true);
+            var result = Analyzer.Analyze(It.IsAny<File>(),
+                                          new List<IRule>() { rule.Object },
+                                          ruleParamConfig.Object);
+
+            Assert.AreEqual(1, result.Count);
+        }
     }
 }

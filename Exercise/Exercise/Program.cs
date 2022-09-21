@@ -10,22 +10,12 @@ namespace Exercise
             var filePath = ReadUserInputForFilePath(".txt");
             File file = new File(filePath, System.IO.File.ReadAllLines(filePath));
 
-            var ruleParameterConfig = InitializeRuleParameterConfig();
+            var ruleParameterConfig = ReadUserInputForRules();
             var rules = GetRules();
             var result = Analyzer.Analyze(file, rules, ruleParameterConfig);
             PrintResult(result);
             Console.Write("Press any key to close App");
             Console.ReadKey();
-        }
-
-        private static RuleParameterConfig InitializeRuleParameterConfig()
-        {
-            var ruleParameterConfig = new RuleParameterConfig();
-            var maxLines = GetInputParams("Input the maximum number of lines");
-            ruleParameterConfig.AddRuleParam("maxLineLength", maxLines);
-            var maxPathLength = GetInputParams("Enter the max number of characters for the file path");
-            ruleParameterConfig.AddRuleParam("maxPathLength", maxPathLength);
-            return ruleParameterConfig;
         }
 
         private static List<IRule> GetRules()
@@ -39,6 +29,45 @@ namespace Exercise
             rules.Add(todoRule);
 
             return rules;
+        }
+
+        private static RuleParameterConfig ReadUserInputForRules()
+        {
+            Console.WriteLine("Please input rules to run with parameters like rule=param" +
+                              "if there are no parameters just input rule name.");
+            Console.WriteLine("To finish inputing rules press 'x'");
+            Console.WriteLine("Available rules are:");
+            Console.WriteLine("todoLines");
+            Console.WriteLine("maxPathLength");
+            Console.WriteLine("maxLineLength");
+
+            var ruleParameterConfig = new RuleParameterConfig();
+            while (true)
+            {
+                var input = Console.ReadLine();
+                if (input == null) { break; }
+                var ruleAndParam = input.Split('=');
+                if (ruleAndParam[0] == "x")
+                {
+                    Console.WriteLine("Finished adding rules, starting analyzer.");
+                    break;
+                }
+                if (ruleAndParam.Length == 1)
+                {
+                    ruleParameterConfig.AddRuleParam(ruleAndParam[0], null);
+                    continue;
+                }
+                if (!Int32.TryParse(ruleAndParam[1], out int nr))
+                {
+                    Console.WriteLine("Parameter for rule: " + ruleAndParam[0] + " needs to be an integer. " +
+                                      " please try again.");
+                    continue;
+                }
+                ruleParameterConfig.AddRuleParam(ruleAndParam[0], nr);
+                Console.WriteLine("Succesfully added rule");
+            }
+
+            return ruleParameterConfig;
         }
 
         private static void PrintResult(List<Issue> issues)
@@ -73,18 +102,6 @@ namespace Exercise
                 filePath = input;
             } while (!InputValidator.IsValidFilePath(filePath, fileExtension));
             return filePath;
-        }
-
-        private static int GetInputParams(string displayText)
-        {
-            Console.WriteLine(displayText);
-            var input = "";
-            int nr;
-            do
-            {
-                input = Console.ReadLine();
-            } while (!Int32.TryParse(input, out nr));
-            return nr;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Exercise.Rules;
+using Moq;
 
 namespace Exercise.UnitTests.Rules
 {
@@ -32,6 +33,26 @@ namespace Exercise.UnitTests.Rules
             var rule = new MaxFilePathLengthRule();
             var result = rule.Execute(file, ruleParamConfig);
             Assert.AreEqual(0, result.Count);
+        }
+
+        [TestMethod]
+        public void ShouldExecute_No_ReturnsFalse()
+        {
+            Mock<RuleParameterConfig> ruleParamConfig = new Mock<RuleParameterConfig>();
+            ruleParamConfig.Setup(p => p.HasRule(It.IsAny<string>())).Returns(false);
+            var rule = new MaxFilePathLengthRule();
+            var result = rule.ShouldExecute(ruleParamConfig.Object);
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void ShouldExecute_Yes_ReturnsTrue()
+        {
+            Mock<RuleParameterConfig> ruleParamConfig = new Mock<RuleParameterConfig>();
+            ruleParamConfig.Setup(p => p.HasRule(It.IsAny<string>())).Returns(true);
+            var rule = new MaxFilePathLengthRule();
+            var result = rule.ShouldExecute(ruleParamConfig.Object);
+            Assert.IsTrue(result);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Exercise.Rules;
+using Moq;
 
 namespace Exercise.UnitTests.Rule
 {
@@ -81,6 +82,26 @@ namespace Exercise.UnitTests.Rule
             var result = rule.Execute(file, new RuleParameterConfig());
             Assert.AreEqual(2, result.Count);
             Assert.AreEqual("TODO", result[0].Text);
+        }
+
+        [TestMethod]
+        public void ShouldExecute_No_ReturnsFalse()
+        {
+            Mock<RuleParameterConfig> ruleParamConfig = new Mock<RuleParameterConfig>();
+            ruleParamConfig.Setup(p => p.HasRule(It.IsAny<string>())).Returns(false);
+            var rule = new TodoRule();
+            var result = rule.ShouldExecute(ruleParamConfig.Object);
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void ShouldExecute_Yes_ReturnsTrue()
+        {
+            Mock<RuleParameterConfig> ruleParamConfig = new Mock<RuleParameterConfig>();
+            ruleParamConfig.Setup(p => p.HasRule(It.IsAny<string>())).Returns(true);
+            var rule = new TodoRule();
+            var result = rule.ShouldExecute(ruleParamConfig.Object);
+            Assert.IsTrue(result);
         }
     }
 }
