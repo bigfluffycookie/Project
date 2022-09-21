@@ -1,4 +1,6 @@
-﻿namespace Exercise.Rules
+﻿using System.Collections.Generic;
+using System;
+namespace Exercise.Rules
 {
     public class MaxLineLengthRule : IRule
     {

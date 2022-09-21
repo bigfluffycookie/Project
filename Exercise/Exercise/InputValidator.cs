@@ -1,4 +1,5 @@
-﻿namespace Exercise
+﻿using System;
+namespace Exercise
 {
     public class InputValidator
     {

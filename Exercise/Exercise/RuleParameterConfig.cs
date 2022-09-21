@@ -1,4 +1,6 @@
-﻿namespace Exercise
+﻿using System.Collections.Generic;
+using System;
+namespace Exercise
 {
     public class RuleParameterConfig
     {

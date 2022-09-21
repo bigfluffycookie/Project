@@ -1,4 +1,5 @@
-﻿namespace Exercise.Rules
+﻿using System.Collections.Generic;
+namespace Exercise.Rules
 {
     public interface IRule
     {

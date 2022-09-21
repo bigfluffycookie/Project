@@ -1,5 +1,6 @@
 ﻿using Exercise.Rules;
-
+using System;
+using System.Collections.Generic;
 namespace Exercise
 {
     public class Analyzer

@@ -1,14 +1,14 @@
 ﻿using Exercise.Rules;
 using Newtonsoft.Json;
-
+using System.Collections.Generic;
+using System;
 namespace Exercise
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static List<string> Main(string ruleConfigFile)
         {
             DisplayWelcomeText();
-            var ruleConfigFile = ReadUserInputForFilePath();
             var ruleFileContent = System.IO.File.ReadAllText(ruleConfigFile);
             var ruleConfig = JsonConvert.DeserializeObject<SerializedRuleConfig>(ruleFileContent);
             if (ruleConfig == null)
@@ -16,7 +16,7 @@ namespace Exercise
                 throw new Exception("Rule Configeration could not be Serialized, Exiting Analyzer");
             }
             var filePath = ruleConfig.fileToAnalyze;
-            if (System.IO.File.Exists(filePath))
+            if (!System.IO.File.Exists(filePath))
             {
                 throw new Exception("File to analyze does not exist: " + filePath);
             }
@@ -25,9 +25,8 @@ namespace Exercise
             var ruleParameterConfig = InitializeRuleParameterConfig(ruleConfig);
             var rules = GetRules();
             var result = Analyzer.Analyze(file, rules, ruleParameterConfig);
-            PrintResult(result);
-            Console.Write("Press any key to close App");
-            Console.ReadKey();
+            var print = CreateReadableIssues(result);
+            return print;
         }
 
         private static List<IRule> GetRules()
@@ -53,38 +52,23 @@ namespace Exercise
             return ruleParameterConfig;
         }
 
-        private static void PrintResult(List<Issue> issues)
+        private static List<string> CreateReadableIssues(List<Issue> issues)
         {
+            var res = new List<string>();
             foreach (Issue issue in issues)
             {
                 var print = "";
                 print += "Line: " + issue.Line + ", ";
                 print += "Column: " + issue.Column + ", ";
                 print += "'" + issue.Text + "'";
-                Console.WriteLine(print);
+                res.Add(print);
             }
+            return res;
         }
 
         private static void DisplayWelcomeText()
         {
             Console.WriteLine("Welcome to the Analyzer");
-        }
-
-        private static string ReadUserInputForFilePath()
-        {
-            Console.WriteLine("Please Input the file path to the rule configuration");
-            var filePath = "";
-            do
-            {
-                var input = Console.ReadLine();
-                if (input == null)
-                {
-                    Console.WriteLine("Exiting Analyzer");
-                    break;
-                }
-                filePath = input;
-            } while (!InputValidator.FileExists(filePath));
-            return filePath;
         }
     }
 }
