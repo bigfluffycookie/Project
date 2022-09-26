@@ -27,7 +27,7 @@ namespace Exercise.UnitTests.Rules
             int max = 1;
             ruleParamConfig.AddRuleParam("maxLineLength", max);
             var file = new File("", new string[] { "" });
-            var rule = new MaxFilePathLengthRule();
+            var rule = new MaxLineLengthRule();
             var result = rule.Execute(file, ruleParamConfig);
             Assert.AreEqual(0, result.Count);
         }
