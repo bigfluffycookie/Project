@@ -7,6 +7,7 @@ namespace Exercise.UnitTests.Rules
     {
         [TestMethod]
         [DataRow("12", 1)]
+        [DataRow("123", 2)]
         public void Execute_BreakRule_ReturnsOneIssue(string path, int max)
         {
             var ruleParamConfig = new RuleParameterConfig();
@@ -21,11 +22,13 @@ namespace Exercise.UnitTests.Rules
         }
 
         [TestMethod]
-        public void Execute_DontBreakRule_ReturnsNoIssue()
+        [DataRow("12", 3)]
+        [DataRow("123", 5)]
+        public void Execute_DontBreakRule_ReturnsNoIssue(string path, int max)
         {
             var ruleParamConfig = new RuleParameterConfig();
-            ruleParamConfig.AddRuleParam("maxPathLength", 2);
-            var file = new File("ab", Array.Empty<string>());
+            ruleParamConfig.AddRuleParam("maxPathLength", max);
+            var file = new File(path, Array.Empty<string>());
             var rule = new MaxFilePathLengthRule();
             var result = rule.Execute(file, ruleParamConfig);
             Assert.AreEqual(0, result.Count);
