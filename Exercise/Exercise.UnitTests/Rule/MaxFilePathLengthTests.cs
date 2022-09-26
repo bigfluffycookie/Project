@@ -7,28 +7,28 @@ namespace Exercise.UnitTests.Rules
     public class MaxFilePathLengthTests
     {
         [TestMethod]
-        [DataRow("12", 1)]
-        [DataRow("123", 2)]
-        public void Execute_BreakRule_ReturnsOneIssue(string path, int max)
+        [DataRow("12", "1")]
+        [DataRow("123", "2")]
+        public void Execute_BreakRule_ReturnsOneIssue(string path, string max)
         {
             var ruleParamConfig = new RuleParameterConfig();
-            ruleParamConfig.AddRuleParam("maxPathLength", max.ToString());
+            ruleParamConfig.AddRuleParam("maxPathLength", max);
             var file = new File(path, Array.Empty<string>());
             var rule = new MaxFilePathLengthRule();
             var result = rule.Execute(file, ruleParamConfig);
             var expectedContent = "File path length is too large: " + path.Length.ToString() +
-                                  " which is greater than max specified: " + max.ToString();
+                                  " which is greater than max specified: " + max;
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(expectedContent, result[0].Text);
         }
 
         [TestMethod]
-        [DataRow("12", 3)]
-        [DataRow("123", 5)]
-        public void Execute_DontBreakRule_ReturnsNoIssue(string path, int max)
+        [DataRow("12", "3")]
+        [DataRow("123", "5")]
+        public void Execute_DontBreakRule_ReturnsNoIssue(string path, string max)
         {
             var ruleParamConfig = new RuleParameterConfig();
-            ruleParamConfig.AddRuleParam("maxPathLength", "2");
+            ruleParamConfig.AddRuleParam("maxPathLength", max);
             var file = new File(path, Array.Empty<string>());
             var rule = new MaxFilePathLengthRule();
             var result = rule.Execute(file, ruleParamConfig);
