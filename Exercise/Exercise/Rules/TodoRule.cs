@@ -11,6 +11,7 @@
         private static List<Issue> GetTodoLines(string[] lines)
         {
             List<Issue> result = new List<Issue>();
+
             for (int i = 0; i < lines.Length; i++)
             {
                 var line = lines[i];

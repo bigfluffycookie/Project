@@ -23,13 +23,13 @@ namespace Exercise.UnitTests
         {
             Mock<IRule> rule = new Mock<IRule>();
             var issue = new Issue(content, line, column);
-
             rule.Setup(p => p.Execute(It.IsAny<File>(),
                                       It.IsAny<RuleParameterConfig>())).Returns(new List<Issue>() { issue });
 
             var result = Analyzer.Analyze(It.IsAny<File>(),
                                           new List<IRule>() { rule.Object },
                                           It.IsAny<RuleParameterConfig>());
+
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(content, result[0].Text);
             Assert.AreEqual(line, result[0].Line);
@@ -42,6 +42,7 @@ namespace Exercise.UnitTests
             Mock<IRule> rule = new Mock<IRule>();
             rule.Setup(p => p.Execute(It.IsAny<File>(),
                                       It.IsAny<RuleParameterConfig>())).Returns(new List<Issue>());
+
             var result = Analyzer.Analyze(It.IsAny<File>(),
                                           new List<IRule>() { rule.Object },
                                           It.IsAny<RuleParameterConfig>());
@@ -57,11 +58,11 @@ namespace Exercise.UnitTests
             Mock<IRule> ruleOne = new Mock<IRule>();
             ruleOne.Setup(p => p.Execute(It.IsAny<File>(),
                                          It.IsAny<RuleParameterConfig>())).Returns(new List<Issue>());
-
             var issue = new Issue(content, line, column);
             Mock<IRule> ruleTwo = new Mock<IRule>();
             ruleTwo.Setup(p => p.Execute(It.IsAny<File>(),
                                          It.IsAny<RuleParameterConfig>())).Returns(new List<Issue>() { issue });
+
             var result = Analyzer.Analyze(It.IsAny<File>(),
                                           new List<IRule>() { ruleOne.Object, ruleTwo.Object },
                                           It.IsAny<RuleParameterConfig>());

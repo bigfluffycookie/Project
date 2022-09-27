@@ -10,7 +10,9 @@ namespace Exercise.UnitTests.Rule
         {
             var file = new File("", Array.Empty<string>());
             var rule = new TodoRule();
+
             var result = rule.Execute(file, new RuleParameterConfig());
+
             Assert.AreEqual(0, result.Count);
         }
 
@@ -22,7 +24,9 @@ namespace Exercise.UnitTests.Rule
             var lines = new string[] { content };
             var file = new File("", lines);
             var rule = new TodoRule();
+
             var result = rule.Execute(file, new RuleParameterConfig());
+
             Assert.AreEqual(0, result.Count);
         }
 
@@ -35,7 +39,9 @@ namespace Exercise.UnitTests.Rule
             var lines = new string[] { content };
             var file = new File("", lines);
             var rule = new TodoRule();
+
             var result = rule.Execute(file, new RuleParameterConfig());
+
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(expectedLine, result[0].Line);
             Assert.AreEqual(expectedColumn, result[0].Column);
@@ -52,7 +58,9 @@ namespace Exercise.UnitTests.Rule
             var lines = new string[] { firstLineContent, secondLineContent };
             var file = new File("", lines);
             var rule = new TodoRule();
+
             var result = rule.Execute(file, new RuleParameterConfig());
+
             Assert.AreEqual(0, result.Count);
         }
 
@@ -65,7 +73,9 @@ namespace Exercise.UnitTests.Rule
             var lines = new string[] { firstLineContent, secondLineContent };
             var file = new File("", lines);
             var rule = new TodoRule();
+
             var result = rule.Execute(file, new RuleParameterConfig());
+
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(expectedLine, result[0].Line);
             Assert.AreEqual(expectedColumn, result[0].Column);
@@ -78,7 +88,9 @@ namespace Exercise.UnitTests.Rule
             var lines = new string[] { "TODO", "TODO" };
             var file = new File("", lines);
             var rule = new TodoRule();
+
             var result = rule.Execute(file, new RuleParameterConfig());
+
             Assert.AreEqual(2, result.Count);
             Assert.AreEqual("TODO", result[0].Text);
         }

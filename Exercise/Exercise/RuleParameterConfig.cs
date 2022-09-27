@@ -2,15 +2,15 @@
 {
     public class RuleParameterConfig
     {
-        private readonly Dictionary<string, int> ruleIdToParam;
-        public RuleParameterConfig()
-        {
-            ruleIdToParam = new Dictionary<string, int>();
-        }
+        private readonly Dictionary<string, int> ruleIdToParam = new();
 
         public void AddRuleParam(string key, int value)
         {
-            if (ruleIdToParam.ContainsKey(key)) { return; }
+            if (ruleIdToParam.ContainsKey(key))
+            {
+                return;
+            }
+
             ruleIdToParam.Add(key, value);
         }
 
@@ -20,6 +20,7 @@
             {
                 throw new Exception("No Parameter found that matches given id: " + key);
             }
+
             return value;
         }
     }

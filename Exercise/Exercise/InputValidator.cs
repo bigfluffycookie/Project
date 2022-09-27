@@ -14,6 +14,7 @@
                 Console.WriteLine("File does not have the requested extension: " + fileExtension);
                 return false;
             }
+
             return true;
         }
 
@@ -24,6 +25,7 @@
                 Console.WriteLine("File does not Exist. Please Try Again.");
                 return false;
             }
+
             return true;
         }
     }
