@@ -1,14 +1,26 @@
-﻿namespace Exercise.Rules
+﻿using System.Data;
+
+namespace Exercise.Rules
 {
     public class MaxFilePathLengthRule : IRule
     {
-        private const string paramId = "maxPathLength";
+        private const string ruleId = "maxPathLength";
+
+        public bool HasParameters()
+        {
+            return true;
+        }
+
+        public string GetRuleId()
+        {
+            return ruleId;
+        }
 
         public List<Issue> Execute(File file, RuleParameterConfig ruleParameterConfig)
         {
             var result = new List<Issue>();
 
-            var maxAllowedFilePathLength = ruleParameterConfig.GetRuleParam(paramId);
+            var maxAllowedFilePathLength = ruleParameterConfig.GetRuleParam(ruleId);
 
             if (file.FilePath.Length > maxAllowedFilePathLength)
             {

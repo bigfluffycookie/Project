@@ -2,12 +2,22 @@
 {
     public class MaxLineLengthRule : IRule
     {
-        private const string paramId = "maxLineLength";
+        private const string ruleId = "maxLineLength";
+
+        public bool HasParameters()
+        {
+            return true;
+        }
+
+        public string GetRuleId()
+        {
+            return ruleId;
+        }
 
         public List<Issue> Execute(File file, RuleParameterConfig ruleParameterConfig)
         {
             var result = new List<Issue>();
-            var maxAllowedLineLength = ruleParameterConfig.GetRuleParam(paramId);
+            var maxAllowedLineLength = ruleParameterConfig.GetRuleParam(ruleId);
 
             if (file.FileContent.Length > maxAllowedLineLength)
             {

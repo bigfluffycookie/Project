@@ -20,6 +20,8 @@ namespace Exercise.UnitTests.Rules
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(expectedContent, result[0].Text);
+            Assert.AreEqual(0, result[0].Line);
+            Assert.AreEqual(0, result[0].Column);
         }
 
         [TestMethod]

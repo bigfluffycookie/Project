@@ -7,8 +7,23 @@ namespace Exercise
         public static void Main(string[] args)
         {
             DisplayWelcomeText();
+
             var filePath = ReadUserInputForFilePath(".txt");
-            string[] fileContent;
+            var fileContent = GetFileContent(filePath);
+            var file = new File(filePath, fileContent);
+
+            var rules = GetRules();
+            var ruleParameterConfig = InitializeRuleParameterConfig(rules);
+
+            var result = Analyzer.Analyze(file, rules, ruleParameterConfig);
+            PrintResult(result);
+            Console.Write("Press any key to close App");
+            Console.ReadKey();
+        }
+
+        private static string[] GetFileContent(string filePath)
+        {
+            var fileContent = Array.Empty<string>();
 
             try
             {
@@ -19,25 +34,23 @@ namespace Exercise
                 Console.WriteLine("File could not be read with exception: " + e.Message);
                 Console.Write("Press any key to close App");
                 Console.ReadKey();
-                return;
+                Environment.Exit(0);
             }
 
-            var file = new File(filePath, fileContent);
-            var ruleParameterConfig = InitializeRuleParameterConfig();
-            var rules = GetRules();
-            var result = Analyzer.Analyze(file, rules, ruleParameterConfig);
-            PrintResult(result);
-            Console.Write("Press any key to close App");
-            Console.ReadKey();
+            return fileContent;
         }
 
-        private static RuleParameterConfig InitializeRuleParameterConfig()
+        private static RuleParameterConfig InitializeRuleParameterConfig(List<IRule> rules)
         {
             var ruleParameterConfig = new RuleParameterConfig();
-            var maxLines = GetInputParams("Input the maximum number of lines");
-            ruleParameterConfig.AddRuleParam("maxLineLength", maxLines);
-            var maxPathLength = GetInputParams("Enter the max number of characters for the file path");
-            ruleParameterConfig.AddRuleParam("maxPathLength", maxPathLength);
+            var rulesWithParams = rules.Where(rule => rule.HasParameters());
+
+            foreach (var rule in rulesWithParams)
+            {
+                var ruleId = rule.GetRuleId();
+                var input = GetInputParams("Input: " + ruleId);
+                ruleParameterConfig.AddRuleParam(ruleId, input);
+            }
 
             return ruleParameterConfig;
         }

@@ -1,7 +1,21 @@
-﻿namespace Exercise.Rules
+﻿using System.Data;
+
+namespace Exercise.Rules
 {
     public class TodoRule : IRule
     {
+        private const string ruleId = "todo";
+
+        public bool HasParameters()
+        {
+            return false;
+        }
+
+        public string GetRuleId()
+        {
+            return ruleId;
+        }
+
         public List<Issue> Execute(File file, RuleParameterConfig ruleParameterConfig)
         {
             var result = GetTodoLines(file.FileContent);

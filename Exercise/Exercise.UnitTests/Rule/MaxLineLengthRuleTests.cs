@@ -19,6 +19,8 @@ namespace Exercise.UnitTests.Rules
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(expectedContent, result[0].Text);
+            Assert.AreEqual(file.FileContent.Length, result[0].Line);
+            Assert.AreEqual(1, result[0].Column);
         }
 
         [TestMethod]
