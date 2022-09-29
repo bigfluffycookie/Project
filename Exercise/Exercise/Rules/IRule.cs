@@ -1,10 +1,11 @@
 ﻿namespace Exercise.Rules
 {
-
     public interface IRule
     {
-        bool HasParameters();
-        string GetRuleId();
-        List<Issue> Execute(File file, RuleParameterConfig ruleParameterConfig);
+        string RuleId { get; }
+
+        bool HasParameters { get; }
+
+        List<Issue> Execute(IFile file, RuleParameterConfig ruleParameterConfig);
     }
 }

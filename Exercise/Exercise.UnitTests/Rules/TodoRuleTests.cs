@@ -1,6 +1,6 @@
 ﻿using Exercise.Rules;
 
-namespace Exercise.UnitTests.Rule
+namespace Exercise.UnitTests.Rules
 {
     [TestClass]
     public class TodoRuleTests
@@ -8,7 +8,7 @@ namespace Exercise.UnitTests.Rule
         [TestMethod]
         public void Execute_HasNoLines_ReturnsEmptyList()
         {
-            var file = new File("", Array.Empty<string>());
+            var file = SetupFile(Array.Empty<string>());
             var rule = new TodoRule();
 
             var result = rule.Execute(file, new RuleParameterConfig());
@@ -21,8 +21,7 @@ namespace Exercise.UnitTests.Rule
         [DataRow("Hello :)")]
         public void Execute_HasOneLine_NoTodo_ReturnsEmptyList(string content)
         {
-            var lines = new string[] { content };
-            var file = new File("", lines);
+            var file = SetupFile(new[] { content });
             var rule = new TodoRule();
 
             var result = rule.Execute(file, new RuleParameterConfig());
@@ -36,8 +35,7 @@ namespace Exercise.UnitTests.Rule
         public void Execute_HasOneLine_WithTodo_ReturnsListWithOneLine(string content, int expectedLine,
                                                                        int expectedColumn, string expectedContent)
         {
-            var lines = new string[] { content };
-            var file = new File("", lines);
+            var file = SetupFile(new[] { content });
             var rule = new TodoRule();
 
             var result = rule.Execute(file, new RuleParameterConfig());
@@ -55,8 +53,7 @@ namespace Exercise.UnitTests.Rule
         [DataRow("Hello :)", "Hello :)")]
         public void Execute_HasTwoLines_NoTodo_ReturnsEmptyList(string firstLineContent, string secondLineContent)
         {
-            var lines = new string[] { firstLineContent, secondLineContent };
-            var file = new File("", lines);
+            var file = SetupFile(new[] { firstLineContent, secondLineContent });
             var rule = new TodoRule();
 
             var result = rule.Execute(file, new RuleParameterConfig());
@@ -67,11 +64,11 @@ namespace Exercise.UnitTests.Rule
         [TestMethod]
         [DataRow("TODO: Hello", "", 1, 1, "TODO: Hello")]
         [DataRow("", "TODO: Hello", 2, 1, "TODO: Hello")]
-        public void Execute_HasTwoLines_OneTodo_ReturnsListWithOneLine(string firstLineContent, string secondLineContent, int expectedLine,
-                                                                       int expectedColumn, string expectedContent)
+        public void Execute_HasTwoLines_OneTodo_ReturnsListWithOneLine(string firstLineContent,
+                            string secondLineContent, int expectedLine,
+                            int expectedColumn, string expectedContent)
         {
-            var lines = new string[] { firstLineContent, secondLineContent };
-            var file = new File("", lines);
+            var file = SetupFile(new[] { firstLineContent, secondLineContent });
             var rule = new TodoRule();
 
             var result = rule.Execute(file, new RuleParameterConfig());
@@ -85,14 +82,17 @@ namespace Exercise.UnitTests.Rule
         [TestMethod]
         public void Execute_HasTwoLines_TwoTodo_ReturnsListWithTwoLines()
         {
-            var lines = new string[] { "TODO", "TODO" };
-            var file = new File("", lines);
+            var file = SetupFile(new[] { "TODO", "TODO" });
             var rule = new TodoRule();
 
             var result = rule.Execute(file, new RuleParameterConfig());
 
             Assert.AreEqual(2, result.Count);
-            Assert.AreEqual("TODO", result[0].Text);
+        }
+
+        private static File SetupFile(string[] lines)
+        {
+            return new File("", lines);
         }
     }
 }

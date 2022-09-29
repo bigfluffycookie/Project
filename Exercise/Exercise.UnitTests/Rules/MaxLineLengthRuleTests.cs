@@ -8,27 +8,28 @@ namespace Exercise.UnitTests.Rules
         [TestMethod]
         public void Execute_BreakRule_ReturnsOneIssue()
         {
-            int max = 1;
-            var ruleParamConfig = SetUpRuleConfig(max);
-            var file = SetUpFile(2);
+            var maxNumberOfLines = 1;
+            var ruleParamConfig = SetUpRuleConfig(maxNumberOfLines);
+            var file = SetupFile(numberOfLines: 2);
             var rule = new MaxLineLengthRule();
 
             var result = rule.Execute(file, ruleParamConfig);
-            var expectedContent = "Number of lines in file is " + file.FileContent.Length.ToString() +
-                                 " which is greater than max specified: " + max.ToString();
+
+            var expectedContent = "Number of lines in file is " + file.FileContent.Length +
+                                  " which is greater than max specified: " + maxNumberOfLines;
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(expectedContent, result[0].Text);
-            Assert.AreEqual(file.FileContent.Length, result[0].Line);
+            Assert.AreEqual(2, result[0].Line);
             Assert.AreEqual(1, result[0].Column);
         }
 
         [TestMethod]
-        public void Execute_FileIsEmpty_DontBreakRule_ReturnsNoIsse()
+        public void Execute_FileIsEmpty_DontBreakRule_ReturnsNoIssue()
         {
-            int max = 1;
-            var ruleParamConfig = SetUpRuleConfig(max);
-            var file = SetUpFile(0);
+            var maxNumberOfLines = 1;
+            var ruleParamConfig = SetUpRuleConfig(maxNumberOfLines);
+            var file = SetupFile(numberOfLines: 0);
             var rule = new MaxLineLengthRule();
 
             var result = rule.Execute(file, ruleParamConfig);
@@ -39,8 +40,8 @@ namespace Exercise.UnitTests.Rules
         [TestMethod]
         public void Execute_DontBreakRule_ReturnsNoIssue()
         {
-            var ruleParamConfig = SetUpRuleConfig(1);
-            var file = SetUpFile(1);
+            var ruleParamConfig = SetUpRuleConfig(maxNumberOfLines: 1);
+            var file = SetupFile(numberOfLines: 1);
             var rule = new MaxLineLengthRule();
 
             var result = rule.Execute(file, ruleParamConfig);
@@ -48,18 +49,20 @@ namespace Exercise.UnitTests.Rules
             Assert.AreEqual(0, result.Count);
         }
 
-        public RuleParameterConfig SetUpRuleConfig(int maxPathLength)
+        private static RuleParameterConfig SetUpRuleConfig(int maxNumberOfLines)
         {
             var ruleParamConfig = new RuleParameterConfig();
-            ruleParamConfig.AddRuleParam("maxLineLength", maxPathLength);
+            ruleParamConfig.AddRuleParam("maxLineLength", maxNumberOfLines);
+
             return ruleParamConfig;
         }
 
-        public File SetUpFile(int nrOfLines)
+        private static File SetupFile(int numberOfLines)
         {
-            var lines = new string[nrOfLines];
+            var lines = new string[numberOfLines];
             Array.Fill(lines, "");
             var file = new File("", lines);
+
             return file;
         }
     }

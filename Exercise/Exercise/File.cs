@@ -1,9 +1,9 @@
 ﻿namespace Exercise
 {
-    public class File
+    public class File : IFile
     {
-        public string FilePath { get; private set; }
-        public string[] FileContent { get; private set; }
+        public string FilePath { get; }
+        public string[] FileContent { get; }
 
         public File(string filePath, string[] fileContent)
         {

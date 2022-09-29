@@ -1,39 +1,32 @@
-﻿using System.Data;
-
-namespace Exercise.Rules
+﻿namespace Exercise.Rules
 {
     public class TodoRule : IRule
     {
-        private const string ruleId = "todo";
+        public string RuleId => "todo";
 
-        public bool HasParameters()
-        {
-            return false;
-        }
+        public bool HasParameters => false;
 
-        public string GetRuleId()
-        {
-            return ruleId;
-        }
-
-        public List<Issue> Execute(File file, RuleParameterConfig ruleParameterConfig)
+        public List<Issue> Execute(IFile file, RuleParameterConfig ruleParameterConfig)
         {
             var result = GetTodoLines(file.FileContent);
+
             return result;
         }
 
-        private static List<Issue> GetTodoLines(string[] lines)
+        private static List<Issue> GetTodoLines(IReadOnlyList<string> lines)
         {
-            List<Issue> result = new List<Issue>();
+            var result = new List<Issue>();
 
-            for (int i = 0; i < lines.Length; i++)
+            for (var i = 0; i < lines.Count; i++)
             {
                 var line = lines[i];
-                var indexOfTodo = line.IndexOf("TODO");
+                var indexOfTodo = line.IndexOf("TODO", StringComparison.Ordinal);
+
                 if (indexOfTodo == -1)
                 {
                     continue;
                 }
+
                 var issue = new Issue(text: line[indexOfTodo..], line: i + 1, column: indexOfTodo + 1);
                 result.Add(issue);
             }

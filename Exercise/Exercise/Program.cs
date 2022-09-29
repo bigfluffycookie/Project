@@ -31,7 +31,7 @@ namespace Exercise
             }
             catch (IOException e)
             {
-                Console.WriteLine("File could not be read with exception: " + e.Message);
+                Console.WriteLine("File could not be read with error message: " + e.Message);
                 Console.Write("Press any key to close App");
                 Console.ReadKey();
                 Environment.Exit(0);
@@ -43,11 +43,11 @@ namespace Exercise
         private static RuleParameterConfig InitializeRuleParameterConfig(List<IRule> rules)
         {
             var ruleParameterConfig = new RuleParameterConfig();
-            var rulesWithParams = rules.Where(rule => rule.HasParameters());
+            var rulesWithParams = rules.Where(rule => rule.HasParameters);
 
             foreach (var rule in rulesWithParams)
             {
-                var ruleId = rule.GetRuleId();
+                var ruleId = rule.RuleId;
                 var input = GetInputParams("Input: " + ruleId);
                 ruleParameterConfig.AddRuleParam(ruleId, input);
             }
@@ -69,7 +69,7 @@ namespace Exercise
 
         private static void PrintResult(List<Issue> issues)
         {
-            foreach (Issue issue in issues)
+            foreach (var issue in issues)
             {
                 var print = "";
                 print += "Line: " + issue.Line + ", ";
@@ -92,11 +92,14 @@ namespace Exercise
             do
             {
                 var input = Console.ReadLine();
+
                 if (input == null)
                 {
                     Console.WriteLine("Exiting Analyzer");
+
                     break;
                 }
+
                 filePath = input;
             } while (!InputValidator.IsValidFilePath(filePath, fileExtension));
 
@@ -106,15 +109,15 @@ namespace Exercise
         private static int GetInputParams(string displayText)
         {
             Console.WriteLine(displayText);
-            var input = "";
-            int nr;
+            string? input;
+            int number;
 
             do
             {
                 input = Console.ReadLine();
-            } while (!Int32.TryParse(input, out nr));
+            } while (!int.TryParse(input, out number));
 
-            return nr;
+            return number;
         }
     }
 }

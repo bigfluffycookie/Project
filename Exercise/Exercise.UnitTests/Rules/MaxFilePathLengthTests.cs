@@ -6,17 +6,18 @@ namespace Exercise.UnitTests.Rules
     public class MaxFilePathLengthTests
     {
         [TestMethod]
-        [DataRow("12", 1)]
+        [DataRow("1", 0)]
         [DataRow("123", 2)]
-        public void Execute_BreakRule_ReturnsOneIssue(string path, int max)
+        public void Execute_BreakRule_ReturnsOneIssue(string path, int maxPathLength)
         {
-            var ruleParamConfig = SetUpRuleConfig(max);
-            var file = new File(path, Array.Empty<string>());
+            var ruleParamConfig = SetUpRuleConfig(maxPathLength);
+            var file = SetupFile(path);
             var rule = new MaxFilePathLengthRule();
 
             var result = rule.Execute(file, ruleParamConfig);
-            var expectedContent = "File path length is too large: " + path.Length.ToString() +
-                                  " which is greater than max specified: " + max.ToString();
+
+            var expectedContent = "File path length is too large: " + path.Length +
+                                  " which is greater than max specified: " + maxPathLength;
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(expectedContent, result[0].Text);
@@ -25,12 +26,12 @@ namespace Exercise.UnitTests.Rules
         }
 
         [TestMethod]
-        [DataRow("12", 3)]
+        [DataRow("", 0)]
         [DataRow("123", 5)]
-        public void Execute_DontBreakRule_ReturnsNoIssue(string path, int max)
+        public void Execute_DontBreakRule_ReturnsNoIssue(string path, int maxPathLength)
         {
-            var ruleParamConfig = SetUpRuleConfig(max);
-            var file = new File(path, Array.Empty<string>());
+            var ruleParamConfig = SetUpRuleConfig(maxPathLength);
+            var file = SetupFile(path);
             var rule = new MaxFilePathLengthRule();
 
             var result = rule.Execute(file, ruleParamConfig);
@@ -38,11 +39,17 @@ namespace Exercise.UnitTests.Rules
             Assert.AreEqual(0, result.Count);
         }
 
-        public RuleParameterConfig SetUpRuleConfig(int maxPathLength) 
+        private static RuleParameterConfig SetUpRuleConfig(int maxPathLength)
         {
             var ruleParamConfig = new RuleParameterConfig();
             ruleParamConfig.AddRuleParam("maxPathLength", maxPathLength);
+
             return ruleParamConfig;
+        }
+
+        private static File SetupFile(string path)
+        {
+            return new File(path, Array.Empty<string>());
         }
     }
 }
