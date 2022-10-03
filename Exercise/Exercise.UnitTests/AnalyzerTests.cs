@@ -17,24 +17,19 @@ namespace Exercise.UnitTests
         }
 
         [TestMethod]
-        [DataRow("ContentOne", 0, 0)]
-        [DataRow("ContentTwo", 1, 2)]
-        public void Analyze_OneRule_HasOneIssue_ReturnsOneIssue(string content, int line, int column)
+        public void Analyze_OneRule_HasOneIssue_ReturnsOneIssue()
         {
             var file = new Mock<IFile>();
             var rule = new Mock<IRule>();
-            var issue = new Issue(content, line, column);
-            rule.Setup(p => p.Execute(file.Object,
-                                      It.IsAny<RuleParameterConfig>())).Returns(new List<Issue> { issue });
+            var issue = new Mock<IIssue>();
+            var ruleParameterConfig = new Mock<IRuleParameterConfig>();
+            rule.Setup(p => p.Execute(file.Object, ruleParameterConfig.Object)).Returns(new List<IIssue> { issue.Object });
 
             var result = Analyzer.Analyze(file.Object,
                                           new List<IRule> { rule.Object },
-                                          It.IsAny<RuleParameterConfig>());
+                                          ruleParameterConfig.Object);
 
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(content, result[0].Text);
-            Assert.AreEqual(line, result[0].Line);
-            Assert.AreEqual(column, result[0].Column);
         }
 
         [TestMethod]
@@ -42,38 +37,33 @@ namespace Exercise.UnitTests
         {
             var file = new Mock<IFile>();
             var rule = new Mock<IRule>();
-            rule.Setup(p => p.Execute(file.Object,
-                                      It.IsAny<RuleParameterConfig>())).Returns(new List<Issue>());
+            var ruleParameterConfig = new Mock<IRuleParameterConfig>();
+            rule.Setup(p => p.Execute(file.Object, ruleParameterConfig.Object)).Returns(new List<IIssue>());
 
             var result = Analyzer.Analyze(file.Object,
                                           new List<IRule> { rule.Object },
-                                          It.IsAny<RuleParameterConfig>());
+                                          ruleParameterConfig.Object);
 
             Assert.AreEqual(0, result.Count);
         }
 
         [TestMethod]
-        [DataRow("ContentOne", 0, 0)]
-        [DataRow("ContentTwo", 1, 2)]
-        public void Analyze_TwoRules_OneRuleHasIssue_ReturnsOneIssue(string content, int line, int column)
+        public void Analyze_TwoRules_OneRuleHasIssue_ReturnsOneIssue()
         {
             var file = new Mock<IFile>();
             var ruleOne = new Mock<IRule>();
-            ruleOne.Setup(p => p.Execute(file.Object,
-                                         It.IsAny<RuleParameterConfig>())).Returns(new List<Issue>());
-            var issue = new Issue(content, line, column);
+            var ruleParameterConfig = new Mock<IRuleParameterConfig>();
+            ruleOne.Setup(p => p.Execute(file.Object, ruleParameterConfig.Object)).Returns(new List<IIssue>());
+
+            var issue = new Mock<IIssue>();
             var ruleTwo = new Mock<IRule>();
-            ruleTwo.Setup(p => p.Execute(file.Object,
-                                         It.IsAny<RuleParameterConfig>())).Returns(new List<Issue> { issue });
+            ruleTwo.Setup(p => p.Execute(file.Object, ruleParameterConfig.Object)).Returns(new List<IIssue> { issue.Object });
 
             var result = Analyzer.Analyze(file.Object,
                                           new List<IRule> { ruleOne.Object, ruleTwo.Object },
-                                          It.IsAny<RuleParameterConfig>());
+                                          ruleParameterConfig.Object);
 
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(content, result[0].Text);
-            Assert.AreEqual(line, result[0].Line);
-            Assert.AreEqual(column, result[0].Column);
         }
     }
 }

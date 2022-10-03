@@ -47,9 +47,6 @@ namespace Exercise.UnitTests.Rules
             return ruleParamConfig;
         }
 
-        private static File SetupFile(string path)
-        {
-            return new File(path, Array.Empty<string>());
-        }
+        private static File SetupFile(string path) => new(path, Array.Empty<string>());
     }
 }

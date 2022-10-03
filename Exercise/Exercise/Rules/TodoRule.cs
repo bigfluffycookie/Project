@@ -6,16 +6,16 @@
 
         public bool HasParameters => false;
 
-        public List<Issue> Execute(IFile file, RuleParameterConfig ruleParameterConfig)
+        public List<IIssue> Execute(IFile file, IRuleParameterConfig ruleParameterConfig)
         {
             var result = GetTodoLines(file.FileContent);
 
             return result;
         }
 
-        private static List<Issue> GetTodoLines(IReadOnlyList<string> lines)
+        private static List<IIssue> GetTodoLines(IReadOnlyList<string> lines)
         {
-            var result = new List<Issue>();
+            var result = new List<IIssue>();
 
             for (var i = 0; i < lines.Count; i++)
             {

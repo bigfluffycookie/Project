@@ -56,7 +56,7 @@ namespace Exercise.UnitTests.Rules
             var file = SetupFile(new[] { firstLineContent, secondLineContent });
             var rule = new TodoRule();
 
-            var result = rule.Execute(file, new RuleParameterConfig());
+            var result = rule.Execute(file, null);
 
             Assert.AreEqual(0, result.Count);
         }
@@ -71,7 +71,7 @@ namespace Exercise.UnitTests.Rules
             var file = SetupFile(new[] { firstLineContent, secondLineContent });
             var rule = new TodoRule();
 
-            var result = rule.Execute(file, new RuleParameterConfig());
+            var result = rule.Execute(file, null);
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(expectedLine, result[0].Line);
@@ -85,14 +85,11 @@ namespace Exercise.UnitTests.Rules
             var file = SetupFile(new[] { "TODO", "TODO" });
             var rule = new TodoRule();
 
-            var result = rule.Execute(file, new RuleParameterConfig());
+            var result = rule.Execute(file, null);
 
             Assert.AreEqual(2, result.Count);
         }
 
-        private static File SetupFile(string[] lines)
-        {
-            return new File("", lines);
-        }
+        private static File SetupFile(string[] lines) => new("", lines);
     }
 }

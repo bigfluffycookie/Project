@@ -6,6 +6,6 @@
 
         bool HasParameters { get; }
 
-        List<Issue> Execute(IFile file, RuleParameterConfig ruleParameterConfig);
+        List<IIssue> Execute(IFile file, IRuleParameterConfig ruleParameterConfig);
     }
 }

@@ -6,9 +6,9 @@
 
         public bool HasParameters => true;
 
-        public List<Issue> Execute(IFile file, RuleParameterConfig ruleParameterConfig)
+        public List<IIssue> Execute(IFile file, IRuleParameterConfig ruleParameterConfig)
         {
-            var result = new List<Issue>();
+            var result = new List<IIssue>();
 
             var maxAllowedFilePathLength = ruleParameterConfig.GetRuleParam(RuleId);
 

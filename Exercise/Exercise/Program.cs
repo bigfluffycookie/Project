@@ -67,7 +67,7 @@ namespace Exercise
             return rules;
         }
 
-        private static void PrintResult(List<Issue> issues)
+        private static void PrintResult(List<IIssue> issues)
         {
             foreach (var issue in issues)
             {

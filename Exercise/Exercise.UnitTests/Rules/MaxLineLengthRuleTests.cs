@@ -25,7 +25,7 @@ namespace Exercise.UnitTests.Rules
         }
 
         [TestMethod]
-        public void Execute_FileIsEmpty_DontBreakRule_ReturnsNoIssue()
+        public void Execute_FileIsEmpty_ReturnsNoIssue()
         {
             var maxNumberOfLines = 1;
             var ruleParamConfig = SetUpRuleConfig(maxNumberOfLines);

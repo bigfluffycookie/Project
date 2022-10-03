@@ -1,6 +1,6 @@
 ﻿namespace Exercise
 {
-    public class RuleParameterConfig
+    public class RuleParameterConfig : IRuleParameterConfig
     {
         private readonly Dictionary<string, int> ruleIdToParam = new();
 

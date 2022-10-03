@@ -4,9 +4,9 @@ namespace Exercise
 {
     public class Analyzer
     {
-        public static List<Issue> Analyze(IFile file, List<IRule> rules, RuleParameterConfig ruleParameterConfig)
+        public static List<IIssue> Analyze(IFile file, List<IRule> rules, IRuleParameterConfig ruleParameterConfig)
         {
-            var result = new List<Issue>();
+            var result = new List<IIssue>();
 
             foreach (var rule in rules)
             {

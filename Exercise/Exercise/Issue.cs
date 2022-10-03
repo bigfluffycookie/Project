@@ -1,6 +1,6 @@
 ﻿namespace Exercise
 {
-    public class Issue
+    public class Issue : IIssue
     {
         public string Text { get; }
         public int Line { get; }
