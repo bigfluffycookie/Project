@@ -12,10 +12,11 @@ namespace Exercise
             var fileContent = GetFileContent(filePath);
             var file = new File(filePath, fileContent);
 
-            var rules = GetRules();
-            var ruleParameterConfig = InitializeRuleParameterConfig(rules);
+            var rules = GetAvailableRules();
+            var rulesToExecute = GetRulesToExecute(rules);
+            var ruleParameterConfig = InitializeRuleParameterConfig(rulesToExecute);
 
-            var result = Analyzer.Analyze(file, rules, ruleParameterConfig);
+            var result = Analyzer.Analyze(file, rulesToExecute, ruleParameterConfig);
             PrintResult(result);
             Console.Write("Press any key to close App");
             Console.ReadKey();
@@ -55,7 +56,33 @@ namespace Exercise
             return ruleParameterConfig;
         }
 
-        private static List<IRule> GetRules()
+        private static List<IRule> GetRulesToExecute(List<IRule> availableRules)
+        {
+            var rulesToExecute = new List<IRule>();
+            Console.WriteLine("Enter ctrl c to exit input.");
+
+            foreach (var rule in availableRules)
+            {
+                Console.WriteLine("Add rule: " + rule.RuleId + " to analyzer? y for yes, any other key for no");
+
+                var input = Console.ReadLine();
+
+                if (input == null)
+                {
+                    break;
+                }
+
+                if (input == "y")
+                {
+
+                    rulesToExecute.Add(rule);
+                }
+            }
+
+            return rulesToExecute;
+        }
+
+        private static List<IRule> GetAvailableRules()
         {
             var rules = new List<IRule>()
             {
