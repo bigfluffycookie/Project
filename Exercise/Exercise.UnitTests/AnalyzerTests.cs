@@ -1,73 +1,71 @@
-﻿namespace Exercise.UnitTests
+﻿using Exercise.Rules;
+using Moq;
+
+namespace Exercise.UnitTests
 {
     [TestClass]
     public class AnalyzerTests
     {
         [TestMethod]
-        public void Analyze_HasNoLines_ReturnsEmptyList()
+        public void Analyze_NoRules_ReturnsEmptyList()
         {
-            var lines = new string[0];
-            var result = Analyzer.Analyze(lines);
+            var result = Analyzer.Analyze(It.IsAny<File>(),
+                                          new List<IRule>(),
+                                          It.IsAny<RuleParameterConfig>());
+
             Assert.AreEqual(0, result.Count);
         }
 
         [TestMethod]
-        [DataRow("")]
-        [DataRow("Hello :)")]
-        public void Analyze_HasOneLine_NoTodo_ReturnsEmptyList(string content)
+        public void Analyze_OneRule_HasOneIssue_ReturnsOneIssue()
         {
-            var lines = new string[] { content };
-            var result = Analyzer.Analyze(lines);
-            Assert.AreEqual(0, result.Count);
-        }
+            var file = Mock.Of<IFile>();
+            var rule = new Mock<IRule>();
+            var issue = Mock.Of<IIssue>();
+            var ruleParameterConfig = Mock.Of<IRuleParameterConfig>();
+            rule.Setup(p => p.Execute(file, ruleParameterConfig)).Returns(new List<IIssue> { issue });
 
-        [TestMethod]
-        [DataRow("TODO: Hello", 1, 1, "TODO: Hello")]
-        [DataRow("12345TODO: Hello", 1, 6, "TODO: Hello")]
-        public void Analyze_HasOneLine_WithTodo_ReturnsListWithOneLine(string content, int expectedLine,
-                                                                       int expectedColumn, string expectedContent)
-        {
-            var lines = new string[] { content };
-            var result = Analyzer.Analyze(lines);
+            var result = Analyzer.Analyze(file,
+                                          new List<IRule> { rule.Object },
+                                          ruleParameterConfig);
+
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(expectedLine, result[0].Line);
-            Assert.AreEqual(expectedColumn, result[0].Column);
-            Assert.AreEqual(expectedContent, result[0].Text);
+            Assert.AreEqual(issue, result[0]);
         }
 
         [TestMethod]
-        [DataRow("", "")]
-        [DataRow("Hello :)", "")]
-        [DataRow("", "Hello :)")]
-        [DataRow("Hello :)", "Hello :)")]
-        public void Analyze_HasTwoLines_NoTodo_ReturnsEmptyList(string firstLineContent, string secondLineContent)
+        public void Analyze_OneRule_HasNoIssues_ReturnsEmptyList()
         {
-            var lines = new string[] { firstLineContent, secondLineContent };
-            var result = Analyzer.Analyze(lines);
+            var file = Mock.Of<IFile>();
+            var rule = new Mock<IRule>();
+            var ruleParameterConfig = Mock.Of<IRuleParameterConfig>();
+            rule.Setup(p => p.Execute(file, ruleParameterConfig)).Returns(new List<IIssue>());
+
+            var result = Analyzer.Analyze(file,
+                                          new List<IRule> { rule.Object },
+                                          ruleParameterConfig);
+
             Assert.AreEqual(0, result.Count);
         }
 
         [TestMethod]
-        [DataRow("TODO: Hello", "", 1, 1, "TODO: Hello")]
-        [DataRow("", "TODO: Hello", 2, 1, "TODO: Hello")]
-        public void Analyze_HasTwoLines_OneTodo_ReturnsListWithOneLine(string firstLineContent, string secondLineContent, int expectedLine,
-                                                                       int expectedColumn, string expectedContent)
+        public void Analyze_TwoRules_OneRuleHasIssue_ReturnsOneIssue()
         {
-            var lines = new string[] { firstLineContent, secondLineContent };
-            var result = Analyzer.Analyze(lines);
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(expectedLine, result[0].Line);
-            Assert.AreEqual(expectedColumn, result[0].Column);
-            Assert.AreEqual(expectedContent, result[0].Text);
-        }
+            var file = Mock.Of<IFile>();
+            var ruleOne = new Mock<IRule>();
+            var ruleParameterConfig = Mock.Of<IRuleParameterConfig>();
+            ruleOne.Setup(p => p.Execute(file, ruleParameterConfig)).Returns(new List<IIssue>());
 
-        [TestMethod]
-        public void Analyze_HasTwoLines_TwoTodo_ReturnsListWithTwoLines()
-        {
-            var lines = new string[] { "TODO", "TODO" };
-            var result = Analyzer.Analyze(lines);
-            Assert.AreEqual(2, result.Count);
-            Assert.AreEqual("TODO", result[0].Text);
+            var issue = Mock.Of<IIssue>();
+            var ruleTwo = new Mock<IRule>();
+            ruleTwo.Setup(p => p.Execute(file, ruleParameterConfig)).Returns(new List<IIssue> { issue });
+
+            var result = Analyzer.Analyze(file,
+                                          new List<IRule> { ruleOne.Object, ruleTwo.Object },
+                                          ruleParameterConfig);
+
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(issue, result[0]);
         }
     }
 }

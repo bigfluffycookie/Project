@@ -1,10 +1,10 @@
 ﻿namespace Exercise
 {
-    public class Issue
+    public class Issue : IIssue
     {
-        public string Text { get; private set; }
-        public int Line { get; private set; }
-        public int Column { get; private set; }
+        public string Text { get; }
+        public int Line { get; }
+        public int Column { get; }
 
         public Issue(string text, int line, int column)
         {
