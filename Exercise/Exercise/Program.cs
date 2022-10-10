@@ -60,11 +60,13 @@ namespace Exercise
         {
             var rulesToExecute = new List<IRule>();
             Console.WriteLine("Enter ctrl c to exit input.");
+
             foreach (var rule in availableRules)
             {
                 Console.WriteLine("Add rule: " + rule.RuleId + " to analyzer? y for yes, any other key for no");
 
                 var input = Console.ReadLine();
+
                 if (input == null)
                 {
                     break;
