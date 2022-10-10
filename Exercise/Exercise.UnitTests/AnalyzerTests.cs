@@ -19,30 +19,31 @@ namespace Exercise.UnitTests
         [TestMethod]
         public void Analyze_OneRule_HasOneIssue_ReturnsOneIssue()
         {
-            var file = new Mock<IFile>();
+            var file = Mock.Of<IFile>();
             var rule = new Mock<IRule>();
-            var issue = new Mock<IIssue>();
-            var ruleParameterConfig = new Mock<IRuleParameterConfig>();
-            rule.Setup(p => p.Execute(file.Object, ruleParameterConfig.Object)).Returns(new List<IIssue> { issue.Object });
+            var issue = Mock.Of<IIssue>();
+            var ruleParameterConfig = Mock.Of<IRuleParameterConfig>();
+            rule.Setup(p => p.Execute(file, ruleParameterConfig)).Returns(new List<IIssue> { issue });
 
-            var result = Analyzer.Analyze(file.Object,
+            var result = Analyzer.Analyze(file,
                                           new List<IRule> { rule.Object },
-                                          ruleParameterConfig.Object);
+                                          ruleParameterConfig);
 
             Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(issue, result[0]);
         }
 
         [TestMethod]
         public void Analyze_OneRule_HasNoIssues_ReturnsEmptyList()
         {
-            var file = new Mock<IFile>();
+            var file = Mock.Of<IFile>();
             var rule = new Mock<IRule>();
-            var ruleParameterConfig = new Mock<IRuleParameterConfig>();
-            rule.Setup(p => p.Execute(file.Object, ruleParameterConfig.Object)).Returns(new List<IIssue>());
+            var ruleParameterConfig = Mock.Of<IRuleParameterConfig>();
+            rule.Setup(p => p.Execute(file, ruleParameterConfig)).Returns(new List<IIssue>());
 
-            var result = Analyzer.Analyze(file.Object,
+            var result = Analyzer.Analyze(file,
                                           new List<IRule> { rule.Object },
-                                          ruleParameterConfig.Object);
+                                          ruleParameterConfig);
 
             Assert.AreEqual(0, result.Count);
         }
@@ -50,20 +51,21 @@ namespace Exercise.UnitTests
         [TestMethod]
         public void Analyze_TwoRules_OneRuleHasIssue_ReturnsOneIssue()
         {
-            var file = new Mock<IFile>();
+            var file = Mock.Of<IFile>();
             var ruleOne = new Mock<IRule>();
-            var ruleParameterConfig = new Mock<IRuleParameterConfig>();
-            ruleOne.Setup(p => p.Execute(file.Object, ruleParameterConfig.Object)).Returns(new List<IIssue>());
+            var ruleParameterConfig = Mock.Of<IRuleParameterConfig>();
+            ruleOne.Setup(p => p.Execute(file, ruleParameterConfig)).Returns(new List<IIssue>());
 
-            var issue = new Mock<IIssue>();
+            var issue = Mock.Of<IIssue>();
             var ruleTwo = new Mock<IRule>();
-            ruleTwo.Setup(p => p.Execute(file.Object, ruleParameterConfig.Object)).Returns(new List<IIssue> { issue.Object });
+            ruleTwo.Setup(p => p.Execute(file, ruleParameterConfig)).Returns(new List<IIssue> { issue });
 
-            var result = Analyzer.Analyze(file.Object,
+            var result = Analyzer.Analyze(file,
                                           new List<IRule> { ruleOne.Object, ruleTwo.Object },
-                                          ruleParameterConfig.Object);
+                                          ruleParameterConfig);
 
             Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(issue, result[0]);
         }
     }
 }
