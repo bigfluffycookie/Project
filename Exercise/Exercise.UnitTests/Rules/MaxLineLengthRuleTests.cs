@@ -1,4 +1,5 @@
 ﻿using Exercise.Rules;
+using Moq;
 
 namespace Exercise.UnitTests.Rules
 {
@@ -49,21 +50,22 @@ namespace Exercise.UnitTests.Rules
             Assert.AreEqual(0, result.Count);
         }
 
-        private static RuleParameterConfig SetUpRuleConfig(int maxNumberOfLines)
+        private static IRuleParameterConfig SetUpRuleConfig(int maxNumberOfLines)
         {
-            var ruleParamConfig = new RuleParameterConfig();
-            ruleParamConfig.AddRuleParam("maxLineLength", maxNumberOfLines);
+            var ruleParamConfig = new Mock<IRuleParameterConfig>();
+            ruleParamConfig.Setup(p => p.GetRuleParam("maxLineLength")).Returns(maxNumberOfLines);
 
-            return ruleParamConfig;
+            return ruleParamConfig.Object;
         }
 
-        private static File SetupFile(int numberOfLines)
+        private static IFile SetupFile(int numberOfLines)
         {
             var lines = new string[numberOfLines];
             Array.Fill(lines, "");
-            var file = new File("", lines);
+            var file = new Mock<IFile>();
+            file.Setup(p => p.FileContent).Returns(lines);
 
-            return file;
+            return file.Object;
         }
     }
 }

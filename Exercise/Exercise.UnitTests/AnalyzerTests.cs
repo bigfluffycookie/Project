@@ -20,8 +20,8 @@ namespace Exercise.UnitTests
         public void Analyze_OneRule_HasOneIssue_ReturnsOneIssue()
         {
             var file = Mock.Of<IFile>();
-            var rule = new Mock<IRule>();
             var issue = Mock.Of<IIssue>();
+            var rule = new Mock<IRule>();
             var ruleParameterConfig = Mock.Of<IRuleParameterConfig>();
             rule.Setup(p => p.Execute(file, ruleParameterConfig)).Returns(new List<IIssue> { issue });
 
@@ -37,8 +37,8 @@ namespace Exercise.UnitTests
         public void Analyze_OneRule_HasNoIssues_ReturnsEmptyList()
         {
             var file = Mock.Of<IFile>();
-            var rule = new Mock<IRule>();
             var ruleParameterConfig = Mock.Of<IRuleParameterConfig>();
+            var rule = new Mock<IRule>();
             rule.Setup(p => p.Execute(file, ruleParameterConfig)).Returns(new List<IIssue>());
 
             var result = Analyzer.Analyze(file,
@@ -52,8 +52,8 @@ namespace Exercise.UnitTests
         public void Analyze_TwoRules_OneRuleHasIssue_ReturnsOneIssue()
         {
             var file = Mock.Of<IFile>();
-            var ruleOne = new Mock<IRule>();
             var ruleParameterConfig = Mock.Of<IRuleParameterConfig>();
+            var ruleOne = new Mock<IRule>();
             ruleOne.Setup(p => p.Execute(file, ruleParameterConfig)).Returns(new List<IIssue>());
 
             var issue = Mock.Of<IIssue>();
