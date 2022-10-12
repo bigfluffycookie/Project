@@ -1,47 +1,64 @@
-namespace Exercise.UnitTests
+using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
+
+namespace Exercise.UnitTests;
+
+[TestClass]
+public class InputValidatorTests
 {
-    [TestClass]
-    public class InputValidatorTests
+    [TestMethod]
+    public void FileHasCorrectExtension_WrongExtension_ReturnsFalse()
     {
-        [TestMethod]
-        public void FileHasCorrectExtension_WrongExtension_ReturnsFalse()
-        {
-            var filePath = "Test.txt";
+        var filePath = "Test.txt";
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+        var inputValidator = InitializeInputValidator(fileSystem);
 
-            var hasCorrectExtension = InputValidator.FileHasCorrectExtension(filePath, ".exr");
+        var hasCorrectExtension = inputValidator.FileHasCorrectExtension(filePath, ".exr");
 
-            Assert.IsFalse(hasCorrectExtension);
-        }
-
-        [TestMethod]
-        public void FileHasCorrectExtension_CorrectExtension_ReturnsTrue()
-        {
-            var filePath =  "Test.txt";
-
-            var hasCorrectExtension = InputValidator.FileHasCorrectExtension(filePath, ".txt");
-
-            Assert.IsTrue(hasCorrectExtension);
-        }
-
-        [TestMethod]
-        public void FileExists_EmptyPath_ReturnsFalse()
-        {
-            var filePath = "";
-
-            var isValidTextFile = InputValidator.FileExists(filePath);
-
-            Assert.IsFalse(isValidTextFile);
-        }
-
-        [TestMethod]
-        public void FileExists_ExistingPath_ReturnsTrue()
-        {
-            var filePath = System.IO.Directory.GetCurrentDirectory() + @"\Test.txt";
-            System.IO.File.Create(filePath);
-
-            var isValidTextFile = InputValidator.FileExists(filePath);
-
-            Assert.IsTrue(isValidTextFile);
-        }
+        Assert.IsFalse(hasCorrectExtension);
     }
+
+    [TestMethod]
+    public void FileHasCorrectExtension_CorrectExtension_ReturnsTrue()
+    {
+        var filePath =  "Test.txt";
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+        var inputValidator = InitializeInputValidator(fileSystem);
+
+        var hasCorrectExtension = inputValidator.FileHasCorrectExtension(filePath, ".txt");
+
+        Assert.IsTrue(hasCorrectExtension);
+    }
+
+    [TestMethod]
+    public void FileExists_FileDoesNotExist_ReturnsFalse()
+    {
+        var path = @"c:\\myfile.txt";
+
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+        var inputValidator = InitializeInputValidator(fileSystem);
+
+        var isValidTextFile = inputValidator.FileExists(path);
+
+        Assert.IsFalse(isValidTextFile);
+    }
+
+    [TestMethod]
+    public void FileExists_ExistingPath_ReturnsTrue()
+    {
+        var path = @"c:\\myfile.txt";
+
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        { 
+                            { path, new MockFileData("Test") }
+        });
+
+        var inputValidator = InitializeInputValidator(fileSystem);
+
+        var isValidTextFile = inputValidator.FileExists(path);
+
+        Assert.IsTrue(isValidTextFile);
+    }
+
+    private InputValidator InitializeInputValidator(IFileSystem fileSystem) => new(fileSystem);
 }

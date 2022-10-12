@@ -1,4 +1,5 @@
-﻿using Exercise.Rules;
+﻿using System.IO.Abstractions;
+using Exercise.Rules;
 
 namespace Exercise
 {
@@ -113,6 +114,7 @@ namespace Exercise
 
         private static string ReadUserInputForFilePath(string fileExtension)
         {
+            var inputValidator = new InputValidator();
             Console.WriteLine("Please Input Text File path to Analyze");
             var filePath = "";
 
@@ -128,7 +130,7 @@ namespace Exercise
                 }
 
                 filePath = input;
-            } while (!InputValidator.IsValidFilePath(filePath, fileExtension));
+            } while (!(inputValidator.FileExists(filePath) && inputValidator.FileHasCorrectExtension(filePath, fileExtension)));
 
             return filePath;
         }
