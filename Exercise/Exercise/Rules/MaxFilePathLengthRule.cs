@@ -9,8 +9,12 @@
         public List<IIssue> Execute(IFile file, IRuleParameterConfig ruleParameterConfig)
         {
             var result = new List<IIssue>();
+            var ruleParam = ruleParameterConfig.GetRuleParam(RuleId);
 
-            var maxAllowedFilePathLength = ruleParameterConfig.GetRuleParam(RuleId);
+            if (!int.TryParse(ruleParam, out var maxAllowedFilePathLength))
+            {
+                throw new Exception("Param for " + RuleId + " is not a valid number");
+            }
 
             if (file.FilePath.Length > maxAllowedFilePathLength)
             {

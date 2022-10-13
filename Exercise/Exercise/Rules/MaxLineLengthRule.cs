@@ -9,7 +9,13 @@
         public List<IIssue> Execute(IFile file, IRuleParameterConfig ruleParameterConfig)
         {
             var result = new List<IIssue>();
-            var maxAllowedLineLength = ruleParameterConfig.GetRuleParam(RuleId);
+            var ruleParam = ruleParameterConfig.GetRuleParam(RuleId);
+
+
+            if (!int.TryParse(ruleParam, out var maxAllowedLineLength))
+            {
+                throw new Exception("Param for " + RuleId + " is not a valid number");
+            }
 
             if (file.FileContent.Length > maxAllowedLineLength)
             {

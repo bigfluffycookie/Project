@@ -1,5 +1,5 @@
-﻿using System.IO.Abstractions;
-using Exercise.Rules;
+﻿using Exercise.Rules;
+using Newtonsoft.Json;
 
 namespace Exercise
 {
@@ -9,18 +9,35 @@ namespace Exercise
         {
             DisplayWelcomeText();
 
-            var filePath = ReadUserInputForFilePath(".txt");
+            var userConfiguration = GetUserConfiguration();
+
+            var filePath = userConfiguration.fileToAnalyze;
             var fileContent = GetFileContent(filePath);
             var file = new File(filePath, fileContent);
 
             var rules = GetAvailableRules();
-            var rulesToExecute = GetRulesToExecute(rules);
-            var ruleParameterConfig = InitializeRuleParameterConfig(rulesToExecute);
+            var rulesToExecute = GetRulesToExecute(rules, userConfiguration);
+            var ruleParameterConfig = InitializeRuleParameterConfig(rulesToExecute, userConfiguration);
 
             var result = Analyzer.Analyze(file, rulesToExecute, ruleParameterConfig);
+
             PrintResult(result);
             Console.Write("Press any key to close App");
             Console.ReadKey();
+        }
+
+        private static UserConfiguration GetUserConfiguration()
+        {
+            var configFilePath = ReadUserInputForFilePath(".json");
+            var configFileContent = System.IO.File.ReadAllText(configFilePath);
+            var userConfiguration = JsonConvert.DeserializeObject<UserConfiguration>(configFileContent);
+
+            if (userConfiguration == null)
+            {
+                throw new Exception("Rule Configuration could not be Serialized");
+            }
+
+            return userConfiguration;
         }
 
         private static string[] GetFileContent(string filePath)
@@ -42,45 +59,23 @@ namespace Exercise
             return fileContent;
         }
 
-        private static RuleParameterConfig InitializeRuleParameterConfig(List<IRule> rules)
+        private static RuleParameterConfig InitializeRuleParameterConfig(List<IRule> rules, UserConfiguration userConfiguration)
         {
             var ruleParameterConfig = new RuleParameterConfig();
+
             var rulesWithParams = rules.Where(rule => rule.HasParameters);
 
             foreach (var rule in rulesWithParams)
             {
-                var ruleId = rule.RuleId;
-                var input = GetInputParams("Input: " + ruleId);
-                ruleParameterConfig.AddRuleParam(ruleId, input);
+                ruleParameterConfig.AddRuleParam(rule.RuleId, userConfiguration.rules[rule.RuleId]);
             }
 
             return ruleParameterConfig;
         }
 
-        private static List<IRule> GetRulesToExecute(List<IRule> availableRules)
+        private static List<IRule> GetRulesToExecute(List<IRule> availableRules, UserConfiguration userConfiguration)
         {
-            var rulesToExecute = new List<IRule>();
-            Console.WriteLine("Enter ctrl c to exit input.");
-
-            foreach (var rule in availableRules)
-            {
-                Console.WriteLine("Add rule: " + rule.RuleId + " to analyzer? y for yes, any other key for no");
-
-                var input = Console.ReadLine();
-
-                if (input == null)
-                {
-                    break;
-                }
-
-                if (input == "y")
-                {
-
-                    rulesToExecute.Add(rule);
-                }
-            }
-
-            return rulesToExecute;
+            return availableRules.Where(rule => userConfiguration.rules.ContainsKey(rule.RuleId)).ToList();
         }
 
         private static List<IRule> GetAvailableRules()
@@ -115,7 +110,7 @@ namespace Exercise
         private static string ReadUserInputForFilePath(string fileExtension)
         {
             var inputValidator = new InputValidator();
-            Console.WriteLine("Please Input Text File path to Analyze");
+            Console.WriteLine("Please Input the file path to the rule configuration file");
             var filePath = "";
 
             do
@@ -133,20 +128,6 @@ namespace Exercise
             } while (!(inputValidator.FileHasCorrectExtension(filePath, fileExtension) && inputValidator.FileExists(filePath)));
 
             return filePath;
-        }
-
-        private static int GetInputParams(string displayText)
-        {
-            Console.WriteLine(displayText);
-            string? input;
-            int number;
-
-            do
-            {
-                input = Console.ReadLine();
-            } while (!int.TryParse(input, out number));
-
-            return number;
         }
     }
 }
