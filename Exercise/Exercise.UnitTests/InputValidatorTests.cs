@@ -1,5 +1,6 @@
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
+using Moq;
 
 namespace Exercise.UnitTests;
 
@@ -9,8 +10,8 @@ public class InputValidatorTests
     [TestMethod]
     public void FileHasCorrectExtension_WrongExtension_ReturnsFalse()
     {
-        var filePath = "Test.txt";
-        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+        const string filePath = "Test.txt";
+        var fileSystem = Mock.Of<IFileSystem>();
         var inputValidator = InitializeInputValidator(fileSystem);
 
         var hasCorrectExtension = inputValidator.FileHasCorrectExtension(filePath, ".exr");
@@ -21,8 +22,8 @@ public class InputValidatorTests
     [TestMethod]
     public void FileHasCorrectExtension_CorrectExtension_ReturnsTrue()
     {
-        var filePath =  "Test.txt";
-        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+        const string filePath = "Test.txt";
+        var fileSystem = Mock.Of<IFileSystem>();
         var inputValidator = InitializeInputValidator(fileSystem);
 
         var hasCorrectExtension = inputValidator.FileHasCorrectExtension(filePath, ".txt");
@@ -33,9 +34,8 @@ public class InputValidatorTests
     [TestMethod]
     public void FileExists_FileDoesNotExist_ReturnsFalse()
     {
-        var path = @"c:\\myfile.txt";
-
-        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+        const string path = @"c:\\myfile.txt";
+        var fileSystem = Mock.Of<IFileSystem>();
         var inputValidator = InitializeInputValidator(fileSystem);
 
         var isValidTextFile = inputValidator.FileExists(path);
@@ -46,14 +46,10 @@ public class InputValidatorTests
     [TestMethod]
     public void FileExists_ExistingPath_ReturnsTrue()
     {
-        var path = @"c:\\myfile.txt";
-
-        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-        { 
-                            { path, new MockFileData("Test") }
-        });
-
-        var inputValidator = InitializeInputValidator(fileSystem);
+        const string path = @"c:\\myfile.txt";
+        var fileSystem = new Mock<IFileSystem>();
+        fileSystem.Setup(p => p.File.Exists(path)).Returns(true);
+        var inputValidator = InitializeInputValidator(fileSystem.Object);
 
         var isValidTextFile = inputValidator.FileExists(path);
 

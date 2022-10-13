@@ -4,11 +4,17 @@ namespace Exercise
 {
     public class InputValidator
     {
-        private IFileSystem fileSystem;
+        private readonly IFileSystem fileSystem;
 
-        public InputValidator(IFileSystem fileSystem) => this.fileSystem = fileSystem;
- 
-        public InputValidator() => this.fileSystem = new FileSystem();
+        public InputValidator(IFileSystem fileSystem)
+        {
+            this.fileSystem = fileSystem;
+        }
+
+        public InputValidator()
+        { 
+            this.fileSystem = new FileSystem();
+        }
 
         public bool FileHasCorrectExtension(string filePath, string fileExtension)
         {
