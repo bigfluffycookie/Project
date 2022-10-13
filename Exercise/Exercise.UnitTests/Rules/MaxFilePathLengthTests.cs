@@ -1,4 +1,5 @@
 ﻿using Exercise.Rules;
+using Moq;
 
 namespace Exercise.UnitTests.Rules
 {
@@ -39,14 +40,20 @@ namespace Exercise.UnitTests.Rules
             Assert.AreEqual(0, result.Count);
         }
 
-        private static RuleParameterConfig SetUpRuleConfig(int maxPathLength)
+        private static IRuleParameterConfig SetUpRuleConfig(int maxPathLength)
         {
-            var ruleParamConfig = new RuleParameterConfig();
-            ruleParamConfig.AddRuleParam("maxPathLength", maxPathLength);
+            var ruleParamConfig = new Mock<IRuleParameterConfig>();
+            ruleParamConfig.Setup(p => p.GetRuleParam("maxPathLength")).Returns(maxPathLength);
 
-            return ruleParamConfig;
+            return ruleParamConfig.Object;
         }
 
-        private static File SetupFile(string path) => new(path, Array.Empty<string>());
+        private static IFile SetupFile(string path)
+        {
+            var file = new Mock<IFile>();
+            file.Setup(p => p.FilePath).Returns(path);
+
+            return file.Object;
+        }
     }
 }

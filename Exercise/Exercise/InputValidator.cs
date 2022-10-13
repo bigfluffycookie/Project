@@ -1,15 +1,24 @@
-﻿namespace Exercise
+﻿using System.IO.Abstractions;
+
+namespace Exercise
 {
     public class InputValidator
     {
-        public static bool IsValidFilePath(string filePath, string fileExtension)
+        private readonly IFileSystem fileSystem;
+
+        public InputValidator(IFileSystem fileSystem)
         {
-            return FileExists(filePath) && FileHasCorrectExtension(filePath, fileExtension);
+            this.fileSystem = fileSystem;
         }
 
-        public static bool FileHasCorrectExtension(string filePath, string fileExtension)
+        public InputValidator()
+        { 
+            this.fileSystem = new FileSystem();
+        }
+
+        public bool FileHasCorrectExtension(string filePath, string fileExtension)
         {
-            if (Path.GetExtension(filePath) == fileExtension)
+            if (fileSystem.Path.GetExtension(filePath) == fileExtension)
             {
                 return true;
             }
@@ -19,9 +28,9 @@
             return false;
         }
 
-        public static bool FileExists(string filePath)
+        public bool FileExists(string filePath)
         {
-            if (System.IO.File.Exists(filePath))
+            if (fileSystem.File.Exists(filePath))
             {
                 return true;
             }
