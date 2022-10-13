@@ -130,7 +130,7 @@ namespace Exercise
                 }
 
                 filePath = input;
-            } while (!(inputValidator.FileExists(filePath) && inputValidator.FileHasCorrectExtension(filePath, fileExtension)));
+            } while (!(inputValidator.FileHasCorrectExtension(filePath, fileExtension) && inputValidator.FileExists(filePath)));
 
             return filePath;
         }
