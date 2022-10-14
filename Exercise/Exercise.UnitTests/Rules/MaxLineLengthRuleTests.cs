@@ -9,7 +9,7 @@ namespace Exercise.UnitTests.Rules
         [TestMethod]
         public void Execute_BreakRule_ReturnsOneIssue()
         {
-            var maxNumberOfLines = "1";
+            var maxNumberOfLines = 1;
             var ruleParamConfig = SetUpRuleConfig(maxNumberOfLines);
             var file = SetupFile(numberOfLines: 2);
             var rule = new MaxLineLengthRule();
@@ -28,7 +28,7 @@ namespace Exercise.UnitTests.Rules
         [TestMethod]
         public void Execute_FileIsEmpty_ReturnsNoIssue()
         {
-            var maxNumberOfLines = "1";
+            var maxNumberOfLines = 1;
             var ruleParamConfig = SetUpRuleConfig(maxNumberOfLines);
             var file = SetupFile(numberOfLines: 0);
             var rule = new MaxLineLengthRule();
@@ -41,7 +41,7 @@ namespace Exercise.UnitTests.Rules
         [TestMethod]
         public void Execute_DontBreakRule_ReturnsNoIssue()
         {
-            var ruleParamConfig = SetUpRuleConfig(maxNumberOfLines: "1");
+            var ruleParamConfig = SetUpRuleConfig(maxNumberOfLines: 1);
             var file = SetupFile(numberOfLines: 1);
             var rule = new MaxLineLengthRule();
 
@@ -50,7 +50,7 @@ namespace Exercise.UnitTests.Rules
             Assert.AreEqual(0, result.Count);
         }
 
-        private static IRuleParameterConfig SetUpRuleConfig(string maxNumberOfLines)
+        private static IRuleParameterConfig SetUpRuleConfig(int maxNumberOfLines)
         {
             var ruleParamConfig = new Mock<IRuleParameterConfig>();
             ruleParamConfig.Setup(p => p.GetRuleParam("maxLineLength")).Returns(maxNumberOfLines);

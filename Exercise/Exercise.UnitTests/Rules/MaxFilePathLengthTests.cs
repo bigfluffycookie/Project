@@ -7,9 +7,9 @@ namespace Exercise.UnitTests.Rules
     public class MaxFilePathLengthTests
     {
         [TestMethod]
-        [DataRow("1", "0")]
-        [DataRow("123", "2")]
-        public void Execute_BreakRule_ReturnsOneIssue(string path, string maxPathLength)
+        [DataRow("1", 0)]
+        [DataRow("123", 2)]
+        public void Execute_BreakRule_ReturnsOneIssue(string path, int maxPathLength)
         {
             var ruleParamConfig = SetUpRuleConfig(maxPathLength);
             var file = SetupFile(path);
@@ -27,9 +27,9 @@ namespace Exercise.UnitTests.Rules
         }
 
         [TestMethod]
-        [DataRow("", "0")]
-        [DataRow("123", "5")]
-        public void Execute_DontBreakRule_ReturnsNoIssue(string path, string maxPathLength)
+        [DataRow("", 0)]
+        [DataRow("123", 5)]
+        public void Execute_DontBreakRule_ReturnsNoIssue(string path, int maxPathLength)
         {
             var ruleParamConfig = SetUpRuleConfig(maxPathLength);
             var file = SetupFile(path);
@@ -40,7 +40,7 @@ namespace Exercise.UnitTests.Rules
             Assert.AreEqual(0, result.Count);
         }
 
-        private static IRuleParameterConfig SetUpRuleConfig(string maxPathLength)
+        private static IRuleParameterConfig SetUpRuleConfig(int maxPathLength)
         {
             var ruleParamConfig = new Mock<IRuleParameterConfig>();
             ruleParamConfig.Setup(p => p.GetRuleParam("maxPathLength")).Returns(maxPathLength);

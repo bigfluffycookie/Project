@@ -2,6 +2,6 @@
 {
     public interface IRuleParameterConfig
     {
-        string GetRuleParam(string key);
+        int GetRuleParam(string key);
     }
 }

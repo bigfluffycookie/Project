@@ -2,9 +2,9 @@
 {
     public class RuleParameterConfig : IRuleParameterConfig
     {
-        private readonly Dictionary<string, string> ruleIdToParam = new();
+        private readonly Dictionary<string, int> ruleIdToParam = new();
 
-        public void AddRuleParam(string key, string value)
+        public void AddRuleParam(string key, int value)
         {
             if (ruleIdToParam.ContainsKey(key))
             {
@@ -14,7 +14,7 @@
             ruleIdToParam.Add(key, value);
         }
 
-        public string GetRuleParam(string key)
+        public int GetRuleParam(string key)
         {
             if (!ruleIdToParam.TryGetValue(key, out var value))
             {

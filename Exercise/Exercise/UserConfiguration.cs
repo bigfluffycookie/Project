@@ -1,4 +1,6 @@
-﻿namespace Exercise
+﻿using Newtonsoft.Json;
+
+namespace Exercise
 {
     /* JSON STYLE
     {
@@ -11,7 +13,9 @@
     [Serializable]
     public class UserConfiguration
     {
+        [JsonProperty("fileToAnalyze")]
         public string fileToAnalyze;
-        public Dictionary<string,string> rules;
+        [JsonProperty("rules")]
+        public Dictionary<string,int> rules;
     }
 }
