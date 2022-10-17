@@ -64,6 +64,7 @@ namespace Exercise
 
         private static string ReadUserInputForFilePath(string fileExtension)
         {
+            Console.WriteLine("Please input path for file to be analyzed");
             var inputValidator = new InputValidator();
             var filePath = "";
 

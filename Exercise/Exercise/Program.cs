@@ -30,6 +30,13 @@ namespace Exercise
         {
             if (args.Length != 0)
             {
+                var inputValidator = new InputValidator();
+
+                if (!inputValidator.FileExists(args[0]))
+                {
+                    throw new Exception("Json File at path: " + args[0] + " was not found.");
+                }
+
                 var inputFromJson = new InputFromJson(args[0]);
 
                 return inputFromJson;
