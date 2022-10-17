@@ -10,8 +10,8 @@ namespace Exercise
     public interface IInput
     {
         string GetPathForFileToAnalyze();
-        List<IRule> RulesToExecute(List<IRule> availableRules);
+        List<IRule> GetRulesToExecute(List<IRule> availableRules);
 
-        IRuleParameterConfig InitializeRuleParmParameterConfig(List<IRule> rules);
+        IRuleParameterConfig GetRuleParmParameterConfig(List<IRule> rules);
     }
 }

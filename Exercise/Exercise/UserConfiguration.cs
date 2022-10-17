@@ -6,7 +6,7 @@ namespace Exercise
     {
         "fileToAnalyze": "<filePath>",
         "rules":{
-            "<ruleID>" : "<ruleParamater>"
+            "<ruleID>" : [<ruleParam>]
         }
     }*/
 

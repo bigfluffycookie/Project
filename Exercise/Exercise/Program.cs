@@ -8,14 +8,16 @@ namespace Exercise
         public static void Main(string[] args)
         {
             DisplayWelcomeText();
-            var input = GetInput();
+
+            var input = GetInput(args);
+
             var filePath = input.GetPathForFileToAnalyze();
             var fileContent = GetFileContent(filePath);
             var file = new File(filePath, fileContent);
 
             var rules = GetAvailableRules();
-            var rulesToExecute = input.RulesToExecute(rules);
-            var ruleParameterConfig = input.InitializeRuleParmParameterConfig(rulesToExecute);
+            var rulesToExecute = input.GetRulesToExecute(rules);
+            var ruleParameterConfig = input.GetRuleParmParameterConfig(rulesToExecute);
 
             var result = Analyzer.Analyze(file, rulesToExecute, ruleParameterConfig);
 
@@ -24,34 +26,16 @@ namespace Exercise
             Console.ReadKey();
         }
 
-        private static IInput GetInput()
+        private static IInput GetInput(string[] args)
         {
-            Console.WriteLine("If you have a predefined rule configuration Json please enter 'j', for manual input enter 'm'");
-            var input = "";
-            do
+            if (args.Length != 0)
             {
-                input = Console.ReadLine();
+                var inputFromJson = new InputFromJson(args[0]);
 
-                if (input == null)
-                {
-                    Console.WriteLine("Exiting Analyzer");
-                    Environment.Exit(0);
-                }
+                return inputFromJson;
+            }
 
-                if (input == "j")
-                {
-                    Console.WriteLine("Enter Path to rule configuration json");
-                    var inputFromJson = new InputFromJson(ReadUserInputForFilePath(".json"));
-
-                    return inputFromJson;
-                }
-                else if (input == "m")
-                {
-                    var inputFromUser = new InputFromUser();
-                    return inputFromUser;
-                }
-
-            } while (true);
+            return new InputFromUser();
         }
 
         private static string[] GetFileContent(string filePath)
@@ -77,9 +61,9 @@ namespace Exercise
         {
             var rules = new List<IRule>()
             {
-                new MaxLineLengthRule(),
-                new MaxFilePathLengthRule(),
-                new TodoRule()
+                                new MaxLineLengthRule(),
+                                new MaxFilePathLengthRule(),
+                                new TodoRule()
             };
 
             return rules;
@@ -100,28 +84,6 @@ namespace Exercise
         private static void DisplayWelcomeText()
         {
             Console.WriteLine("Welcome to the Analyzer");
-        }
-
-        private static string ReadUserInputForFilePath(string fileExtension)
-        {
-            var inputValidator = new InputValidator();
-            var filePath = "";
-
-            do
-            {
-                var input = Console.ReadLine();
-
-                if (input == null)
-                {
-                    Console.WriteLine("Exiting Analyzer");
-
-                    break;
-                }
-
-                filePath = input;
-            } while (!(inputValidator.FileHasCorrectExtension(filePath, fileExtension) && inputValidator.FileExists(filePath)));
-
-            return filePath;
         }
     }
 }

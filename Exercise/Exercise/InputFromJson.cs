@@ -34,12 +34,12 @@ namespace Exercise
             return userConfiguration.fileToAnalyze;
         }
 
-        public List<IRule> RulesToExecute(List<IRule> availableRules)
+        public List<IRule> GetRulesToExecute(List<IRule> availableRules)
         {
             return availableRules.Where(rule => userConfiguration.rules.ContainsKey(rule.RuleId)).ToList();
         }
 
-        public IRuleParameterConfig InitializeRuleParmParameterConfig(List<IRule> rules)
+        public IRuleParameterConfig GetRuleParmParameterConfig(List<IRule> rules)
         {
             var ruleParameterConfig = new RuleParameterConfig();
 

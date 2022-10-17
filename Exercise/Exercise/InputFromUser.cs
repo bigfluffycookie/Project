@@ -5,29 +5,9 @@ namespace Exercise
 {
     internal class InputFromUser : IInput
     {
-        public string GetPathForFileToAnalyze()
-        {
-            var inputValidator = new InputValidator();
-            var filePath = "";
-            Console.WriteLine("Please enter the path for the file to analyze");
-            do
-            {
-                var input = Console.ReadLine();
+        public string GetPathForFileToAnalyze() => ReadUserInputForFilePath(".txt");
 
-                if (input == null)
-                {
-                    Console.WriteLine("Exiting Analyzer");
-
-                    break;
-                }
-
-                filePath = input;
-            } while (!(inputValidator.FileHasCorrectExtension(filePath, ".txt") && inputValidator.FileExists(filePath)));
-
-            return filePath;
-        }
-
-        public List<IRule> RulesToExecute(List<IRule> availableRules)
+        public List<IRule> GetRulesToExecute(List<IRule> availableRules)
         {
             var rulesToExecute = new List<IRule>();
             Console.WriteLine("Enter ctrl c to exit input.");
@@ -53,7 +33,7 @@ namespace Exercise
             return rulesToExecute;
         }
 
-        public IRuleParameterConfig InitializeRuleParmParameterConfig(List<IRule> rules)
+        public IRuleParameterConfig GetRuleParmParameterConfig(List<IRule> rules)
         {
             var ruleParameterConfig = new RuleParameterConfig();
             var rulesWithParams = rules.Where(rule => rule.HasParameters);
@@ -80,6 +60,29 @@ namespace Exercise
             } while (!int.TryParse(input, out number));
 
             return number;
+        }
+
+        private static string ReadUserInputForFilePath(string fileExtension)
+        {
+            var inputValidator = new InputValidator();
+            var filePath = "";
+
+            do
+            {
+                var input = Console.ReadLine();
+
+                if (input == null)
+                {
+                    Console.WriteLine("Exiting Analyzer");
+
+                    break;
+                }
+
+                filePath = input;
+            } while (!(inputValidator.FileHasCorrectExtension(filePath, fileExtension) &&
+                       inputValidator.FileExists(filePath)));
+
+            return filePath;
         }
     }
 }
