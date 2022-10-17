@@ -8,16 +8,14 @@ namespace Exercise
         public static void Main(string[] args)
         {
             DisplayWelcomeText();
-
-            var userConfiguration = GetUserConfiguration();
-
-            var filePath = userConfiguration.fileToAnalyze;
+            var input = GetInput();
+            var filePath = input.GetPathForFileToAnalyze();
             var fileContent = GetFileContent(filePath);
             var file = new File(filePath, fileContent);
 
             var rules = GetAvailableRules();
-            var rulesToExecute = GetRulesToExecute(rules, userConfiguration);
-            var ruleParameterConfig = InitializeRuleParameterConfig(rulesToExecute, userConfiguration);
+            var rulesToExecute = input.RulesToExecute(rules);
+            var ruleParameterConfig = input.InitializeRuleParmParameterConfig(rulesToExecute);
 
             var result = Analyzer.Analyze(file, rulesToExecute, ruleParameterConfig);
 
@@ -26,18 +24,34 @@ namespace Exercise
             Console.ReadKey();
         }
 
-        private static UserConfiguration GetUserConfiguration()
+        private static IInput GetInput()
         {
-            var configFilePath = ReadUserInputForFilePath(".json");
-            var configFileContent = System.IO.File.ReadAllText(configFilePath);
-            var userConfiguration = JsonConvert.DeserializeObject<UserConfiguration>(configFileContent);
-
-            if (userConfiguration == null)
+            Console.WriteLine("If you have a predefined rule configuration Json please enter 'j', for manual input enter 'm'");
+            var input = "";
+            do
             {
-                throw new Exception("Rule Configuration could not be Serialized");
-            }
+                input = Console.ReadLine();
 
-            return userConfiguration;
+                if (input == null)
+                {
+                    Console.WriteLine("Exiting Analyzer");
+                    Environment.Exit(0);
+                }
+
+                if (input == "j")
+                {
+                    Console.WriteLine("Enter Path to rule configuration json");
+                    var inputFromJson = new InputFromJson(ReadUserInputForFilePath(".json"));
+
+                    return inputFromJson;
+                }
+                else if (input == "m")
+                {
+                    var inputFromUser = new InputFromUser();
+                    return inputFromUser;
+                }
+
+            } while (true);
         }
 
         private static string[] GetFileContent(string filePath)
@@ -57,25 +71,6 @@ namespace Exercise
             }
 
             return fileContent;
-        }
-
-        private static RuleParameterConfig InitializeRuleParameterConfig(List<IRule> rules, UserConfiguration userConfiguration)
-        {
-            var ruleParameterConfig = new RuleParameterConfig();
-
-            var rulesWithParams = rules.Where(rule => rule.HasParameters);
-
-            foreach (var rule in rulesWithParams)
-            {
-                ruleParameterConfig.AddRuleParam(rule.RuleId, userConfiguration.rules[rule.RuleId]);
-            }
-
-            return ruleParameterConfig;
-        }
-
-        private static List<IRule> GetRulesToExecute(List<IRule> availableRules, UserConfiguration userConfiguration)
-        {
-            return availableRules.Where(rule => userConfiguration.rules.ContainsKey(rule.RuleId)).ToList();
         }
 
         private static List<IRule> GetAvailableRules()
@@ -110,7 +105,6 @@ namespace Exercise
         private static string ReadUserInputForFilePath(string fileExtension)
         {
             var inputValidator = new InputValidator();
-            Console.WriteLine("Please Input the file path to the rule configuration file");
             var filePath = "";
 
             do

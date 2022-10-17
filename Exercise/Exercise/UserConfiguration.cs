@@ -16,6 +16,6 @@ namespace Exercise
         [JsonProperty("fileToAnalyze")]
         public string fileToAnalyze;
         [JsonProperty("rules")]
-        public Dictionary<string,int> rules;
+        public Dictionary<string, int[]> rules;
     }
 }
