@@ -9,7 +9,6 @@
         public List<IIssue> Execute(IFile file, IRuleParameterConfig ruleParameterConfig)
         {
             var result = new List<IIssue>();
-
             var maxAllowedFilePathLength = ruleParameterConfig.GetRuleParam(RuleId);
 
             if (file.FilePath.Length > maxAllowedFilePathLength)
