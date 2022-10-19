@@ -6,7 +6,7 @@
 
         public bool HasParameters => false;
 
-        public List<IIssue> Execute(IFile file, IRuleParameterConfig ruleParameterConfig)
+        public List<IIssue> Execute(IFile file, IRuleConfig ruleConfig)
         {
             var result = GetTodoLines(file.FileContent);
 

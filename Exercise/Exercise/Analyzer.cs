@@ -4,14 +4,19 @@ namespace Exercise
 {
     public class Analyzer
     {
-        public static List<IIssue> Analyze(IFile file, List<IRule> rules, IRuleParameterConfig ruleParameterConfig)
+        public static List<IIssue> Analyze(IFile file, List<IRule> rules, IConfigProvider configProvider)
         {
             var result = new List<IIssue>();
 
             foreach (var rule in rules)
             {
-                var resultFromRule = rule.Execute(file, ruleParameterConfig);
-                result.AddRange(resultFromRule);
+                var ruleConfig = configProvider.GetConfiguration().Rules.FirstOrDefault(x => x.RuleId == rule.RuleId);
+
+                if(ruleConfig != null)
+                {
+                    var resultFromRule = rule.Execute(file, ruleConfig);
+                    result.AddRange(resultFromRule);
+                }
             }
 
             return result;
