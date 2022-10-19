@@ -25,7 +25,7 @@ namespace Exercise
 
             if (userConfiguration == null)
             {
-                throw new Exception("Rule Configuration could not be Serialized");
+                throw new Exception("Rule Configuration could not be Deserialized");
             }
         }
 
