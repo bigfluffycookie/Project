@@ -1,5 +1,4 @@
 ﻿using Exercise.Rules;
-using Newtonsoft.Json;
 
 namespace Exercise
 {
@@ -9,24 +8,23 @@ namespace Exercise
         {
             DisplayWelcomeText();
 
-            var input = GetInput(args);
+            var rules = GetAvailableRules();
+            var configProvider = GetConfigProvider(args, rules);
+            var config = configProvider.GetConfiguration();
 
-            var filePath = input.GetPathForFileToAnalyze();
+            var filePath = config.FileToAnalyze;
             var fileContent = GetFileContent(filePath);
             var file = new File(filePath, fileContent);
 
-            var rules = GetAvailableRules();
-            var rulesToExecute = input.GetRulesToExecute(rules);
-            var ruleParameterConfig = input.GetRuleParmParameterConfig(rulesToExecute);
-
-            var result = Analyzer.Analyze(file, rulesToExecute, ruleParameterConfig);
+            var adapter = new ConfigToRuleParameterConfigAdapter(config);
+            var result = Analyzer.Analyze(file, rules, adapter);
 
             PrintResult(result);
             Console.Write("Press any key to close App");
             Console.ReadKey();
         }
 
-        private static IInput GetInput(string[] args)
+        private static IConfigProvider GetConfigProvider(string[] args, List<IRule> availableRules)
         {
             if (args.Length != 0)
             {
@@ -37,12 +35,12 @@ namespace Exercise
                     throw new Exception("Json File at path: " + args[0] + " was not found.");
                 }
 
-                var inputFromJson = new InputFromJson(args[0]);
+                var inputFromJson = new ConfigProviderJson(args[0], availableRules);
 
                 return inputFromJson;
             }
 
-            return new InputFromUser();
+            return new ConfigProviderUser(availableRules);
         }
 
         private static string[] GetFileContent(string filePath)
