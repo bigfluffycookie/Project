@@ -1,4 +1,5 @@
 ﻿using Exercise.Rules;
+using Moq;
 
 namespace Exercise.UnitTests.Rules
 {
@@ -10,8 +11,9 @@ namespace Exercise.UnitTests.Rules
         {
             var file = SetupFile(Array.Empty<string>());
             var rule = new TodoRule();
+            var ruleConfig = Mock.Of<IRuleConfig>();
 
-            var result = rule.Execute(file, new RuleParameterConfig());
+            var result = rule.Execute(file, ruleConfig);
 
             Assert.AreEqual(0, result.Count);
         }
@@ -23,8 +25,9 @@ namespace Exercise.UnitTests.Rules
         {
             var file = SetupFile(new[] { content });
             var rule = new TodoRule();
+            var ruleConfig = Mock.Of<IRuleConfig>();
 
-            var result = rule.Execute(file, new RuleParameterConfig());
+            var result = rule.Execute(file, ruleConfig);
 
             Assert.AreEqual(0, result.Count);
         }
@@ -37,8 +40,9 @@ namespace Exercise.UnitTests.Rules
         {
             var file = SetupFile(new[] { content });
             var rule = new TodoRule();
+            var ruleConfig = Mock.Of<IRuleConfig>();
 
-            var result = rule.Execute(file, new RuleParameterConfig());
+            var result = rule.Execute(file, ruleConfig);
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(expectedLine, result[0].Line);
@@ -55,8 +59,9 @@ namespace Exercise.UnitTests.Rules
         {
             var file = SetupFile(new[] { firstLineContent, secondLineContent });
             var rule = new TodoRule();
+            var ruleConfig = Mock.Of<IRuleConfig>();
 
-            var result = rule.Execute(file, null);
+            var result = rule.Execute(file, ruleConfig);
 
             Assert.AreEqual(0, result.Count);
         }
@@ -70,8 +75,9 @@ namespace Exercise.UnitTests.Rules
         {
             var file = SetupFile(new[] { firstLineContent, secondLineContent });
             var rule = new TodoRule();
+            var ruleConfig = Mock.Of<IRuleConfig>();
 
-            var result = rule.Execute(file, null);
+            var result = rule.Execute(file, ruleConfig);
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(expectedLine, result[0].Line);
@@ -84,8 +90,9 @@ namespace Exercise.UnitTests.Rules
         {
             var file = SetupFile(new[] { "TODO", "TODO" });
             var rule = new TodoRule();
+            var ruleConfig = Mock.Of<IRuleConfig>();
 
-            var result = rule.Execute(file, null);
+            var result = rule.Execute(file, ruleConfig);
 
             Assert.AreEqual(2, result.Count);
         }

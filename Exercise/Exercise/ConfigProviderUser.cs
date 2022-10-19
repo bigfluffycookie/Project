@@ -42,16 +42,16 @@ namespace Exercise
 
                 if (input != "y") continue;
 
-                RuleConfigUser ruleConfig;
+                RuleConfig ruleConfig;
 
                 if (rule.HasParameters)
                 {
                     var ruleParam = GetInputParams("Input rule param");
-                    ruleConfig = new RuleConfigUser(rule.RuleId, ruleParam);
+                    ruleConfig = new RuleConfig(rule.RuleId, ruleParam);
                 }
                 else
                 {
-                    ruleConfig = new RuleConfigUser(rule.RuleId);
+                    ruleConfig = new RuleConfig(rule.RuleId);
                 }
 
                 ruleConfigs.Add(ruleConfig);
@@ -110,22 +110,5 @@ namespace Exercise
         public string FileToAnalyze { get; }
 
         public IEnumerable<IRuleConfig> Rules { get; }
-    }
-
-    public class RuleConfigUser : IRuleConfig
-    {
-        public RuleConfigUser(string ruleId)
-        {
-            this.RuleId = ruleId;
-        }
-
-        public RuleConfigUser(string ruleId, int param)
-        {
-            this.RuleId = ruleId;
-            this.RuleParam = param;
-        }
-
-        public string RuleId { get; }
-        public int RuleParam { get; }
     }
 }

@@ -34,8 +34,8 @@ namespace Exercise
             foreach (var rule in rulesToExecute)
             {
                 var ruleConfigJson = rule.HasParameters
-                                     ? new RuleConfigJson(rule.RuleId,userConfiguration.rules[rule.RuleId][0])
-                                     : new RuleConfigJson(rule.RuleId);
+                                     ? new RuleConfig(rule.RuleId,userConfiguration.rules[rule.RuleId][0])
+                                     : new RuleConfig(rule.RuleId);
                 ruleConfigs.Add(ruleConfigJson);
             }
 
@@ -59,22 +59,5 @@ namespace Exercise
         public string FileToAnalyze { get; }
 
         public IEnumerable<IRuleConfig> Rules { get; }
-    }
-
-    public class RuleConfigJson : IRuleConfig
-    {
-        public RuleConfigJson(string ruleId)
-        {
-            this.RuleId = ruleId;
-        }
-
-        public RuleConfigJson(string ruleId, int param)
-        {
-            this.RuleId = ruleId;
-            this.RuleParam = param;
-        }
-
-        public string RuleId { get; }
-        public int RuleParam { get; }
     }
 }

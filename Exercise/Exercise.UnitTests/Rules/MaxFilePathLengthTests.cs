@@ -40,12 +40,12 @@ namespace Exercise.UnitTests.Rules
             Assert.AreEqual(0, result.Count);
         }
 
-        private static IRuleParameterConfig SetUpRuleConfig(int maxPathLength)
+        private static IRuleConfig SetUpRuleConfig(int maxPathLength)
         {
-            var ruleParamConfig = new Mock<IRuleParameterConfig>();
-            ruleParamConfig.Setup(p => p.GetRuleParam("maxPathLength")).Returns(maxPathLength);
+            var ruleConfig = new Mock<IRuleConfig>();
+            ruleConfig.Setup(p => p.RuleParam).Returns(maxPathLength);
 
-            return ruleParamConfig.Object;
+            return ruleConfig.Object;
         }
 
         private static IFile SetupFile(string path)

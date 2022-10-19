@@ -18,4 +18,21 @@
     {
         IConfiguration GetConfiguration();
     }
+
+    public class RuleConfig: IRuleConfig
+    {
+        public RuleConfig(string ruleId)
+        {
+            this.RuleId = ruleId;
+        }
+
+        public RuleConfig(string ruleId, int param)
+        {
+            this.RuleId = ruleId;
+            this.RuleParam = param;
+        }
+
+        public string RuleId { get; }
+        public int RuleParam { get; }
+    }
 }

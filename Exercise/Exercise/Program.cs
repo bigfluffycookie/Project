@@ -15,7 +15,7 @@ namespace Exercise
             var fileContent = GetFileContent(filePath);
             var file = new File(filePath, fileContent);
             
-            var result = Analyzer.Analyze(file, rules, configProvider);
+            var result = Analyzer.Analyze(file, rules, configProvider.GetConfiguration());
 
             PrintResult(result);
             Console.Write("Press any key to close App");
