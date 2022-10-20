@@ -11,7 +11,13 @@ public class ConfigProviderJsonTests
     public void GetConfiguration_JsonWithOneRule_ReturnsConfigWithOneRule()
     {
         var path = "path.json";
-        var fileContent = "{\r\n  \"fileToAnalyze\": \"path\",\r\n  \"rules\":{\r\n      \"ruleID\" : [0]\r\n   }\r\n}";
+        var fileContent = @"{
+             'fileToAnalyze': 'path',
+             'rules' : {
+                'ruleID' : [0]
+             }
+        }";
+
         var fileSystem = new Mock<IFileSystem>();
         fileSystem.Setup(p => p.File.ReadAllText(path)).Returns(fileContent);
 
@@ -28,7 +34,11 @@ public class ConfigProviderJsonTests
     public void GetConfiguration_JsonWithNoRule_ReturnsConfigWithNoRules()
     {
         var path = "path.json";
-        var fileContent = "{\r\n  \"fileToAnalyze\": \"path\",\r\n  \"rules\":{\r\n   }\r\n}";
+        var fileContent = @"{
+             'fileToAnalyze': 'path',
+             'rules' : {}
+        }";
+
         var fileSystem = new Mock<IFileSystem>();
         fileSystem.Setup(p => p.File.ReadAllText(path)).Returns(fileContent);
 
