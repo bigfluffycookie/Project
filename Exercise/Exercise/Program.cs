@@ -10,12 +10,12 @@ namespace Exercise
 
             var rules = GetAvailableRules();
             var configProvider = GetConfigProvider(args, rules);
-
-            var filePath = configProvider.GetConfiguration().FileToAnalyze;
+            var configuration = configProvider.GetConfiguration();
+            var filePath = configuration.FileToAnalyze;
             var fileContent = GetFileContent(filePath);
             var file = new File(filePath, fileContent);
             
-            var result = Analyzer.Analyze(file, rules, configProvider.GetConfiguration());
+            var result = Analyzer.Analyze(file, rules, configuration);
 
             PrintResult(result);
             Console.Write("Press any key to close App");
