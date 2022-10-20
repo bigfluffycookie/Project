@@ -18,10 +18,9 @@ public class ConfigProviderJsonTests
              }
         }";
 
-        var fileSystem = new Mock<IFileSystem>();
-        fileSystem.Setup(p => p.File.ReadAllText(path)).Returns(fileContent);
+        var fileSystem = CreateFileSystemWithFile(path, fileContent);
 
-        var configProvider = new ConfigProviderJson(fileSystem.Object, path);
+        var configProvider = new ConfigProviderJson(fileSystem, path);
         var config = configProvider.GetConfiguration();
 
         Assert.AreEqual(1, config.Rules.Count());
@@ -39,10 +38,9 @@ public class ConfigProviderJsonTests
              'rules' : {}
         }";
 
-        var fileSystem = new Mock<IFileSystem>();
-        fileSystem.Setup(p => p.File.ReadAllText(path)).Returns(fileContent);
+        var fileSystem = CreateFileSystemWithFile(path, fileContent);
 
-        var configProvider = new ConfigProviderJson(fileSystem.Object, path);
+        var configProvider = new ConfigProviderJson(fileSystem, path);
         var config = configProvider.GetConfiguration();
 
         Assert.AreEqual(0, config.Rules.Count());
@@ -53,9 +51,16 @@ public class ConfigProviderJsonTests
     {
         var path = "path.json";
         var fileContent = "{}}";
+        var fileSystem = CreateFileSystemWithFile(path, fileContent);
+
+        Assert.ThrowsException<Exception>(() => new ConfigProviderJson(fileSystem, path));
+    }
+
+    private static IFileSystem CreateFileSystemWithFile(string path, string fileContent)
+    {
         var fileSystem = new Mock<IFileSystem>();
         fileSystem.Setup(p => p.File.ReadAllText(path)).Returns(fileContent);
 
-        Assert.ThrowsException<Exception>(() => new ConfigProviderJson(fileSystem.Object, path));
+        return fileSystem.Object;
     }
 }
