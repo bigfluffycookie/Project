@@ -19,6 +19,19 @@
         IConfiguration GetConfiguration();
     }
 
+    public class Configuration : IConfiguration
+    {
+        public Configuration(string fileToAnalyze, IEnumerable<IRuleConfig> rules)
+        {
+            this.FileToAnalyze = fileToAnalyze;
+            this.Rules = rules;
+        }
+
+        public string FileToAnalyze { get; }
+
+        public IEnumerable<IRuleConfig> Rules { get; }
+    }
+
     public class RuleConfig: IRuleConfig
     {
         public RuleConfig(string ruleId)

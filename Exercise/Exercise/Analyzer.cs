@@ -4,7 +4,7 @@ namespace Exercise
 {
     public class Analyzer
     {
-        public static List<IIssue> Analyze(IFile file, List<IRule> rules, IConfiguration configuration)
+        public static List<IIssue> Analyze(IFile file, IEnumerable<IRule> rules, IConfiguration configuration)
         {
             var result = new List<IIssue>();
 

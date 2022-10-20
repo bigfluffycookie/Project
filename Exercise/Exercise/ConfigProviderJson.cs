@@ -5,9 +5,9 @@ namespace Exercise
 {
     internal class ConfigProviderJson : IConfigProvider
     {
-        private ConfigurationJson configuration;
+        private Configuration configuration;
 
-        public ConfigProviderJson(string filePath, List<IRule> availableRules)
+        public ConfigProviderJson(string filePath, IEnumerable<IRule> availableRules)
         {
             var userConfiguration = CreateUserConfiguration(filePath);
             InitializeConfig(userConfiguration, availableRules);
@@ -26,7 +26,7 @@ namespace Exercise
             return userConfiguration;
         }
 
-        private void InitializeConfig(UserConfiguration userConfiguration, List<IRule> availableRules)
+        private void InitializeConfig(UserConfiguration userConfiguration, IEnumerable<IRule> availableRules)
         {
             var ruleConfigs = new List<IRuleConfig>();
             var rulesToExecute = availableRules.Where(rule => userConfiguration.rules.ContainsKey(rule.RuleId)).ToList();
@@ -39,25 +39,12 @@ namespace Exercise
                 ruleConfigs.Add(ruleConfigJson);
             }
 
-            configuration = new ConfigurationJson(userConfiguration.fileToAnalyze,ruleConfigs);
+            configuration = new Configuration(userConfiguration.fileToAnalyze,ruleConfigs);
         }
 
         public IConfiguration GetConfiguration()
         {
             return configuration;
         }
-    }
-
-    public class ConfigurationJson : IConfiguration
-    {
-        public ConfigurationJson(string fileToAnalyze, IEnumerable<IRuleConfig> rules)
-        {
-            this.FileToAnalyze = fileToAnalyze;
-            this.Rules = rules;
-        }
-
-        public string FileToAnalyze { get; }
-
-        public IEnumerable<IRuleConfig> Rules { get; }
     }
 }

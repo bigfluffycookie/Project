@@ -4,7 +4,7 @@ namespace Exercise
 {
     internal class ConfigProviderUser : IConfigProvider
     {
-        private IConfiguration configuration;
+        private Configuration configuration;
 
         public ConfigProviderUser(IEnumerable<IRule> rules)
         {
@@ -20,7 +20,7 @@ namespace Exercise
             var fileToAnalyze = ReadUserInputForFilePath(".txt");
             var ruleConfigs = CreateRuleConfigsWithUserInput(availableRules);
 
-            configuration = new ConfigurationUser(fileToAnalyze, ruleConfigs);
+            configuration = new Configuration(fileToAnalyze, ruleConfigs);
         }
 
 
@@ -97,18 +97,5 @@ namespace Exercise
 
             return filePath;
         }
-    }
-
-    public class ConfigurationUser : IConfiguration
-    {
-        public ConfigurationUser(string fileToAnalyze, IEnumerable<IRuleConfig> rules)
-        {
-            this.FileToAnalyze = fileToAnalyze;
-            this.Rules = rules;
-        }
-
-        public string FileToAnalyze { get; }
-
-        public IEnumerable<IRuleConfig> Rules { get; }
     }
 }
