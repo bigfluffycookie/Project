@@ -50,12 +50,12 @@ namespace Exercise.UnitTests.Rules
             Assert.AreEqual(0, result.Count);
         }
 
-        private static IRuleParameterConfig SetUpRuleConfig(int maxNumberOfLines)
+        private static IRuleConfig SetUpRuleConfig(int maxNumberOfLines)
         {
-            var ruleParamConfig = new Mock<IRuleParameterConfig>();
-            ruleParamConfig.Setup(p => p.GetRuleParam("maxLineLength")).Returns(maxNumberOfLines);
+            var ruleConfig = new Mock<IRuleConfig>();
+            ruleConfig.Setup(p => p.RuleParam).Returns(maxNumberOfLines);
 
-            return ruleParamConfig.Object;
+            return ruleConfig.Object;
         }
 
         private static IFile SetupFile(int numberOfLines)

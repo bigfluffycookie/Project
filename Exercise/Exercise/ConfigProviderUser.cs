@@ -1,15 +1,32 @@
-﻿using System.Transactions;
-using Exercise.Rules;
+﻿using Exercise.Rules;
 
 namespace Exercise
 {
-    internal class InputFromUser : IInput
+    internal class ConfigProviderUser : IConfigProvider
     {
-        public string GetPathForFileToAnalyze() => ReadUserInputForFilePath(".txt");
+        private Configuration configuration;
 
-        public List<IRule> GetRulesToExecute(List<IRule> availableRules)
+        public ConfigProviderUser(IEnumerable<IRule> rules)
         {
-            var rulesToExecute = new List<IRule>();
+            InitializeConfig(rules);
+        }
+        public IConfiguration GetConfiguration()
+        {
+            return configuration;
+        }
+
+        private void InitializeConfig(IEnumerable<IRule> availableRules)
+        {
+            var fileToAnalyze = ReadUserInputForFilePath(".txt");
+            var ruleConfigs = CreateRuleConfigsWithUserInput(availableRules);
+
+            configuration = new Configuration(fileToAnalyze, ruleConfigs);
+        }
+
+
+        private IEnumerable<IRuleConfig> CreateRuleConfigsWithUserInput(IEnumerable<IRule> availableRules)
+        {
+            var ruleConfigs = new List<IRuleConfig>();
             Console.WriteLine("Enter ctrl c to exit input.");
 
             foreach (var rule in availableRules)
@@ -23,29 +40,24 @@ namespace Exercise
                     break;
                 }
 
-                if (input == "y")
+                if (input != "y") continue;
+
+                RuleConfig ruleConfig;
+
+                if (rule.HasParameters)
                 {
-
-                    rulesToExecute.Add(rule);
+                    var ruleParam = GetInputParams("Input rule param");
+                    ruleConfig = new RuleConfig(rule.RuleId, ruleParam);
                 }
+                else
+                {
+                    ruleConfig = new RuleConfig(rule.RuleId);
+                }
+
+                ruleConfigs.Add(ruleConfig);
             }
 
-            return rulesToExecute;
-        }
-
-        public IRuleParameterConfig GetRuleParmParameterConfig(List<IRule> rules)
-        {
-            var ruleParameterConfig = new RuleParameterConfig();
-            var rulesWithParams = rules.Where(rule => rule.HasParameters);
-
-            foreach (var rule in rulesWithParams)
-            {
-                var ruleId = rule.RuleId;
-                var input = GetInputParams("Input: " + ruleId);
-                ruleParameterConfig.AddRuleParam(ruleId, input);
-            }
-
-            return ruleParameterConfig;
+            return ruleConfigs;
         }
 
         private static int GetInputParams(string displayText)

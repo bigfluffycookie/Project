@@ -6,10 +6,10 @@
 
         public bool HasParameters => true;
 
-        public List<IIssue> Execute(IFile file, IRuleParameterConfig ruleParameterConfig)
+        public List<IIssue> Execute(IFile file, IRuleConfig ruleConfig)
         {
             var result = new List<IIssue>();
-            var maxAllowedLineLength = ruleParameterConfig.GetRuleParam(RuleId);
+            var maxAllowedLineLength = ruleConfig.RuleParam;
 
             if (file.FileContent.Length > maxAllowedLineLength)
             {
