@@ -11,14 +11,9 @@ namespace Exercise
 
         private IFileSystem fileSystem;
 
-        public ConfigProviderJson(string filePath)
-        {
-            this.fileSystem = new FileSystem();
-            var userConfiguration = CreateUserConfiguration(filePath);
-            InitializeConfig(userConfiguration);
-        }
+        public ConfigProviderJson(string filePath) : this (filePath, new FileSystem()) { }
 
-        internal ConfigProviderJson(IFileSystem fileSystem, string filePath)
+        internal ConfigProviderJson(string filePath, IFileSystem fileSystem)
         {
             this.fileSystem = fileSystem;
             var userConfiguration = CreateUserConfiguration(filePath);
@@ -28,7 +23,7 @@ namespace Exercise
         private UserConfiguration CreateUserConfiguration(string filePath)
         {
             var configFileContent = fileSystem.File.ReadAllText(filePath);
-            UserConfiguration userConfiguration;
+            UserConfiguration? userConfiguration;
             
             try
             { 
@@ -37,6 +32,11 @@ namespace Exercise
             catch
             {
                 throw new Exception("Rule Configuration could not be Deserialized");
+            }
+
+            if (userConfiguration?.rules == null || userConfiguration?.fileToAnalyze == null)
+            {
+                throw new Exception("Rule Configuration could not be Deserialized into UserConfiguration");
             }
 
             return userConfiguration;
@@ -50,7 +50,7 @@ namespace Exercise
             {
                 var ruleConfigJson = rule.Value.Length > 0
                                      ? new RuleConfig(rule.Key, rule.Value[0])
-                                     : new RuleConfig(rule.Key);
+                                     : new RuleConfig(rule.Key, null);
                 ruleConfigs.Add(ruleConfigJson);
             }
 

@@ -42,18 +42,14 @@ namespace Exercise
 
                 if (input != "y") continue;
 
-                RuleConfig ruleConfig;
+                int? ruleParam = null;
 
                 if (rule.HasParameters)
                 {
-                    var ruleParam = GetInputParams("Input rule param");
-                    ruleConfig = new RuleConfig(rule.RuleId, ruleParam);
-                }
-                else
-                {
-                    ruleConfig = new RuleConfig(rule.RuleId);
+                    ruleParam = GetInputParams("Input rule param");
                 }
 
+                var ruleConfig = new RuleConfig(rule.RuleId, ruleParam);
                 ruleConfigs.Add(ruleConfig);
             }
 

@@ -11,7 +11,7 @@
     {
         string RuleId { get; }
 
-        int RuleParam { get; }
+        int? RuleParam { get; }
     }
 
     public interface IConfigProvider
@@ -34,18 +34,13 @@
 
     public class RuleConfig: IRuleConfig
     {
-        public RuleConfig(string ruleId)
+        public RuleConfig(string ruleId, int? ruleParam)
         {
             this.RuleId = ruleId;
-        }
-
-        public RuleConfig(string ruleId, int param)
-        {
-            this.RuleId = ruleId;
-            this.RuleParam = param;
+            this.RuleParam = ruleParam;
         }
 
         public string RuleId { get; }
-        public int RuleParam { get; }
+        public int? RuleParam { get; }
     }
 }
