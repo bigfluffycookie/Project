@@ -30,7 +30,7 @@ public class ConfigProviderJsonTests
     }
 
     [TestMethod]
-    public void GetConfiguration_JsonWithTwoRules_ReturnsConfigWithOneRule()
+    public void GetConfiguration_JsonWithTwoRules_ReturnsConfigWithTwoRules()
     {
         var path = "path.json";
         var fileContent = @"{
