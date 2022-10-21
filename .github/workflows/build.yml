@@ -46,6 +46,6 @@ jobs:
           dotnet build .\.\Exercise\Exercise.sln
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
       - name: Test
-        run: dotnet test
+        run:  dotnet test .\.\Exercise\Exercise.sln
         
       
