@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions;
+using System.Runtime.CompilerServices;
 
 namespace Exercise
 {
@@ -6,14 +7,11 @@ namespace Exercise
     {
         private readonly IFileSystem fileSystem;
 
+        public InputValidator() : this(new FileSystem()) { }
+
         public InputValidator(IFileSystem fileSystem)
         {
             this.fileSystem = fileSystem;
-        }
-
-        public InputValidator()
-        { 
-            this.fileSystem = new FileSystem();
         }
 
         public bool FileHasCorrectExtension(string filePath, string fileExtension)

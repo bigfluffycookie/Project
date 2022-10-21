@@ -25,7 +25,7 @@ namespace Exercise.UnitTests
             var id = "id";
 
             var ruleConfig = CreateRuleConfigWithId(id);
-            var configuration = CreateConfigurationWithRuleConfigs(new List<IRuleConfig>{ruleConfig});
+            var configuration = CreateConfigurationWithRuleConfigs(ruleConfig);
 
             var rule = CreateRuleWithId(id);
             rule.Setup(p => p.Execute(file, ruleConfig)).Returns(new List<IIssue> { issue });
@@ -44,7 +44,7 @@ namespace Exercise.UnitTests
             var file = Mock.Of<IFile>();
             var id = "id";
             var ruleConfig = CreateRuleConfigWithId(id);
-            var configuration = CreateConfigurationWithRuleConfigs(new List<IRuleConfig> { ruleConfig });
+            var configuration = CreateConfigurationWithRuleConfigs(ruleConfig);
 
             var rule = CreateRuleWithId(id);
             rule.Setup(p => p.Execute(file, ruleConfig)).Returns(new List<IIssue>());
@@ -72,7 +72,7 @@ namespace Exercise.UnitTests
             var ruleTwo = CreateRuleWithId(idTwo);
             ruleTwo.Setup(p => p.Execute(file, ruleConfigTwo)).Returns(new List<IIssue> { issue });
 
-            var configuration = CreateConfigurationWithRuleConfigs(new List<IRuleConfig>{ruleConfigOne, ruleConfigTwo});
+            var configuration = CreateConfigurationWithRuleConfigs(ruleConfigOne, ruleConfigTwo);
 
             var result = Analyzer.Analyze(file,
                                           new List<IRule> { ruleOne.Object, ruleTwo.Object },
@@ -98,7 +98,7 @@ namespace Exercise.UnitTests
             return ruleConfig.Object;
         }
 
-        private static IConfiguration CreateConfigurationWithRuleConfigs(IEnumerable<IRuleConfig> ruleConfigs)
+        private static IConfiguration CreateConfigurationWithRuleConfigs(params IRuleConfig[] ruleConfigs)
         {
             var configuration = new Mock<IConfiguration>();
             configuration.Setup(p => p.Rules).Returns(ruleConfigs);
