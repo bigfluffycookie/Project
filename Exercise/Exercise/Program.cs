@@ -33,7 +33,7 @@ namespace Exercise
                     throw new Exception("Json File at path: " + args[0] + " was not found.");
                 }
 
-                var inputFromJson = new ConfigProviderJson(args[0], availableRules);
+                var inputFromJson = new ConfigProviderJson(args[0]);
 
                 return inputFromJson;
             }

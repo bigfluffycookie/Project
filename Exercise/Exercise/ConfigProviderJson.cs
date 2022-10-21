@@ -1,4 +1,6 @@
-﻿using Exercise.Rules;
+﻿using System.IO.Abstractions;
+using System.Linq.Expressions;
+using Exercise.Rules;
 using Newtonsoft.Json;
 
 namespace Exercise
@@ -7,35 +9,48 @@ namespace Exercise
     {
         private Configuration configuration;
 
-        public ConfigProviderJson(string filePath, IEnumerable<IRule> availableRules)
+        private IFileSystem fileSystem;
+
+        public ConfigProviderJson(string filePath) : this (filePath, new FileSystem()) { }
+
+        internal ConfigProviderJson(string filePath, IFileSystem fileSystem)
         {
+            this.fileSystem = fileSystem;
             var userConfiguration = CreateUserConfiguration(filePath);
-            InitializeConfig(userConfiguration, availableRules);
+            InitializeConfig(userConfiguration);
         }
 
         private UserConfiguration CreateUserConfiguration(string filePath)
         {
-            var configFileContent = System.IO.File.ReadAllText(filePath);
-            var userConfiguration = JsonConvert.DeserializeObject<UserConfiguration>(configFileContent);
-
-            if (userConfiguration == null)
+            var configFileContent = fileSystem.File.ReadAllText(filePath);
+            UserConfiguration? userConfiguration;
+            
+            try
+            { 
+                userConfiguration = JsonConvert.DeserializeObject<UserConfiguration>(configFileContent);
+            }
+            catch
             {
                 throw new Exception("Rule Configuration could not be Deserialized");
+            }
+
+            if (userConfiguration?.rules == null || userConfiguration?.fileToAnalyze == null)
+            {
+                throw new Exception("Rule Configuration could not be Deserialized into UserConfiguration");
             }
 
             return userConfiguration;
         }
 
-        private void InitializeConfig(UserConfiguration userConfiguration, IEnumerable<IRule> availableRules)
+        private void InitializeConfig(UserConfiguration userConfiguration)
         {
             var ruleConfigs = new List<IRuleConfig>();
-            var rulesToExecute = availableRules.Where(rule => userConfiguration.rules.ContainsKey(rule.RuleId)).ToList();
 
-            foreach (var rule in rulesToExecute)
+            foreach (var rule in userConfiguration.rules)
             {
-                var ruleConfigJson = rule.HasParameters
-                                     ? new RuleConfig(rule.RuleId,userConfiguration.rules[rule.RuleId][0])
-                                     : new RuleConfig(rule.RuleId);
+                var ruleConfigJson = rule.Value.Length > 0
+                                     ? new RuleConfig(rule.Key, rule.Value[0])
+                                     : new RuleConfig(rule.Key, null);
                 ruleConfigs.Add(ruleConfigJson);
             }
 
