@@ -1,4 +1,5 @@
-﻿using Exercise.Rules;
+﻿using System.Collections.Generic;
+using Exercise.Rules;
 using Moq;
 
 namespace Exercise.UnitTests

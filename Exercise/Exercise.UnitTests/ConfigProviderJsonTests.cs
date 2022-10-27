@@ -1,4 +1,6 @@
-﻿using System.IO.Abstractions;
+﻿using System;
+using System.Linq;
+using System.IO.Abstractions;
 using Moq;
 
 namespace Exercise.UnitTests;
