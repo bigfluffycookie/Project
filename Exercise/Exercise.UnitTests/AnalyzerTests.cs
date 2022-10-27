@@ -1,4 +1,4 @@
-﻿using Castle.Core.Configuration;
+﻿using System.Collections.Generic;
 using Exercise.Rules;
 using Moq;
 

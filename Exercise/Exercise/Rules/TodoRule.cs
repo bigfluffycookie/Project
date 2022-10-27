@@ -1,4 +1,7 @@
-﻿namespace Exercise.Rules
+﻿using System;
+using System.Collections.Generic;
+
+namespace Exercise.Rules
 {
     public class TodoRule : IRule
     {
@@ -27,7 +30,7 @@
                     continue;
                 }
 
-                var issue = new Issue(text: line[indexOfTodo..], line: i + 1, column: indexOfTodo + 1);
+                var issue = new Issue(text: line.Substring(indexOfTodo), line: i + 1, column: indexOfTodo + 1);
                 result.Add(issue);
             }
 

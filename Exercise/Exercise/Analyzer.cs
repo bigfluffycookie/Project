@@ -1,4 +1,6 @@
-﻿using Exercise.Rules;
+﻿using System.Linq;
+using System.Collections.Generic;
+using Exercise.Rules;
 
 namespace Exercise
 {
