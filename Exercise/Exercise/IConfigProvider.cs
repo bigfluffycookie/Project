@@ -1,4 +1,6 @@
-﻿namespace Exercise
+﻿using System.Collections.Generic;
+
+namespace Exercise
 {
     public interface IConfiguration
     {

@@ -1,5 +1,4 @@
 ﻿using System.IO.Abstractions;
-using Exercise.Rules;
 using Moq;
 
 namespace Exercise.UnitTests;

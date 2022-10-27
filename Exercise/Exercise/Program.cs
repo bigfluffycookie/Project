@@ -1,4 +1,7 @@
-﻿using Exercise.Rules;
+﻿using System;
+using System.IO;
+using System.Collections.Generic;
+using Exercise.Rules;
 
 namespace Exercise
 {

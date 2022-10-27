@@ -61,7 +61,6 @@ namespace Exercise.UnitTests.Rules
         private static IFile SetupFile(int numberOfLines)
         {
             var lines = new string[numberOfLines];
-            Array.Fill(lines, "");
             var file = new Mock<IFile>();
             file.Setup(p => p.FileContent).Returns(lines);
 

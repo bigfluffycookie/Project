@@ -1,5 +1,4 @@
-﻿using Castle.Core.Configuration;
-using Exercise.Rules;
+﻿using Exercise.Rules;
 using Moq;
 
 namespace Exercise.UnitTests
