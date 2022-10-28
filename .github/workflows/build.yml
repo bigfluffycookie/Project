@@ -45,7 +45,7 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"bigfluffycookie_Project" /o:"bigfluffycookie" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          MSBuild.exe .\.\Exercise\Exercise.sln /t:Rebuild
+          MSBuild.exe .\.\Exercise\Exercise.sln -t:rebuild -verbosity:diag
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
       - name: Test
         run:  dotnet test .\.\Exercise\Exercise.sln --no-build
