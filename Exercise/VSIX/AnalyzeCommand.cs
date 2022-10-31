@@ -107,7 +107,7 @@ namespace VSIX
 
         private void LogAnalyzerResults(string result)
         {
-            logger.Log(result);
+            logger?.Log(result);
         }
     }
 }
