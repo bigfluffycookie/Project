@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel.Design;
 using Task = System.Threading.Tasks.Task;
@@ -42,7 +42,7 @@ namespace VSIX
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
-
+            
             var menuItem = new MenuCommand(this.Analyze, menuCommandID);
             commandService.AddCommand(menuItem);
 
