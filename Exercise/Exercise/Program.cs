@@ -5,9 +5,9 @@ using Exercise.Rules;
 
 namespace Exercise
 {
-    public class Program
+    public static class Program
     {
-        public static void Main(string[] args)
+        public static string ProgramSetUp(string[] args)
         {
             DisplayWelcomeText();
 
@@ -20,9 +20,9 @@ namespace Exercise
             
             var result = Analyzer.Analyze(file, rules, configuration);
 
-            PrintResult(result);
-            Console.Write("Press any key to close App");
-            Console.ReadKey();
+            var formattedResultReadyResult = FormatResult(result);
+
+            return formattedResultReadyResult;
         }
 
         private static IConfigProvider GetConfigProvider(string[] args, List<IRule> availableRules)
@@ -75,16 +75,18 @@ namespace Exercise
             return rules;
         }
 
-        private static void PrintResult(List<IIssue> issues)
+        private static string FormatResult(List<IIssue> issues)
         {
+            var formattedResult = issues.Count == 0 ? "No Issues" : "";
             foreach (var issue in issues)
             {
-                var print = "";
-                print += "Line: " + issue.Line + ", ";
-                print += "Column: " + issue.Column + ", ";
-                print += "'" + issue.Text + "'";
-                Console.WriteLine(print);
+                formattedResult += "Line: " + issue.Line + ", ";
+                formattedResult += "Column: " + issue.Column + ", ";
+                formattedResult += "'" + issue.Text + "'";
+                formattedResult += "\n";
             }
+
+            return formattedResult;
         }
 
         private static void DisplayWelcomeText()

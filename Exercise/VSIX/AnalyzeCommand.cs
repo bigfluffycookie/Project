@@ -1,11 +1,10 @@
-﻿using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel.Design;
-using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
+using System.Diagnostics;
+using Microsoft.VisualStudio.ComponentModelHost;
+using Exception = System.Exception;
 
 namespace VSIX
 {
@@ -29,6 +28,8 @@ namespace VSIX
         /// </summary>
         private readonly AsyncPackage package;
 
+        private ILogger logger;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AnalyzeCommand"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
@@ -41,8 +42,19 @@ namespace VSIX
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
-            var menuItem = new MenuCommand(this.Execute, menuCommandID);
+            
+            var menuItem = new MenuCommand(this.Analyze, menuCommandID);
             commandService.AddCommand(menuItem);
+
+            try
+            {
+                var comp = this.package.GetService<SComponentModel, IComponentModel>();
+                logger = comp.GetService<ILogger>();
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception);
+            }
         }
 
         /// <summary>
@@ -79,27 +91,23 @@ namespace VSIX
             Instance = new AnalyzeCommand(package, commandService);
         }
 
-        /// <summary>
-        /// This function is the callback used to execute the command when the menu item is clicked.
-        /// See the constructor to see how the menu item is associated with this function using
-        /// OleMenuCommandService service and MenuCommand class.
-        /// </summary>
-        /// <param name="sender">Event sender.</param>
-        /// <param name="e">Event args.</param>
-        private void Execute(object sender, EventArgs e)
+        private void Analyze(object sender, EventArgs e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
-            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-            string title = "AnalyzeCommand";
+            var ruleConfigFilePath = GetRuleConfigPath();
+            var result = Exercise.Program.ProgramSetUp(new string[] { ruleConfigFilePath });
+            LogAnalyzerResults(result);
+        }
 
-            // Show a message box to prove we were here
-            VsShellUtilities.ShowMessageBox(
-                this.package,
-                message,
-                title,
-                OLEMSGICON.OLEMSGICON_INFO,
-                OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+
+        private string GetRuleConfigPath()
+        {
+            var ruleConfigPath = @"..\..\..\Files\rules.json";
+            return ruleConfigPath;
+        }
+
+        private void LogAnalyzerResults(string result)
+        {
+            logger?.Log(result);
         }
     }
 }
