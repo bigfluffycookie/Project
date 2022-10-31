@@ -32,7 +32,7 @@ namespace VSIX
             var guid = PaneId;
 
             // Create a new pane.
-            outputWindow.CreatePane(ref guid, "Step 5", Convert.ToInt32(true), Convert.ToInt32(false));
+            outputWindow.CreatePane(ref guid, "Leyla's Analyzer", Convert.ToInt32(true), Convert.ToInt32(false));
 
             // Retrieve the new pane.
             outputWindow.GetPane(ref guid, out pane);

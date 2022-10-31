@@ -28,7 +28,7 @@ namespace VSIX.UnitTests
             var expectedGuid = Logger.PaneId;
 
             serviceProvider.Verify(p => p.GetService(typeof(IVsOutputWindow)), Times.Once);
-            outputWindow.Verify(p => p.CreatePane(ref expectedGuid, "Step 5", 1, 0), Times.Once);
+            outputWindow.Verify(p => p.CreatePane(ref expectedGuid, "Leyla's Analyzer", 1, 0), Times.Once);
             outputWindow.Verify(p => p.GetPane(ref expectedGuid, out paneObj), Times.Once);
         }
 
