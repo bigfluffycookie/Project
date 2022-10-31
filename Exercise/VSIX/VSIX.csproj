@@ -89,10 +89,6 @@
     <Content Include="Resources\AnalyzeCommand.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Exercise.UnitTests\Exercise.UnitTests.csproj">
-      <Project>{28c3191f-5410-46d7-a8c3-667f4913f9f6}</Project>
-      <Name>Exercise.UnitTests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Exercise\Exercise.csproj">
       <Project>{dd7fc0db-eccb-46e8-a27d-baf4e1964476}</Project>
       <Name>Exercise</Name>

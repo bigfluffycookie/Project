@@ -20,9 +20,9 @@ namespace Exercise
             
             var result = Analyzer.Analyze(file, rules, configuration);
 
-            var printReadyResult = FormatResult(result);
+            var formattedResultReadyResult = FormatResult(result);
 
-            return printReadyResult;
+            return formattedResultReadyResult;
         }
 
         private static IConfigProvider GetConfigProvider(string[] args, List<IRule> availableRules)
@@ -77,16 +77,16 @@ namespace Exercise
 
         private static string FormatResult(List<IIssue> issues)
         {
-            var print = issues.Count == 0 ? "No Issues " : "";
+            var formattedResult = issues.Count == 0 ? "No Issues" : "";
             foreach (var issue in issues)
             {
-                print += "Line: " + issue.Line + ", ";
-                print += "Column: " + issue.Column + ", ";
-                print += "'" + issue.Text + "'";
-                print += "\n";
+                formattedResult += "Line: " + issue.Line + ", ";
+                formattedResult += "Column: " + issue.Column + ", ";
+                formattedResult += "'" + issue.Text + "'";
+                formattedResult += "\n";
             }
 
-            return print;
+            return formattedResult;
         }
 
         private static void DisplayWelcomeText()

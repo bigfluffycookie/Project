@@ -1,16 +1,8 @@
 ﻿using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
-using System.ComponentModel.Composition;
-
-using Microsoft.VisualStudio.RpcContracts.Commands;
 using Task = System.Threading.Tasks.Task;
-using EnvDTE;
-using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
-using System.Linq;
-using Exercise;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Exception = System.Exception;
 
@@ -103,7 +95,7 @@ namespace VSIX
         {
             var ruleConfigFilePath = GetRuleConfigPath();
             var result = Exercise.Program.ProgramSetUp(new string[] { ruleConfigFilePath });
-            logger.Log(result);
+            LogAnalyzerResults(result);
         }
 
 
