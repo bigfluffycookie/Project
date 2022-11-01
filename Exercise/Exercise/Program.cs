@@ -12,7 +12,7 @@ namespace Exercise
             var rulesProvider = new AvailableRulesProvider();
             var rules = rulesProvider.GetAvailableRules();
 
-            var configProvider = GetConfigProvider();
+            var configProvider = new ConfigProviderJson();
             var configuration = configProvider.GetConfiguration();
             var filePath = "C:\\Junk\\File.txt";
             var file = new File(filePath);
