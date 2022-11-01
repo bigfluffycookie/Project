@@ -13,7 +13,6 @@ public class ConfigProviderJsonTests
     {
         var path = "path.json";
         var fileContent = @"{
-             'fileToAnalyze': 'path',
              'rules' : {
                 'ruleID' : [0]
              }
@@ -27,7 +26,6 @@ public class ConfigProviderJsonTests
         Assert.AreEqual(1, config.Rules.Count());
         Assert.AreEqual(0, config.Rules.First().RuleParam);
         Assert.AreEqual("ruleID", config.Rules.First().RuleId);
-        Assert.AreEqual("path", config.FileToAnalyze);
     }
 
     [TestMethod]
@@ -35,7 +33,6 @@ public class ConfigProviderJsonTests
     {
         var path = "path.json";
         var fileContent = @"{
-             'fileToAnalyze': 'path',
              'rules' : {
                 'ruleID' : [0],
                 'ruleID2' : [0]
@@ -48,7 +45,6 @@ public class ConfigProviderJsonTests
         var config = configProvider.GetConfiguration();
 
         Assert.AreEqual(2, config.Rules.Count());
-        Assert.AreEqual("path", config.FileToAnalyze);
     }
 
     [TestMethod]
@@ -56,7 +52,6 @@ public class ConfigProviderJsonTests
     {
         var path = "path.json";
         var fileContent = @"{
-             'fileToAnalyze': 'path',
              'rules' : {
                 'ruleID' : []
              }
@@ -70,7 +65,6 @@ public class ConfigProviderJsonTests
         Assert.AreEqual(1, config.Rules.Count());
         Assert.AreEqual(null, config.Rules.First().RuleParam);
         Assert.AreEqual("ruleID", config.Rules.First().RuleId);
-        Assert.AreEqual("path", config.FileToAnalyze);
     }
 
     [TestMethod]
@@ -78,7 +72,6 @@ public class ConfigProviderJsonTests
     {
         var path = "path.json";
         var fileContent = @"{
-             'fileToAnalyze': 'path',
              'rules' : {}
         }";
 
