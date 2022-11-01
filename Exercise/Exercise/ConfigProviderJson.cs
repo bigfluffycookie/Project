@@ -34,7 +34,7 @@ namespace Exercise
                 throw new Exception("Rule Configuration could not be Deserialized");
             }
 
-            if (userConfiguration?.rules == null || userConfiguration?.fileToAnalyze == null)
+            if (userConfiguration?.rules == null)
             {
                 throw new Exception("Rule Configuration could not be Deserialized into UserConfiguration");
             }
@@ -54,7 +54,7 @@ namespace Exercise
                 ruleConfigs.Add(ruleConfigJson);
             }
 
-            configuration = new Configuration(userConfiguration.fileToAnalyze,ruleConfigs);
+            configuration = new Configuration(ruleConfigs);
         }
 
         public IConfiguration GetConfiguration()

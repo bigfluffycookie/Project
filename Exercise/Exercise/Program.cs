@@ -14,9 +14,9 @@ namespace Exercise
 
             var configProvider = GetConfigProvider(args);
             var configuration = configProvider.GetConfiguration();
-            var filePath = configuration.FileToAnalyze;
+            var filePath = "C:\\Junk\\File.txt";
             var file = new File(filePath);
-            
+
             var result = Analyzer.Analyze(file, rules, configuration);
 
             var formattedResultReadyResult = FormatResult(result);
