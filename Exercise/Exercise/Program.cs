@@ -11,7 +11,9 @@ namespace Exercise
         {
             DisplayWelcomeText();
 
-            var rules = GetAvailableRules();
+            var rulesProvider = new AvailableRulesProvider();
+            var rules = rulesProvider.GetAvailableRules();
+
             var configProvider = GetConfigProvider(args, rules);
             var configuration = configProvider.GetConfiguration();
             var filePath = configuration.FileToAnalyze;
@@ -25,7 +27,7 @@ namespace Exercise
             return formattedResultReadyResult;
         }
 
-        private static IConfigProvider GetConfigProvider(string[] args, List<IRule> availableRules)
+        private static IConfigProvider GetConfigProvider(string[] args, IEnumerable<IRule> availableRules)
         {
             if (args.Length != 0)
             {
@@ -61,18 +63,6 @@ namespace Exercise
             }
 
             return fileContent;
-        }
-
-        private static List<IRule> GetAvailableRules()
-        {
-            var rules = new List<IRule>()
-            {
-                                new MaxLineLengthRule(),
-                                new MaxFilePathLengthRule(),
-                                new TodoRule()
-            };
-
-            return rules;
         }
 
         private static string FormatResult(List<IIssue> issues)
