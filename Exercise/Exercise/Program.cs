@@ -12,7 +12,7 @@ namespace Exercise
             var rules = GetAvailableRules();
             var configProvider = GetConfigProvider(args);
             var configuration = configProvider.GetConfiguration();
-            var filePath = "C:\\Users\\leyla.buechel\\Documents\\FileExercise\\File.txt";
+            var filePath = "C:\\Junk\\File.txt";
             var fileContent = GetFileContent(filePath);
             var file = new File(filePath, fileContent);
             
