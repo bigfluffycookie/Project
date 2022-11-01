@@ -1,7 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using Exercise.Rules;
+using System;
 using System.Collections.Generic;
-using Exercise.Rules;
+using System.IO;
 
 namespace Exercise
 {
@@ -9,15 +9,13 @@ namespace Exercise
     {
         public static string ProgramSetUp(string[] args)
         {
-            DisplayWelcomeText();
-
             var rules = GetAvailableRules();
-            var configProvider = GetConfigProvider(args, rules);
+            var configProvider = GetConfigProvider(args);
             var configuration = configProvider.GetConfiguration();
             var filePath = configuration.FileToAnalyze;
             var fileContent = GetFileContent(filePath);
             var file = new File(filePath, fileContent);
-            
+
             var result = Analyzer.Analyze(file, rules, configuration);
 
             var formattedResultReadyResult = FormatResult(result);
@@ -25,23 +23,18 @@ namespace Exercise
             return formattedResultReadyResult;
         }
 
-        private static IConfigProvider GetConfigProvider(string[] args, List<IRule> availableRules)
+        private static IConfigProvider GetConfigProvider(string[] args)
         {
-            if (args.Length != 0)
+            var inputValidator = new InputValidator();
+
+            if (!inputValidator.FileExists(args[0]))
             {
-                var inputValidator = new InputValidator();
-
-                if (!inputValidator.FileExists(args[0]))
-                {
-                    throw new Exception("Json File at path: " + args[0] + " was not found.");
-                }
-
-                var inputFromJson = new ConfigProviderJson(args[0]);
-
-                return inputFromJson;
+                throw new Exception("Json File at path: " + args[0] + " was not found.");
             }
 
-            return new ConfigProviderUser(availableRules);
+            var inputFromJson = new ConfigProviderJson(args[0]);
+
+            return inputFromJson;
         }
 
         private static string[] GetFileContent(string filePath)
@@ -87,11 +80,6 @@ namespace Exercise
             }
 
             return formattedResult;
-        }
-
-        private static void DisplayWelcomeText()
-        {
-            Console.WriteLine("Welcome to the Analyzer");
         }
     }
 }
