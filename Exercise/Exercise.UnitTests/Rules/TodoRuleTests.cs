@@ -98,6 +98,12 @@ namespace Exercise.UnitTests.Rules
             Assert.AreEqual(2, result.Count);
         }
 
-        private static File SetupFile(string[] lines) => new("", lines);
+        private static IFile SetupFile(string[] lines)
+        {
+            var file = new Mock<IFile>();
+            file.Setup(p => p.FileContent).Returns(lines);
+
+            return file.Object;
+        }
     }
 }

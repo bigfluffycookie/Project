@@ -9,13 +9,14 @@ namespace Exercise
     {
         public static string ProgramSetUp(string[] args)
         {
-            var rules = GetAvailableRules();
+            var rulesProvider = new AvailableRulesProvider();
+            var rules = rulesProvider.GetAvailableRules();
+
             var configProvider = GetConfigProvider(args);
             var configuration = configProvider.GetConfiguration();
             var filePath = "C:\\Junk\\File.txt";
-            var fileContent = GetFileContent(filePath);
-            var file = new File(filePath, fileContent);
-            
+            var file = new File(filePath);
+
             var result = Analyzer.Analyze(file, rules, configuration);
 
             var formattedResultReadyResult = FormatResult(result);
@@ -33,37 +34,6 @@ namespace Exercise
            }
 
            return new ConfigProviderJson(args[0]);
-        }
-
-        private static string[] GetFileContent(string filePath)
-        {
-            var fileContent = Array.Empty<string>();
-
-            try
-            {
-                fileContent = System.IO.File.ReadAllLines(filePath);
-            }
-            catch (IOException e)
-            {
-                Console.WriteLine("File could not be read with error message: " + e.Message);
-                Console.Write("Press any key to close App");
-                Console.ReadKey();
-                Environment.Exit(0);
-            }
-
-            return fileContent;
-        }
-
-        private static List<IRule> GetAvailableRules()
-        {
-            var rules = new List<IRule>()
-            {
-                                new MaxLineLengthRule(),
-                                new MaxFilePathLengthRule(),
-                                new TodoRule()
-            };
-
-            return rules;
         }
 
         private static string FormatResult(List<IIssue> issues)
