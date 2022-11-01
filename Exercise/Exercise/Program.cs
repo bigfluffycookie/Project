@@ -17,8 +17,7 @@ namespace Exercise
             var configProvider = GetConfigProvider(args, rules);
             var configuration = configProvider.GetConfiguration();
             var filePath = configuration.FileToAnalyze;
-            var fileContent = GetFileContent(filePath);
-            var file = new File(filePath, fileContent);
+            var file = new File(filePath);
             
             var result = Analyzer.Analyze(file, rules, configuration);
 
@@ -44,25 +43,6 @@ namespace Exercise
             }
 
             return new ConfigProviderUser(availableRules);
-        }
-
-        private static string[] GetFileContent(string filePath)
-        {
-            var fileContent = Array.Empty<string>();
-
-            try
-            {
-                fileContent = System.IO.File.ReadAllLines(filePath);
-            }
-            catch (IOException e)
-            {
-                Console.WriteLine("File could not be read with error message: " + e.Message);
-                Console.Write("Press any key to close App");
-                Console.ReadKey();
-                Environment.Exit(0);
-            }
-
-            return fileContent;
         }
 
         private static string FormatResult(List<IIssue> issues)
