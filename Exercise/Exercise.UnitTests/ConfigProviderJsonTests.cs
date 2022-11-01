@@ -11,16 +11,15 @@ public class ConfigProviderJsonTests
     [TestMethod]
     public void GetConfiguration_JsonWithOneRuleHasParameter_ReturnsConfigWithOneRule()
     {
-        var path = "path.json";
         var fileContent = @"{
              'rules' : {
                 'ruleID' : [0]
              }
         }";
 
-        var fileSystem = CreateFileSystemWithFile(path, fileContent);
+        var fileSystem = CreateFileSystemWithFile(fileContent);
 
-        var configProvider = new ConfigProviderJson(path, fileSystem);
+        var configProvider = new ConfigProviderJson(fileSystem);
         var config = configProvider.GetConfiguration();
 
         Assert.AreEqual(1, config.Rules.Count());
@@ -31,7 +30,6 @@ public class ConfigProviderJsonTests
     [TestMethod]
     public void GetConfiguration_JsonWithTwoRules_ReturnsConfigWithTwoRules()
     {
-        var path = "path.json";
         var fileContent = @"{
              'rules' : {
                 'ruleID' : [0],
@@ -39,9 +37,9 @@ public class ConfigProviderJsonTests
              }
         }";
 
-        var fileSystem = CreateFileSystemWithFile(path, fileContent);
+        var fileSystem = CreateFileSystemWithFile(fileContent);
 
-        var configProvider = new ConfigProviderJson(path, fileSystem);
+        var configProvider = new ConfigProviderJson(fileSystem);
         var config = configProvider.GetConfiguration();
 
         Assert.AreEqual(2, config.Rules.Count());
@@ -50,16 +48,15 @@ public class ConfigProviderJsonTests
     [TestMethod]
     public void GetConfiguration_JsonWithOneRuleNoParameter_ReturnsConfigWithOneRule()
     {
-        var path = "path.json";
         var fileContent = @"{
              'rules' : {
                 'ruleID' : []
              }
         }";
 
-        var fileSystem = CreateFileSystemWithFile(path, fileContent);
+        var fileSystem = CreateFileSystemWithFile(fileContent);
 
-        var configProvider = new ConfigProviderJson(path, fileSystem);
+        var configProvider = new ConfigProviderJson(fileSystem);
         var config = configProvider.GetConfiguration();
 
         Assert.AreEqual(1, config.Rules.Count());
@@ -70,14 +67,13 @@ public class ConfigProviderJsonTests
     [TestMethod]
     public void GetConfiguration_JsonWithNoRule_ReturnsConfigWithNoRules()
     {
-        var path = "path.json";
         var fileContent = @"{
              'rules' : {}
         }";
 
-        var fileSystem = CreateFileSystemWithFile(path, fileContent);
+        var fileSystem = CreateFileSystemWithFile(fileContent);
 
-        var configProvider = new ConfigProviderJson(path, fileSystem);
+        var configProvider = new ConfigProviderJson(fileSystem);
         var config = configProvider.GetConfiguration();
 
         Assert.AreEqual(0, config.Rules.Count());
@@ -86,26 +82,26 @@ public class ConfigProviderJsonTests
     [TestMethod]
     public void Constructor_InvalidJson_ThrowsException()
     {
-        var path = "path.json";
         var fileContent = "{}}";
-        var fileSystem = CreateFileSystemWithFile(path, fileContent);
+        var fileSystem = CreateFileSystemWithFile(fileContent);
 
-        Assert.ThrowsException<Exception>(() => new ConfigProviderJson(path, fileSystem));
+        Assert.ThrowsException<Exception>(() => new ConfigProviderJson(fileSystem));
     }
 
     [TestMethod]
     public void Constructor_WrongFormatJson_ThrowsException()
     {
-        var path = "path.json";
         var fileContent = "{}";
-        var fileSystem = CreateFileSystemWithFile(path, fileContent);
+        var fileSystem = CreateFileSystemWithFile(fileContent);
 
-        Assert.ThrowsException<Exception>(() => new ConfigProviderJson(path, fileSystem));
+        Assert.ThrowsException<Exception>(() => new ConfigProviderJson(fileSystem));
     }
 
-    private static IFileSystem CreateFileSystemWithFile(string path, string fileContent)
+    private static IFileSystem CreateFileSystemWithFile(string fileContent)
     {
+        var path = Environment.GetEnvironmentVariable("localappdata") + @"\\LeylasAnalyzer" + "\\" + "rules.json";
         var fileSystem = new Mock<IFileSystem>();
+        fileSystem.Setup(p => p.File.Exists(path)).Returns(true);
         fileSystem.Setup(p => p.File.ReadAllText(path)).Returns(fileContent);
 
         return fileSystem.Object;
