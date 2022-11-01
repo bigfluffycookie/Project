@@ -10,7 +10,7 @@ namespace Exercise
         public string FilePath { get; }
         public string[] FileContent { get; }
 
-        public File(string filePath) : this(filePath , new FileSystem()) { }
+        public File(string filePath) : this(filePath, new FileSystem()) { }
 
         public File(string filePath, IFileSystem fileSystem)
         {
