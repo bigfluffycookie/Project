@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.IO.Abstractions;
+using FluentAssertions;
 using Moq;
 
 namespace Exercise.UnitTests;
@@ -11,9 +12,10 @@ public class FileTests
     public void Ctor_FileDoesNotExist_HasDebugLog()
     {
         const string filePath = "Test.txt";
-        var file = new File(filePath);
+        var fileSystem = new Mock<IFileSystem>();
+        fileSystem.Setup(p => p.File.ReadAllText(filePath)).Throws(new IOException());
 
-        Assert.AreEqual(0, file.FileContent.Length);
+        Assert.ThrowsException<IOException>(() => new File(filePath));
     }
 
     [TestMethod]
@@ -25,20 +27,7 @@ public class FileTests
 
         var file = new File(filePath, fileSystem.Object);
 
-        Assert.AreEqual(0, file.FileContent.Length);
-    }
-
-    [TestMethod]
-    public void Ctor_FileExistsOneLineOfContent_LoadsCorrectContent()
-    {
-        const string filePath = "Test.txt";
-        var fileSystem = new Mock<IFileSystem>();
-        fileSystem.Setup(p => p.File.ReadAllLines(filePath)).Returns(new[] { "Content" });
-
-        var file = new File(filePath, fileSystem.Object);
-
-        Assert.AreEqual(1, file.FileContent.Length);
-        Assert.AreEqual("Content", file.FileContent[0]);
+        file.FileContent.Length.Should().Be(1);
     }
 
     [TestMethod]
@@ -50,8 +39,8 @@ public class FileTests
 
         var file = new File(filePath, fileSystem.Object);
 
-        Assert.AreEqual(2, file.FileContent.Length);
-        Assert.AreEqual("Content1", file.FileContent[0]);
-        Assert.AreEqual("Content2", file.FileContent[1]);
+        file.FileContent.Length.Should().Be(2);
+        file.FileContent[0].Should().Be("Content1");
+        file.FileContent[1].Should().Be("Content2");
     }
 }
