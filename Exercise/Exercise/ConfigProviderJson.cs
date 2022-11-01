@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Abstractions;
 using Newtonsoft.Json;
 
@@ -11,18 +12,48 @@ namespace Exercise
 
         private IFileSystem fileSystem;
 
-        public ConfigProviderJson(string filePath) : this (filePath, new FileSystem()) { }
+        private string jsonFolder = Environment.GetEnvironmentVariable("localappdata") + @"\\LeylasAnalyzer";
 
-        internal ConfigProviderJson(string filePath, IFileSystem fileSystem)
+        public ConfigProviderJson() : this (new FileSystem()) { }
+
+        internal ConfigProviderJson(IFileSystem fileSystem)
         {
             this.fileSystem = fileSystem;
-            var userConfiguration = CreateUserConfiguration(filePath);
+
+            UserConfiguration userConfiguration;
+            string jsonFilePath = jsonFolder + "\\" + "rules.json";
+
+            if (fileSystem.File.Exists(jsonFilePath))
+            {
+                userConfiguration = CreateUserConfiguration(jsonFilePath);
+            }
+            else
+            {
+                fileSystem.Directory.CreateDirectory(jsonFolder);
+                userConfiguration = CreateDefaultJson(jsonFilePath);
+            }
+
             InitializeConfig(userConfiguration);
         }
 
-        private UserConfiguration CreateUserConfiguration(string filePath)
+        private UserConfiguration CreateDefaultJson(string path)
         {
-            var configFileContent = fileSystem.File.ReadAllText(filePath);
+            var userConfiguration = new UserConfiguration();
+            userConfiguration.rules = new Dictionary<string, int[]>();
+
+            userConfiguration.rules.Add("todo", new int[0]);
+            userConfiguration.rules.Add("maxPathLength", new int[] { 50 });
+            userConfiguration.rules.Add("maxLineLength", new int[] { 20 });
+
+            string configFileContent = JsonConvert.SerializeObject(userConfiguration);
+            fileSystem.File.WriteAllText(path, configFileContent);
+
+            return userConfiguration;
+        }
+
+        private UserConfiguration CreateUserConfiguration(string path)
+        {
+            var configFileContent = fileSystem.File.ReadAllText(path);
             UserConfiguration? userConfiguration;
             
             try
