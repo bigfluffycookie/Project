@@ -54,7 +54,7 @@ namespace Exercise
                 ruleConfigs.Add(ruleConfigJson);
             }
 
-            configuration = new Configuration(userConfiguration.fileToAnalyze,ruleConfigs);
+            configuration = new Configuration(ruleConfigs);
         }
 
         public IConfiguration GetConfiguration()

@@ -4,8 +4,6 @@ namespace Exercise
 {
     public interface IConfiguration
     {
-        string FileToAnalyze { get; }
-
         IEnumerable<IRuleConfig> Rules { get; }
     }
 
@@ -23,13 +21,10 @@ namespace Exercise
 
     public class Configuration : IConfiguration
     {
-        public Configuration(string fileToAnalyze, IEnumerable<IRuleConfig> rules)
+        public Configuration(IEnumerable<IRuleConfig> rules)
         {
-            this.FileToAnalyze = fileToAnalyze;
             this.Rules = rules;
         }
-
-        public string FileToAnalyze { get; }
 
         public IEnumerable<IRuleConfig> Rules { get; }
     }
