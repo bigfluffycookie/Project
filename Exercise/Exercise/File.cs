@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System;
 using System.IO.Abstractions;
+using System.Diagnostics;
 
 namespace Exercise
 {
@@ -9,7 +10,7 @@ namespace Exercise
         public string FilePath { get; }
         public string[] FileContent { get; }
 
-        public File(string filePath) : this(filePath,new FileSystem()) { }
+        public File(string filePath) : this(filePath , new FileSystem()) { }
 
         public File(string filePath, IFileSystem fileSystem)
         {
@@ -27,10 +28,7 @@ namespace Exercise
             }
             catch (IOException e)
             {
-                Console.WriteLine("File could not be read with error message: " + e.Message);
-                Console.Write("Press any key to close App");
-                Console.ReadKey();
-                Environment.Exit(0);
+                Debug.Write("File could not be read with error message: " + e.Message);
             }
 
             return fileContent;
