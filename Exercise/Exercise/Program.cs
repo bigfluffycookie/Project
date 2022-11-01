@@ -9,12 +9,10 @@ namespace Exercise
     {
         public static string ProgramSetUp(string[] args)
         {
-            DisplayWelcomeText();
-
             var rulesProvider = new AvailableRulesProvider();
             var rules = rulesProvider.GetAvailableRules();
 
-            var configProvider = GetConfigProvider(args, rules);
+            var configProvider = GetConfigProvider(args);
             var configuration = configProvider.GetConfiguration();
             var filePath = configuration.FileToAnalyze;
             var file = new File(filePath);
@@ -26,23 +24,16 @@ namespace Exercise
             return formattedResultReadyResult;
         }
 
-        private static IConfigProvider GetConfigProvider(string[] args, IEnumerable<IRule> availableRules)
+        private static IConfigProvider GetConfigProvider(string[] args)
         {
-            if (args.Length != 0)
-            {
-                var inputValidator = new InputValidator();
+           var inputValidator = new InputValidator();
 
-                if (!inputValidator.FileExists(args[0]))
-                {
-                    throw new Exception("Json File at path: " + args[0] + " was not found.");
-                }
+           if (!inputValidator.FileExists(args[0]))
+           {
+              throw new Exception("Json File at path: " + args[0] + " was not found.");
+           }
 
-                var inputFromJson = new ConfigProviderJson(args[0]);
-
-                return inputFromJson;
-            }
-
-            return new ConfigProviderUser(availableRules);
+           return new ConfigProviderJson(args[0]);
         }
 
         private static string FormatResult(List<IIssue> issues)
@@ -57,11 +48,6 @@ namespace Exercise
             }
 
             return formattedResult;
-        }
-
-        private static void DisplayWelcomeText()
-        {
-            Console.WriteLine("Welcome to the Analyzer");
         }
     }
 }
