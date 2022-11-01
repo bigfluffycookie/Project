@@ -21,7 +21,7 @@ namespace Exercise
         private string[] GetFileContent(string filePath, IFileSystem fileSystem)
         {
             var fileContent = fileSystem.File.ReadAllLines(filePath);
-
+            
             return fileContent;
         }
     }

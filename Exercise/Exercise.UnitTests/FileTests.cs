@@ -13,13 +13,13 @@ public class FileTests
     {
         const string filePath = "Test.txt";
         var fileSystem = new Mock<IFileSystem>();
-        fileSystem.Setup(p => p.File.ReadAllText(filePath)).Throws(new IOException());
+        fileSystem.Setup(p => p.File.ReadAllLines(filePath)).Throws(new FileNotFoundException());
 
-        Assert.ThrowsException<IOException>(() => new File(filePath));
+        Assert.ThrowsException<FileNotFoundException>(() => new File(filePath, fileSystem.Object));
     }
 
     [TestMethod]
-    public void Ctor_FileExistsÊmptyFile_FileContentEmpty()
+    public void Ctor_FileExistsEmptyFile_FileContentEmpty()
     {
         const string filePath = "Test.txt";
         var fileSystem = new Mock<IFileSystem>();
@@ -27,7 +27,7 @@ public class FileTests
 
         var file = new File(filePath, fileSystem.Object);
 
-        file.FileContent.Length.Should().Be(1);
+        file.FileContent.Length.Should().Be(0);
     }
 
     [TestMethod]
