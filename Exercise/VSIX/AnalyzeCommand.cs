@@ -93,16 +93,8 @@ namespace VSIX
 
         private void Analyze(object sender, EventArgs e)
         {
-            var ruleConfigFilePath = GetRuleConfigPath();
-            var result = Exercise.Program.ProgramSetUp(new string[] { ruleConfigFilePath });
+            var result = Exercise.Program.ProgramSetUp();
             LogAnalyzerResults(result);
-        }
-
-
-        private string GetRuleConfigPath()
-        {
-            var ruleConfigPath = @"..\..\..\Files\rules.json";
-            return ruleConfigPath;
         }
 
         private void LogAnalyzerResults(string result)
