@@ -2,6 +2,8 @@
 using System.Linq;
 using System.IO.Abstractions;
 using Moq;
+using System.IO;
+using FluentAssertions;
 
 namespace Exercise.UnitTests;
 
@@ -95,6 +97,27 @@ public class ConfigProviderJsonTests
         var fileSystem = CreateFileSystemWithFile(fileContent);
 
         Assert.ThrowsException<Exception>(() => new ConfigProviderJson(fileSystem));
+    }
+
+    [TestMethod]
+    public void Constructor_JsonDoesNotExist_CreatesJson()
+    {
+        var fileContent = @"{
+             'rules' : {}
+        }";
+
+        var directoryPath = Environment.GetEnvironmentVariable("localappdata") + @"\\LeylasAnalyzer";
+        var filePath = directoryPath + "\\" + "rules.json";
+
+        var fileSystem = new Mock<IFileSystem>();
+
+        fileSystem.Setup(p => p.Directory.CreateDirectory(directoryPath));
+        fileSystem.Setup(p => p.File.ReadAllText(filePath)).Returns(fileContent);
+
+        var configProvider = new ConfigProviderJson(fileSystem.Object);
+
+        fileSystem.Verify(p => p.File.WriteAllText(filePath, It.IsAny<string>()), Times.Once);
+        fileSystem.Verify(p => p.Directory.CreateDirectory(directoryPath), Times.Once);
     }
 
     private static IFileSystem CreateFileSystemWithFile(string fileContent)

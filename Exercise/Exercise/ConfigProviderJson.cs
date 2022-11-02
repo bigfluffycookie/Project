@@ -20,23 +20,23 @@ namespace Exercise
         {
             this.fileSystem = fileSystem;
 
-            UserConfiguration userConfiguration;
-            string jsonFilePath = jsonFolder + "\\" + "rules.json";
-
-            if (fileSystem.File.Exists(jsonFilePath))
-            {
-                userConfiguration = CreateUserConfiguration(jsonFilePath);
-            }
-            else
-            {
-                fileSystem.Directory.CreateDirectory(jsonFolder);
-                userConfiguration = CreateDefaultJson(jsonFilePath);
-            }
+            var jsonFilePath = jsonFolder + "\\" + "rules.json";
+            EnsureRulesConfigFileExists(jsonFilePath);
+            var userConfiguration = LoadUserConfiguration(jsonFilePath);
 
             InitializeConfig(userConfiguration);
         }
 
-        private UserConfiguration CreateDefaultJson(string path)
+        private void EnsureRulesConfigFileExists(string jsonFilePath)
+        {
+            if (!fileSystem.File.Exists(jsonFilePath))
+            {
+                fileSystem.Directory.CreateDirectory(jsonFolder);
+                CreateDefaultJson(jsonFilePath);
+            }
+        }
+
+        private void CreateDefaultJson(string path)
         {
             var userConfiguration = new UserConfiguration();
             userConfiguration.rules = new Dictionary<string, int[]>();
@@ -47,11 +47,9 @@ namespace Exercise
 
             string configFileContent = JsonConvert.SerializeObject(userConfiguration);
             fileSystem.File.WriteAllText(path, configFileContent);
-
-            return userConfiguration;
         }
 
-        private UserConfiguration CreateUserConfiguration(string path)
+        private UserConfiguration LoadUserConfiguration(string path)
         {
             var configFileContent = fileSystem.File.ReadAllText(path);
             UserConfiguration? userConfiguration;
