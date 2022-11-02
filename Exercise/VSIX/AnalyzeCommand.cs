@@ -5,6 +5,7 @@ using Task = System.Threading.Tasks.Task;
 using System.Diagnostics;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Exception = System.Exception;
+using Exercise;
 
 namespace VSIX
 {
@@ -30,6 +31,8 @@ namespace VSIX
 
         private ILogger logger;
 
+        private IAnalyzeManager analyzeManager;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AnalyzeCommand"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
@@ -50,6 +53,7 @@ namespace VSIX
             {
                 var comp = this.package.GetService<SComponentModel, IComponentModel>();
                 logger = comp.GetService<ILogger>();
+                analyzeManager = comp.GetService<IAnalyzeManager>();
             }
             catch (Exception exception)
             {
@@ -93,16 +97,8 @@ namespace VSIX
 
         private void Analyze(object sender, EventArgs e)
         {
-            var ruleConfigFilePath = GetRuleConfigPath();
-            var result = Exercise.Program.ProgramSetUp();
+            var result = analyzeManager.AnalyzeAndGetResult();
             LogAnalyzerResults(result);
-        }
-
-
-        private string GetRuleConfigPath()
-        {
-            var ruleConfigPath = @"..\..\..\Files\rules.json";
-            return ruleConfigPath;
         }
 
         private void LogAnalyzerResults(string result)

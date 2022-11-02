@@ -1,27 +1,33 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using Exercise.Rules;
+using System.ComponentModel.Composition;
 
 namespace Exercise
 {
-    public static class Program
+    internal interface IAnalyzeManager
     {
-        public static string ProgramSetUp()
-        {
-            var rulesProvider = new AvailableRulesProvider();
-            var rules = rulesProvider.GetAvailableRules();
+       string AnalyzeAndGetResult();
+    }
 
+    [Export(typeof(IAnalyzeManager))]
+    [PartCreationPolicy(CreationPolicy.Shared)]
+    internal class AnalyzeManager : IAnalyzeManager
+    {
+        public string AnalyzeAndGetResult()
+        {
             var configProvider = new ConfigProviderJson();
             var configuration = configProvider.GetConfiguration();
             var filePath = "C:\\Junk\\File.txt";
             var file = new File(filePath);
 
+            var rulesProvider = new AvailableRulesProvider();
+            var rules = rulesProvider.GetAvailableRules();
+
             var result = Analyzer.Analyze(file, rules, configuration);
 
-            var formattedResultReadyResult = FormatResult(result);
+            var formattedResult = FormatResult(result);
 
-            return formattedResultReadyResult;
+            return formattedResult;
         }
 
         private static string FormatResult(List<IIssue> issues)
