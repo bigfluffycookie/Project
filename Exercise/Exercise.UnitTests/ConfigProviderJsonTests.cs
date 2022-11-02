@@ -111,6 +111,7 @@ public class ConfigProviderJsonTests
         var directoryPath = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer");
         var filePath = Path.Combine(directoryPath, "rules.json");
 
+        fileSystem.Setup(p => p.File.Exists(filePath)).Returns(false);
         fileSystem.Setup(p => p.Directory.CreateDirectory(directoryPath));
         fileSystem.Setup(p => p.File.ReadAllText(filePath)).Returns(fileContent);
 
