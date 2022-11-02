@@ -131,7 +131,7 @@ public class ConfigProviderJsonTests
 
         var fileSystem = new Mock<IFileSystem>();
 
-        var path = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer\\rules.json");
+        var path = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer", "rules.json");
 
         fileSystem.Setup(p => p.File.Exists(path)).Returns(true);
         fileSystem.Setup(p => p.File.ReadAllText(path)).Returns(fileContent);
@@ -145,7 +145,7 @@ public class ConfigProviderJsonTests
     private static IFileSystem CreateFileSystemWithFile(string fileContent)
     {
         var fileSystem = new Mock<IFileSystem>();
-        var path = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer\\rules.json");
+        var path = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer", "rules.json");
         fileSystem.Setup(p => p.File.Exists(path)).Returns(true);
         fileSystem.Setup(p => p.File.ReadAllText(path)).Returns(fileContent);
 
