@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using Exercise.Rules;
 
 namespace Exercise
 {
@@ -13,6 +14,14 @@ namespace Exercise
     [PartCreationPolicy(CreationPolicy.Shared)]
     internal class AnalyzeManager : IAnalyzeManager
     {
+        private IEnumerable<IRule> availableRules { get; }
+
+        [ImportingConstructor]
+        public AnalyzeManager([Import] IAvailableRulesProvider availableRulesProvider)
+        {
+            availableRules = availableRulesProvider.AvailableRules;
+        }
+
         public string AnalyzeAndGetResult()
         {
             var configProvider = new ConfigProviderJson();
@@ -20,10 +29,7 @@ namespace Exercise
             var filePath = "C:\\Junk\\File.txt";
             var file = new File(filePath);
 
-            var rulesProvider = new AvailableRulesProvider();
-            var rules = rulesProvider.GetAvailableRules();
-
-            var result = Analyzer.Analyze(file, rules, configuration);
+            var result = Analyzer.Analyze(file, availableRules, configuration);
 
             var formattedResult = FormatResult(result);
 

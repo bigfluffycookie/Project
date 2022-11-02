@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 
 namespace Exercise.Rules
 {
+    [Export(typeof(IRule))]
     public class MaxFilePathLengthRule : IRule
     {
         public string RuleId => "maxPathLength";

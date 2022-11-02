@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 
 namespace Exercise.Rules
 {
+    [Export(typeof(IRule))]
     public class TodoRule : IRule
     {
         public string RuleId => "todo";
