@@ -7,12 +7,12 @@ namespace Exercise
 {
     public static class Program
     {
-        public static string ProgramSetUp(string[] args)
+        public static string ProgramSetUp()
         {
             var rulesProvider = new AvailableRulesProvider();
             var rules = rulesProvider.GetAvailableRules();
 
-            var configProvider = GetConfigProvider(args);
+            var configProvider = new ConfigProviderJson();
             var configuration = configProvider.GetConfiguration();
             var filePath = "C:\\Junk\\File.txt";
             var file = new File(filePath);
@@ -22,18 +22,6 @@ namespace Exercise
             var formattedResultReadyResult = FormatResult(result);
 
             return formattedResultReadyResult;
-        }
-
-        private static IConfigProvider GetConfigProvider(string[] args)
-        {
-           var inputValidator = new InputValidator();
-
-           if (!inputValidator.FileExists(args[0]))
-           {
-              throw new Exception("Json File at path: " + args[0] + " was not found.");
-           }
-
-           return new ConfigProviderJson(args[0]);
         }
 
         private static string FormatResult(List<IIssue> issues)
