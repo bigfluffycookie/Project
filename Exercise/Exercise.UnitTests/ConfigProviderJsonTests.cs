@@ -106,24 +106,45 @@ public class ConfigProviderJsonTests
              'rules' : {}
         }";
 
-        var directoryPath = Environment.GetEnvironmentVariable("localappdata") + @"\\LeylasAnalyzer";
-        var filePath = directoryPath + "\\" + "rules.json";
-
         var fileSystem = new Mock<IFileSystem>();
+
+        var directoryPath = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer");
+        var filePath = Path.Combine(directoryPath, "rules.json");
 
         fileSystem.Setup(p => p.Directory.CreateDirectory(directoryPath));
         fileSystem.Setup(p => p.File.ReadAllText(filePath)).Returns(fileContent);
 
-        var configProvider = new ConfigProviderJson(fileSystem.Object);
+        _ = new ConfigProviderJson(fileSystem.Object);
 
+        fileSystem.Verify(p => p.File.Exists(filePath), Times.Once);
         fileSystem.Verify(p => p.File.WriteAllText(filePath, It.IsAny<string>()), Times.Once);
         fileSystem.Verify(p => p.Directory.CreateDirectory(directoryPath), Times.Once);
     }
 
+    [TestMethod]
+    public void Constructor_JsonExists_JsonIsNotCreated()
+    {
+        var fileContent = @"{
+             'rules' : {}
+        }";
+
+        var fileSystem = new Mock<IFileSystem>();
+
+        var path = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer\\rules.json");
+
+        fileSystem.Setup(p => p.File.Exists(path)).Returns(true);
+        fileSystem.Setup(p => p.File.ReadAllText(path)).Returns(fileContent);
+
+        _ = new ConfigProviderJson(fileSystem.Object);
+
+        fileSystem.Verify(p => p.File.Exists(path), Times.Once);
+        fileSystem.Verify(p => p.File.WriteAllText(path, It.IsAny<string>()), Times.Never);
+    }
+
     private static IFileSystem CreateFileSystemWithFile(string fileContent)
     {
-        var path = Environment.GetEnvironmentVariable("localappdata") + @"\\LeylasAnalyzer" + "\\" + "rules.json";
         var fileSystem = new Mock<IFileSystem>();
+        var path = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer\\rules.json");
         fileSystem.Setup(p => p.File.Exists(path)).Returns(true);
         fileSystem.Setup(p => p.File.ReadAllText(path)).Returns(fileContent);
 
