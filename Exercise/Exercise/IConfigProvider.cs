@@ -16,6 +16,8 @@ namespace Exercise
 
     public interface IConfigProvider
     {
+        void UpdateConfiguration(string path);
+
         IConfiguration GetConfiguration();
     }
 

@@ -157,7 +157,7 @@ public class ConfigProviderJsonTests
         }";
 
         var fileSystem = new Mock<IFileSystem>();
-        var defaultPath = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer\\rules.json");
+        var defaultPath = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer", "rules.json");
         fileSystem.Setup(p => p.File.Exists(defaultPath)).Returns(true);
         fileSystem.Setup(p => p.File.ReadAllText(defaultPath)).Returns(fileContent);
 
@@ -167,6 +167,8 @@ public class ConfigProviderJsonTests
 
         var configProvider = new ConfigProviderJson(fileSystem.Object);
         configProvider.UpdateConfiguration(path);
+
+        fileSystem.Verify(p => p.File.ReadAllText(path), Times.Once);
         var config = configProvider.GetConfiguration();
 
         config.Rules.Count().Should().Be(1);
