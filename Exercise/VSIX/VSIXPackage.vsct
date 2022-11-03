@@ -71,6 +71,13 @@
 					<ButtonText>Invoke AnalyzeCommand</ButtonText>
 				</Strings>
 			</Button>
+			<Button guid="guidVSIXPackageCmdSet" id="BrowseCommandId" priority="0x0101" type="Button">
+				<Parent guid="guidVSIXPackageCmdSet" id="MySubMenuGroup" />
+				<Icon guid="guidImages" id="bmpPic1" />
+				<Strings>
+					<ButtonText>Browse for Rule Config File</ButtonText>
+				</Strings>
+			</Button>
 		</Buttons>
 
 		<!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -94,6 +101,7 @@
 			<IDSymbol name="MyMenuItem" value="0x1021" />
 			<IDSymbol name="MySubMenuGroup" value="0x1022" />
 			<IDSymbol name="AnalyzeCommandId" value="0x0100" />
+			<IDSymbol name="BrowseCommandId" value="0x0101" />
 		</GuidSymbol>
 
 		<GuidSymbol name="guidImages" value="{7420ce07-09f0-4cc8-a79b-1d8d7e2eb1e3}">
