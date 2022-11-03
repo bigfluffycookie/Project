@@ -29,8 +29,6 @@ namespace VSIX
         /// </summary>
         private readonly AsyncPackage package;
 
-        private ILogger logger;
-
         private IAnalysisController analyzeManager;
 
         /// <summary>
@@ -52,7 +50,6 @@ namespace VSIX
             try
             {
                 var comp = this.package.GetService<SComponentModel, IComponentModel>();
-                logger = comp.GetService<ILogger>();
                 analyzeManager = comp.GetService<IAnalysisController>();
             }
             catch (Exception exception)
