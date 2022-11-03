@@ -144,6 +144,38 @@ public class ConfigProviderJsonTests
         fileSystem.Verify(p => p.Directory.CreateDirectory(directoryPath), Times.Once);
     }
 
+    [TestMethod]
+    public void Constructor_UpdateConfiguration_UpdatesCorrectly()
+    {
+        var fileContent = @"{
+             'rules' : {}
+        }";
+
+        var updatedFileContent = @"{
+             'rules' : 
+                { 'ruleID' : [0] }
+        }";
+
+        var fileSystem = new Mock<IFileSystem>();
+        var defaultPath = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer", "rules.json");
+        fileSystem.Setup(p => p.File.Exists(defaultPath)).Returns(true);
+        fileSystem.Setup(p => p.File.ReadAllText(defaultPath)).Returns(fileContent);
+
+        var path = "Test.json";
+        fileSystem.Setup(p => p.File.Exists(path)).Returns(true);
+        fileSystem.Setup(p => p.File.ReadAllText(path)).Returns(updatedFileContent);
+
+        var configProvider = new ConfigProviderJson(fileSystem.Object);
+        configProvider.UpdateConfiguration(path);
+
+        fileSystem.Verify(p => p.File.ReadAllText(path), Times.Once);
+        var config = configProvider.GetConfiguration();
+
+        config.Rules.Count().Should().Be(1);
+        config.Rules.First().RuleId.Should().Be("ruleID");
+        config.Rules.First().RuleParam.Should().Be(0);
+    }
+
     private static IFileSystem CreateFileSystemWithFile(string fileContent)
     {
         var fileSystem = new Mock<IFileSystem>();

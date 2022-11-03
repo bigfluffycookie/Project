@@ -19,21 +19,22 @@ namespace Exercise
 
         private readonly ImmutableArray<IRule> availableRules;
 
+        private readonly IConfigProvider configProvider;
+
         [ImportingConstructor]
-        public AnalysisController(ILogger logger, IAvailableRulesProvider availableRulesProvider)
+        public AnalysisController(ILogger logger, IAvailableRulesProvider availableRulesProvider, IConfigProvider configProvider)
         {
             this.logger = logger;
             availableRules = availableRulesProvider.AvailableRules;
+            this.configProvider = configProvider;
         }
 
         public void AnalyzeAndGetResult()
         {
-            var configProvider = new ConfigProviderJson();
-            var configuration = configProvider.GetConfiguration();
             var filePath = "C:\\Junk\\File.txt";
             var file = new File(filePath);
 
-            var result = Analyzer.Analyze(file, availableRules, configuration);
+            var result = Analyzer.Analyze(file, availableRules, configProvider.GetConfiguration());
 
             FormatAndLogResult(result);
         }

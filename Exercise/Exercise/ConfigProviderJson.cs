@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.IO;
 using System.IO.Abstractions;
 using Newtonsoft.Json;
 
 namespace Exercise
 {
+    [Export(typeof(IConfigProvider))]
+    [PartCreationPolicy(CreationPolicy.Shared)]
     internal class ConfigProviderJson : IConfigProvider
     {
-        private Configuration configuration;
+        private IConfiguration configuration;
 
         private IFileSystem fileSystem;
 
@@ -17,21 +20,26 @@ namespace Exercise
         internal ConfigProviderJson(IFileSystem fileSystem)
         {
             this.fileSystem = fileSystem;
-            var jsonFolder = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer");
-            var jsonFilePath = Path.Combine(jsonFolder, "rules.json");
-            EnsureRulesConfigFileExists(jsonFolder, jsonFilePath);
-            var userConfiguration = LoadUserConfiguration(jsonFilePath);
-
-            InitializeConfig(userConfiguration);
+            EnsureDefaultRulesConfigFileExists();
         }
 
-        private void EnsureRulesConfigFileExists(string jsonFolder, string jsonFilePath)
+        public void UpdateConfiguration(string path)
         {
-            if (!fileSystem.File.Exists(jsonFilePath))
+            var userConfiguration = LoadUserConfiguration(path);
+            configuration = InitializeConfig(userConfiguration);
+        }
+
+        private void EnsureDefaultRulesConfigFileExists()
+        {
+            var jsonFolder = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer");
+            var defaultJsonPath = Path.Combine(jsonFolder, "rules.json");
+            if (!fileSystem.File.Exists(defaultJsonPath))
             {
                 fileSystem.Directory.CreateDirectory(jsonFolder);
-                CreateDefaultJson(jsonFilePath);
+                CreateDefaultJson(defaultJsonPath);
             }
+
+            UpdateConfiguration(defaultJsonPath);
         }
 
         private void CreateDefaultJson(string path)
@@ -69,7 +77,7 @@ namespace Exercise
             return userConfiguration;
         }
 
-        private void InitializeConfig(UserConfiguration userConfiguration)
+        private IConfiguration InitializeConfig(UserConfiguration userConfiguration)
         {
             var ruleConfigs = new List<IRuleConfig>();
 
@@ -81,7 +89,7 @@ namespace Exercise
                 ruleConfigs.Add(ruleConfigJson);
             }
 
-            configuration = new Configuration(ruleConfigs);
+            return new Configuration(ruleConfigs);
         }
 
         public IConfiguration GetConfiguration()
