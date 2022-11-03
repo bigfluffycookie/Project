@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using Exercise.Rules;
 using Moq;
 
@@ -11,7 +12,7 @@ namespace Exercise.UnitTests
         public void Analyze_NoRules_ReturnsEmptyList()
         {
             var result = Analyzer.Analyze(It.IsAny<File>(),
-                                          new List<IRule>(),
+                                          new List<IRule>().ToImmutableArray(),
                                           It.IsAny<IConfiguration>());
 
             Assert.AreEqual(0, result.Count);
@@ -31,7 +32,7 @@ namespace Exercise.UnitTests
             rule.Setup(p => p.Execute(file, ruleConfig)).Returns(new List<IIssue> { issue });
 
             var result = Analyzer.Analyze(file,
-                                          new List<IRule> { rule.Object },
+                                          new List<IRule> { rule.Object }.ToImmutableArray(),
                                           configuration);
 
             Assert.AreEqual(1, result.Count);
@@ -50,7 +51,7 @@ namespace Exercise.UnitTests
             rule.Setup(p => p.Execute(file, ruleConfig)).Returns(new List<IIssue>());
 
             var result = Analyzer.Analyze(file,
-                                          new List<IRule> { rule.Object },
+                                          new List<IRule> { rule.Object }.ToImmutableArray(),
                                           configuration);
 
             Assert.AreEqual(0, result.Count);
@@ -75,7 +76,7 @@ namespace Exercise.UnitTests
             var configuration = CreateConfigurationWithRuleConfigs(ruleConfigOne, ruleConfigTwo);
 
             var result = Analyzer.Analyze(file,
-                                          new List<IRule> { ruleOne.Object, ruleTwo.Object },
+                                          new List<IRule> { ruleOne.Object, ruleTwo.Object }.ToImmutableArray(),
                                           configuration);
 
             Assert.AreEqual(1, result.Count);
