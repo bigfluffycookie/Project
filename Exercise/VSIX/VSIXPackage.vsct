@@ -39,7 +39,19 @@
       <Group guid="guidVSIXPackageCmdSet" id="MyMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
       </Group>
-    </Groups>
+	  <Group guid="guidVSIXPackageCmdSet" id="MySubMenuGroup" priority="0x0600">
+		<Parent guid="guidVSIXPackageCmdSet" id="MyMenuItem" />
+	  </Group>
+	</Groups>
+
+	<Menus>
+		<Menu guid="guidVSIXPackageCmdSet" id="MyMenuItem" type="Menu" priority="0x0600">
+			<Parent guid="guidVSIXPackageCmdSet" id="MyMenuGroup" />
+			<Strings>
+				<ButtonText>Leylas Analyzer</ButtonText>
+			</Strings>
+		</Menu>
+	</Menus>
 
     <!--Buttons section. -->
     <!--This section defines the elements the user can interact with, like a menu command or a button
@@ -53,7 +65,7 @@
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
       <Button guid="guidVSIXPackageCmdSet" id="AnalyzeCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidVSIXPackageCmdSet" id="MyMenuGroup" />
+        <Parent guid="guidVSIXPackageCmdSet" id="MySubMenuGroup" />
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
           <ButtonText>Invoke AnalyzeCommand</ButtonText>
@@ -79,6 +91,8 @@
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidVSIXPackageCmdSet" value="{9d169479-372d-4b21-a855-d4449ad5b742}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
+	  <IDSymbol name="MyMenuItem" value="0x1021" />
+	  <IDSymbol name="MySubMenuGroup" value="0x1022" />
       <IDSymbol name="AnalyzeCommandId" value="0x0100" />
     </GuidSymbol>
 
