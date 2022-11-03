@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using Exercise.Rules;
 
@@ -14,7 +15,7 @@ namespace Exercise
     [PartCreationPolicy(CreationPolicy.Shared)]
     internal class AnalyzeManager : IAnalyzeManager
     {
-        private IEnumerable<IRule> availableRules { get; }
+        private readonly ImmutableArray<IRule> availableRules;
 
         [ImportingConstructor]
         public AnalyzeManager([Import] IAvailableRulesProvider availableRulesProvider)
