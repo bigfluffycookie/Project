@@ -16,7 +16,7 @@ namespace Exercise
         private readonly ILogger logger;
 
         [ImportingConstructor]
-        public AnalysisController([Import] ILogger logger)
+        public AnalysisController(ILogger logger)
         {
             this.logger = logger;
         }
