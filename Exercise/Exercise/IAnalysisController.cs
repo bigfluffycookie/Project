@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel.Composition;
+using Exercise.Rules;
 
 namespace Exercise
 {
@@ -15,10 +17,13 @@ namespace Exercise
     {
         private readonly ILogger logger;
 
+        private readonly ImmutableArray<IRule> availableRules;
+
         [ImportingConstructor]
-        public AnalysisController(ILogger logger)
+        public AnalysisController(ILogger logger, IAvailableRulesProvider availableRulesProvider)
         {
             this.logger = logger;
+            availableRules = availableRulesProvider.AvailableRules;
         }
 
         public void AnalyzeAndGetResult()
@@ -28,10 +33,7 @@ namespace Exercise
             var filePath = "C:\\Junk\\File.txt";
             var file = new File(filePath);
 
-            var rulesProvider = new AvailableRulesProvider();
-            var rules = rulesProvider.GetAvailableRules();
-
-            var result = Analyzer.Analyze(file, rules, configuration);
+            var result = Analyzer.Analyze(file, availableRules, configuration);
 
             FormatAndLogResult(result);
         }
