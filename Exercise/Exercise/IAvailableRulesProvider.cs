@@ -18,9 +18,9 @@ namespace Exercise
         public ImmutableArray<IRule> AvailableRules { get; }
 
         [ImportingConstructor]
-        public AvailableRulesProvider([ImportMany] ImmutableArray<IRule> rules)
+        public AvailableRulesProvider([ImportMany] IEnumerable<IRule> rules)
         {
-            AvailableRules = rules;
+            AvailableRules = rules.ToImmutableArray();
         }
     }
 }

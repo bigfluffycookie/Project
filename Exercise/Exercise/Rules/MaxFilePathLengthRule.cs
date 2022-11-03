@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 namespace Exercise.Rules
 {
     [Export(typeof(IRule))]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
     public class MaxFilePathLengthRule : IRule
     {
         public string RuleId => "maxPathLength";
