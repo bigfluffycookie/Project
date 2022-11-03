@@ -18,7 +18,7 @@ namespace Exercise
         private readonly IConfigProvider configProvider;
 
         [ImportingConstructor]
-        public AnalysisController([Import] ILogger logger, [Import]IConfigProvider configProvider)
+        public AnalysisController(ILogger logger, IConfigProvider configProvider)
         {
             this.logger = logger;
             this.configProvider = configProvider;
