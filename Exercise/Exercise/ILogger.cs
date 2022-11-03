@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Composition;
 
-namespace VSIX
+namespace Exercise
 {
     internal interface ILogger
     {

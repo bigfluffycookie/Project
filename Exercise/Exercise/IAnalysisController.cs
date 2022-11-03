@@ -4,16 +4,24 @@ using System.ComponentModel.Composition;
 
 namespace Exercise
 {
-    internal interface IAnalyzeManager
+    internal interface IAnalysisController
     {
-       string AnalyzeAndGetResult();
+       void AnalyzeAndGetResult();
     }
 
-    [Export(typeof(IAnalyzeManager))]
+    [Export(typeof(IAnalysisController))]
     [PartCreationPolicy(CreationPolicy.Shared)]
-    internal class AnalyzeManager : IAnalyzeManager
+    internal class AnalysisController : IAnalysisController
     {
-        public string AnalyzeAndGetResult()
+        private readonly ILogger logger;
+
+        [ImportingConstructor]
+        public AnalysisController([Import] ILogger logger)
+        {
+            this.logger = logger;
+        }
+
+        public void AnalyzeAndGetResult()
         {
             var configProvider = new ConfigProviderJson();
             var configuration = configProvider.GetConfiguration();
@@ -25,12 +33,10 @@ namespace Exercise
 
             var result = Analyzer.Analyze(file, rules, configuration);
 
-            var formattedResult = FormatResult(result);
-
-            return formattedResult;
+            FormatAndLogResult(result);
         }
 
-        private static string FormatResult(List<IIssue> issues)
+        private void FormatAndLogResult(List<IIssue> issues)
         {
             var formattedResult = issues.Count == 0 ? "No Issues" : "";
             foreach (var issue in issues)
@@ -41,7 +47,7 @@ namespace Exercise
                 formattedResult += "\n";
             }
 
-            return formattedResult;
+            logger.Log(formattedResult);
         }
     }
 }

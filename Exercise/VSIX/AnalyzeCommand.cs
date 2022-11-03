@@ -31,7 +31,7 @@ namespace VSIX
 
         private ILogger logger;
 
-        private IAnalyzeManager analyzeManager;
+        private IAnalysisController analyzeManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AnalyzeCommand"/> class.
@@ -53,7 +53,7 @@ namespace VSIX
             {
                 var comp = this.package.GetService<SComponentModel, IComponentModel>();
                 logger = comp.GetService<ILogger>();
-                analyzeManager = comp.GetService<IAnalyzeManager>();
+                analyzeManager = comp.GetService<IAnalysisController>();
             }
             catch (Exception exception)
             {
@@ -97,13 +97,7 @@ namespace VSIX
 
         private void Analyze(object sender, EventArgs e)
         {
-            var result = analyzeManager.AnalyzeAndGetResult();
-            LogAnalyzerResults(result);
-        }
-
-        private void LogAnalyzerResults(string result)
-        {
-            logger?.Log(result);
+            analyzeManager.AnalyzeAndGetResult();
         }
     }
 }
