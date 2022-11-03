@@ -5,6 +5,7 @@ using Task = System.Threading.Tasks.Task;
 using System.Diagnostics;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Exception = System.Exception;
+using Exercise;
 
 namespace VSIX
 {
@@ -28,7 +29,7 @@ namespace VSIX
         /// </summary>
         private readonly AsyncPackage package;
 
-        private ILogger logger;
+        private IAnalysisController analyzeManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AnalyzeCommand"/> class.
@@ -49,7 +50,7 @@ namespace VSIX
             try
             {
                 var comp = this.package.GetService<SComponentModel, IComponentModel>();
-                logger = comp.GetService<ILogger>();
+                analyzeManager = comp.GetService<IAnalysisController>();
             }
             catch (Exception exception)
             {
@@ -93,13 +94,7 @@ namespace VSIX
 
         private void Analyze(object sender, EventArgs e)
         {
-            var result = Exercise.Program.ProgramSetUp();
-            LogAnalyzerResults(result);
-        }
-
-        private void LogAnalyzerResults(string result)
-        {
-            logger?.Log(result);
+            analyzeManager.AnalyzeAndGetResult();
         }
     }
 }

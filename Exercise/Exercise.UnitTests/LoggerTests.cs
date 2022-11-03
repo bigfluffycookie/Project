@@ -3,7 +3,7 @@ using Moq;
 using System;
 using FluentAssertions;
 
-namespace VSIX.UnitTests
+namespace Exercise.UnitTests
 {
     [TestClass]
     public class LoggerTests

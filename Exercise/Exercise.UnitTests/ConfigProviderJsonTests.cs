@@ -131,6 +131,28 @@ public class ConfigProviderJsonTests
 
         var fileSystem = new Mock<IFileSystem>();
 
+        var directoryPath = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer");
+        var filePath = Path.Combine(directoryPath, "rules.json");
+
+        fileSystem.Setup(p => p.Directory.CreateDirectory(directoryPath));
+        fileSystem.Setup(p => p.File.ReadAllText(filePath)).Returns(fileContent);
+
+        _ = new ConfigProviderJson(fileSystem.Object);
+
+        fileSystem.Verify(p => p.File.Exists(filePath), Times.Once);
+        fileSystem.Verify(p => p.File.WriteAllText(filePath, It.IsAny<string>()), Times.Once);
+        fileSystem.Verify(p => p.Directory.CreateDirectory(directoryPath), Times.Once);
+    }
+
+    [TestMethod]
+    public void Constructor_JsonExists_JsonIsNotCreated()
+    {
+        var fileContent = @"{
+             'rules' : {}
+        }";
+
+        var fileSystem = new Mock<IFileSystem>();
+
         var path = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer", "rules.json");
 
         fileSystem.Setup(p => p.File.Exists(path)).Returns(true);
