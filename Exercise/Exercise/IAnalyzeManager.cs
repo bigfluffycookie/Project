@@ -6,27 +6,24 @@ using Exercise.Rules;
 
 namespace Exercise
 {
-    internal interface IAnalysisController
+    internal interface IAnalyzeManager
     {
-       void AnalyzeAndGetResult();
+       string AnalyzeAndGetResult();
     }
 
-    [Export(typeof(IAnalysisController))]
+    [Export(typeof(IAnalyzeManager))]
     [PartCreationPolicy(CreationPolicy.Shared)]
-    internal class AnalysisController : IAnalysisController
+    internal class AnalyzeManager : IAnalyzeManager
     {
-        private readonly ILogger logger;
-
         private readonly ImmutableArray<IRule> availableRules;
 
         [ImportingConstructor]
-        public AnalysisController(ILogger logger, IAvailableRulesProvider availableRulesProvider)
+        public AnalyzeManager([Import] IAvailableRulesProvider availableRulesProvider)
         {
-            this.logger = logger;
             availableRules = availableRulesProvider.AvailableRules;
         }
 
-        public void AnalyzeAndGetResult()
+        public string AnalyzeAndGetResult()
         {
             var configProvider = new ConfigProviderJson();
             var configuration = configProvider.GetConfiguration();
@@ -35,10 +32,12 @@ namespace Exercise
 
             var result = Analyzer.Analyze(file, availableRules, configuration);
 
-            FormatAndLogResult(result);
+            var formattedResult = FormatResult(result);
+
+            return formattedResult;
         }
 
-        private void FormatAndLogResult(List<IIssue> issues)
+        private static string FormatResult(List<IIssue> issues)
         {
             var formattedResult = issues.Count == 0 ? "No Issues" : "";
             foreach (var issue in issues)
@@ -49,7 +48,7 @@ namespace Exercise
                 formattedResult += "\n";
             }
 
-            logger.Log(formattedResult);
+            return formattedResult;
         }
     }
 }

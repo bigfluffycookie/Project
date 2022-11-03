@@ -29,7 +29,7 @@ namespace VSIX
         /// </summary>
         private readonly AsyncPackage package;
 
-        private IAnalysisController analyzeManager;
+        private IAnalysisController analyzeController;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AnalyzeCommand"/> class.
@@ -50,7 +50,7 @@ namespace VSIX
             try
             {
                 var comp = this.package.GetService<SComponentModel, IComponentModel>();
-                analyzeManager = comp.GetService<IAnalysisController>();
+                analyzeController = comp.GetService<IAnalysisController>();
             }
             catch (Exception exception)
             {
@@ -94,7 +94,7 @@ namespace VSIX
 
         private void Analyze(object sender, EventArgs e)
         {
-            analyzeManager.AnalyzeAndGetResult();
+            analyzeController.AnalyzeAndGetResult();
         }
     }
 }

@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.ComponentModel.Composition;
 using Exercise.Rules;
 
 namespace Exercise
 {
     internal interface IAvailableRulesProvider
     {
-        IEnumerable<IRule> GetAvailableRules();
+        ImmutableArray<IRule> AvailableRules { get; }
     }
 
+    [Export(typeof(IAvailableRulesProvider))]
+    [PartCreationPolicy(CreationPolicy.Shared)]
     public class AvailableRulesProvider : IAvailableRulesProvider
     {
-        public IEnumerable<IRule> GetAvailableRules() 
-        {
-            var rules = new List<IRule>()
-            {
-                new MaxLineLengthRule(),
-                new MaxFilePathLengthRule(),
-                new TodoRule()
-            };
+        public ImmutableArray<IRule> AvailableRules { get; }
 
-            return rules;
+        [ImportingConstructor]
+        public AvailableRulesProvider([ImportMany] ImmutableArray<IRule> rules)
+        {
+            AvailableRules = rules;
         }
     }
 }
