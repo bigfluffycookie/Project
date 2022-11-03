@@ -12,22 +12,20 @@ namespace Exercise
 
         private IFileSystem fileSystem;
 
-        private string jsonFolder;
-
         public ConfigProviderJson() : this (new FileSystem()) { }
 
         internal ConfigProviderJson(IFileSystem fileSystem)
         {
             this.fileSystem = fileSystem;
-            jsonFolder = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer");
+            var jsonFolder = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer");
             var jsonFilePath = Path.Combine(jsonFolder, "rules.json");
-            EnsureRulesConfigFileExists(jsonFilePath);
+            EnsureRulesConfigFileExists(jsonFolder, jsonFilePath);
             var userConfiguration = LoadUserConfiguration(jsonFilePath);
 
             InitializeConfig(userConfiguration);
         }
 
-        private void EnsureRulesConfigFileExists(string jsonFilePath)
+        private void EnsureRulesConfigFileExists(string jsonFolder, string jsonFilePath)
         {
             if (!fileSystem.File.Exists(jsonFilePath))
             {

@@ -29,7 +29,7 @@ namespace VSIX
         /// </summary>
         private readonly AsyncPackage package;
 
-        private ILogger logger;
+        private IAnalysisController analyzeManager;
 
         private IAnalyzeManager analyzeManager;
 
@@ -52,7 +52,7 @@ namespace VSIX
             try
             {
                 var comp = this.package.GetService<SComponentModel, IComponentModel>();
-                logger = comp.GetService<ILogger>();
+                analyzeManager = comp.GetService<IAnalysisController>();
                 analyzeManager = comp.GetService<IAnalyzeManager>();
             }
             catch (Exception exception)
@@ -97,13 +97,7 @@ namespace VSIX
 
         private void Analyze(object sender, EventArgs e)
         {
-            var result = analyzeManager.AnalyzeAndGetResult();
-            LogAnalyzerResults(result);
-        }
-
-        private void LogAnalyzerResults(string result)
-        {
-            logger?.Log(result);
+            analyzeManager.AnalyzeAndGetResult();
         }
     }
 }

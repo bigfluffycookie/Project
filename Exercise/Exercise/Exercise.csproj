@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Composition" Version="17.2.41" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.3.32804.24" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
   </ItemGroup>
