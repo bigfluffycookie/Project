@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 namespace Exercise.Rules
 {
     [Export(typeof(IRule))]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
     public class TodoRule : IRule
     {
         public string RuleId => "todo";
