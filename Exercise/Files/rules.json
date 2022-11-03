@@ -1,8 +1,0 @@
-{
-  "fileToAnalyze": "..\\..\\..\\Files\\File.txt",
-  "rules":{
-      "todo" : [],
-      "maxLineLength" : [2],
-      "maxPathLength": [5]
-   }
-}
