@@ -15,23 +15,24 @@ namespace Exercise
     {
         private readonly ILogger logger;
 
+        private readonly IConfigProvider configProvider;
+
         [ImportingConstructor]
-        public AnalysisController([Import] ILogger logger)
+        public AnalysisController([Import] ILogger logger, [Import]IConfigProvider configProvider)
         {
             this.logger = logger;
+            this.configProvider = configProvider;
         }
 
         public void AnalyzeAndGetResult()
         {
-            var configProvider = new ConfigProviderJson();
-            var configuration = configProvider.GetConfiguration();
             var filePath = "C:\\Junk\\File.txt";
             var file = new File(filePath);
 
             var rulesProvider = new AvailableRulesProvider();
             var rules = rulesProvider.GetAvailableRules();
 
-            var result = Analyzer.Analyze(file, rules, configuration);
+            var result = Analyzer.Analyze(file, rules, configProvider.GetConfiguration());
 
             FormatAndLogResult(result);
         }

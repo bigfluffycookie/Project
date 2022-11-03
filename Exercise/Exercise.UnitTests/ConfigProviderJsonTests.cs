@@ -4,6 +4,7 @@ using System.IO.Abstractions;
 using Moq;
 using System.IO;
 using FluentAssertions;
+using static System.Net.WebRequestMethods;
 
 namespace Exercise.UnitTests;
 
@@ -140,6 +141,37 @@ public class ConfigProviderJsonTests
         fileSystem.Verify(p => p.File.Exists(path), Times.Once);
         fileSystem.Verify(p => p.File.WriteAllText(path, It.IsAny<string>()), Times.Never);
     }
+
+    [TestMethod]
+    public void Constructor_UpdateConfiguration_UpdatesCorrectly()
+    {
+        var fileContent = @"{
+             'rules' : {}
+        }";
+
+        var updatedFileContent = @"{
+             'rules' : 
+                { 'ruleID' : [0] }
+        }";
+
+        var fileSystem = new Mock<IFileSystem>();
+        var defaultPath = Path.Combine(Environment.GetEnvironmentVariable("localappdata"), "LeylasAnalyzer\\rules.json");
+        fileSystem.Setup(p => p.File.Exists(defaultPath)).Returns(true);
+        fileSystem.Setup(p => p.File.ReadAllText(defaultPath)).Returns(fileContent);
+
+        var path = "Test.json";
+        fileSystem.Setup(p => p.File.Exists(path)).Returns(true);
+        fileSystem.Setup(p => p.File.ReadAllText(path)).Returns(updatedFileContent);
+
+        var configProvider = new ConfigProviderJson(fileSystem.Object);
+        configProvider.UpdateConfiguration(path);
+        var config = configProvider.GetConfiguration();
+
+        config.Rules.Count().Should().Be(1);
+        config.Rules.First().RuleId.Should().Be("ruleID");
+        config.Rules.First().RuleParam.Should().Be(0);
+    }
+
 
     private static IFileSystem CreateFileSystemWithFile(string fileContent)
     {
