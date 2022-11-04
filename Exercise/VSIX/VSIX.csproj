@@ -46,6 +46,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BrowseCommand.cs" />
     <Compile Include="AnalyzeCommand.cs" />
     <Compile Include="InteralVisibleTo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

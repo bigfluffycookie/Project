@@ -30,6 +30,7 @@ namespace VSIX
         public const int MyMenuItem = 0x1021;
         public const int MySubMenuGroup = 0x1022;
         public const int AnalyzeCommandId = 0x0100;
+        public const int BrowseCommandId = 0x0101;
         public const int bmpPic1 = 0x0001;
         public const int bmpPic2 = 0x0002;
         public const int bmpPicSearch = 0x0003;
