@@ -52,8 +52,8 @@ namespace VSIX
             
             var menuItem = new MenuCommand(this.Analyze, menuCommandID);
             commandService.AddCommand(menuItem);
-
-            dte = Package.GetGlobalService(typeof(DTE)) as DTE2;
+           
+            dte = package.GetService<DTE, DTE2>();
 
             try
             {
