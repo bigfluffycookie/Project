@@ -57,6 +57,7 @@ namespace VSIX
             {
                 var comp = this.package.GetService<SComponentModel, IComponentModel>();
                 configProvider = comp.GetService<IConfigProvider>();
+                logger = comp.GetService<ILogger>();
             }
             catch (Exception exception)
             {
@@ -115,7 +116,14 @@ namespace VSIX
                 return;
             }
 
-            configProvider?.UpdateConfiguration(openFileDialog.FileName);
+            if (configProvider == null)
+            {
+                logger.LogWithNewLine("Can not update rule configuration as the Configuration Provider is unavailable.");
+            }
+            else
+            {
+                configProvider.UpdateConfiguration(openFileDialog.FileName);
+            }
         }
     }
 }
