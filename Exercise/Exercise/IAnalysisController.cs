@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using Exercise.Rules;
+using static Microsoft.ServiceHub.Framework.ServiceJsonRpcDescriptor;
 
 namespace Exercise
 {
@@ -44,23 +45,26 @@ namespace Exercise
 
         private void LogStartMessage(string fileToAnalyzePath, string ruleConfigPath)
         {
-            logger.Log("----------------------------------------------------------------------------\n");
-            logger.Log($"Analyzing File:  {fileToAnalyzePath} \n");
-            logger.Log($"Using rule configuration from path: {ruleConfigPath} \n");
+            logger.LogMessageSeperator();
+            logger.LogWithNewLine($"Analyzing File:  {fileToAnalyzePath}");
+            logger.LogWithNewLine($"Using rule configuration from path: {ruleConfigPath}");
         }
 
         private void FormatAndLogResult(List<IIssue> issues)
         {
-            var formattedResult = issues.Count == 0 ? "No Issues" : "";
-            foreach (var issue in issues)
+            if (issues.Count == 0)
             {
-                formattedResult += "Line: " + issue.Line + ", ";
-                formattedResult += "Column: " + issue.Column + ", ";
-                formattedResult += "'" + issue.Text + "'";
-                formattedResult += "\n";
+                logger.LogWithNewLine("No Issues found");
+                return;
             }
 
-            logger.Log(formattedResult);
+            foreach (var issue in issues)
+            {
+                var formattedResult = @$"Line:  {issue.Line} , 
+                                        Column: {issue.Column} ,
+                                        '{issue.Text}'";
+                logger.LogWithNewLine(formattedResult);
+            }
         }
     }
 }

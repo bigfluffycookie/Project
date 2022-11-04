@@ -108,7 +108,7 @@ namespace VSIX
         private void BrowseFile(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-
+            openFileDialog.Filter = "Json (.json)|*.json";
             if (openFileDialog.ShowDialog() == DialogResult.Cancel)
             {
                 return;
