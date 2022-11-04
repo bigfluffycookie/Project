@@ -33,8 +33,13 @@ namespace Exercise
         {
             var filePath = "C:\\Junk\\File.txt";
             var file = new File(filePath);
+            logger.Log("----------------------------------------------------------------------------\n");
+            logger.Log("Analyzing File: " + filePath + "\n");
 
-            var result = Analyzer.Analyze(file, availableRules, configProvider.GetConfiguration());
+            var configuration = configProvider.GetConfiguration();
+            logger.Log("Using rule configuration from path: " + configuration.ConfigurationPath + "\n");
+
+            var result = Analyzer.Analyze(file, availableRules, configuration);
 
             FormatAndLogResult(result);
         }

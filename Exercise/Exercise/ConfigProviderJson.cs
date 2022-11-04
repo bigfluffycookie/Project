@@ -26,7 +26,7 @@ namespace Exercise
         public void UpdateConfiguration(string path)
         {
             var userConfiguration = LoadUserConfiguration(path);
-            configuration = InitializeConfig(userConfiguration);
+            configuration = InitializeConfig(userConfiguration, path);
         }
 
         private void EnsureDefaultRulesConfigFileExists()
@@ -77,7 +77,7 @@ namespace Exercise
             return userConfiguration;
         }
 
-        private IConfiguration InitializeConfig(UserConfiguration userConfiguration)
+        private IConfiguration InitializeConfig(UserConfiguration userConfiguration, string path)
         {
             var ruleConfigs = new List<IRuleConfig>();
 
@@ -89,7 +89,7 @@ namespace Exercise
                 ruleConfigs.Add(ruleConfigJson);
             }
 
-            return new Configuration(ruleConfigs);
+            return new Configuration(ruleConfigs, path);
         }
 
         public IConfiguration GetConfiguration()
