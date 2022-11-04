@@ -6,6 +6,8 @@ using System.Diagnostics;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Exception = System.Exception;
 using Exercise;
+using EnvDTE80;
+using EnvDTE;
 
 namespace VSIX
 {
@@ -31,6 +33,10 @@ namespace VSIX
 
         private IAnalysisController analyzeController;
 
+        private DTE2 dte;
+
+        private ILogger logger;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AnalyzeCommand"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
@@ -47,10 +53,13 @@ namespace VSIX
             var menuItem = new MenuCommand(this.Analyze, menuCommandID);
             commandService.AddCommand(menuItem);
 
+            dte = Package.GetGlobalService(typeof(DTE)) as DTE2;
+
             try
             {
                 var comp = this.package.GetService<SComponentModel, IComponentModel>();
                 analyzeController = comp.GetService<IAnalysisController>();
+                logger = comp.GetService<ILogger>();
             }
             catch (Exception exception)
             {
@@ -94,7 +103,15 @@ namespace VSIX
 
         private void Analyze(object sender, EventArgs e)
         {
-            analyzeController.AnalyzeAndGetResult();
+            var activeDoc = dte.ActiveDocument;
+
+            if (activeDoc == null)
+            {
+                logger.Log("No file is currently active. Please open a document and try again.");
+                return;
+            }
+
+            analyzeController.AnalyzeAndGetResult(activeDoc.FullName);
         }
     }
 }
