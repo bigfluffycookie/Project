@@ -9,6 +9,7 @@ using Exercise;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.Globalization;
 using System.Windows.Forms;
+using System.Security.Cryptography;
 
 namespace VSIX
 {
@@ -33,6 +34,8 @@ namespace VSIX
         private readonly AsyncPackage package;
 
         private IConfigProvider configProvider;
+
+        private ILogger logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BrowseCommand"/> class.
@@ -105,7 +108,12 @@ namespace VSIX
         private void BrowseFile(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.ShowDialog();
+
+            if (openFileDialog.ShowDialog() == DialogResult.Cancel)
+            {
+                return;
+            }
+
             configProvider.UpdateConfiguration(openFileDialog.FileName);
         }
     }

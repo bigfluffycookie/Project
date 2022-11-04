@@ -45,8 +45,8 @@ namespace Exercise
         private void LogStartMessage(string fileToAnalyzePath, string ruleConfigPath)
         {
             logger.Log("----------------------------------------------------------------------------\n");
-            logger.Log("Analyzing File: " + fileToAnalyzePath + "\n");
-            logger.Log("Using rule configuration from path: " + ruleConfigPath + "\n");
+            logger.Log($"Analyzing File:  {fileToAnalyzePath} \n");
+            logger.Log($"Using rule configuration from path: {ruleConfigPath} \n");
         }
 
         private void FormatAndLogResult(List<IIssue> issues)
