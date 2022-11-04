@@ -103,11 +103,17 @@ namespace VSIX
 
         private void Analyze(object sender, EventArgs e)
         {
+            if (analyzeController == null)
+            {
+                logger.LogWithNewLine("Cannot analyze as the analyzer component is unavailable.");
+                return;
+            }
+
             var activeDoc = dte.ActiveDocument;
 
             if (activeDoc == null)
             {
-                logger.Log("No file is currently active. Please open a document and try again.");
+                logger.LogWithNewLine("No file is currently active. Please open a document and try again.");
                 return;
             }
 
