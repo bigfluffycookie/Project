@@ -4,6 +4,8 @@ namespace Exercise
 {
     public interface IConfiguration
     {
+        string ConfigurationPath { get; }
+
         IEnumerable<IRuleConfig> Rules { get; }
     }
 
@@ -23,12 +25,15 @@ namespace Exercise
 
     public class Configuration : IConfiguration
     {
-        public Configuration(IEnumerable<IRuleConfig> rules)
-        {
-            this.Rules = rules;
-        }
+        public string ConfigurationPath { get; }
 
         public IEnumerable<IRuleConfig> Rules { get; }
+
+        public Configuration(IEnumerable<IRuleConfig> rules, string path)
+        {
+            this.Rules = rules;
+            this.ConfigurationPath = path;
+        }
     }
 
     public class RuleConfig: IRuleConfig

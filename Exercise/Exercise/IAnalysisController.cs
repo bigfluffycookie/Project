@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using Exercise.Rules;
+using static Microsoft.ServiceHub.Framework.ServiceJsonRpcDescriptor;
 
 namespace Exercise
 {
     internal interface IAnalysisController
     {
-       void AnalyzeAndGetResult();
+       void AnalyzeAndGetResult(string fileToAnalyzePath);
     }
 
     [Export(typeof(IAnalysisController))]
@@ -29,28 +30,40 @@ namespace Exercise
             this.configProvider = configProvider;
         }
 
-        public void AnalyzeAndGetResult()
+        public void AnalyzeAndGetResult(string fileToAnalyzePath)
         {
-            var filePath = "C:\\Junk\\File.txt";
-            var file = new File(filePath);
+            var file = new File(fileToAnalyzePath);
 
-            var result = Analyzer.Analyze(file, availableRules, configProvider.GetConfiguration());
+            var configuration = configProvider.GetConfiguration();
+            LogStartMessage(fileToAnalyzePath, configuration.ConfigurationPath);
+
+            var result = Analyzer.Analyze(file, availableRules, configuration);
 
             FormatAndLogResult(result);
         }
 
+        private void LogStartMessage(string fileToAnalyzePath, string ruleConfigPath)
+        {
+            logger.LogMessageSeperator();
+            logger.LogWithNewLine($"Analyzing File:  {fileToAnalyzePath}");
+            logger.LogWithNewLine($"Using rule configuration from path: {ruleConfigPath}");
+        }
+
         private void FormatAndLogResult(List<IIssue> issues)
         {
-            var formattedResult = issues.Count == 0 ? "No Issues" : "";
-            foreach (var issue in issues)
+            if (issues.Count == 0)
             {
-                formattedResult += "Line: " + issue.Line + ", ";
-                formattedResult += "Column: " + issue.Column + ", ";
-                formattedResult += "'" + issue.Text + "'";
-                formattedResult += "\n";
+                logger.LogWithNewLine("No Issues found");
+                return;
             }
 
-            logger.Log(formattedResult);
+            foreach (var issue in issues)
+            {
+                var formattedResult = @$"Line:  {issue.Line} ," +
+                                       $"Column: {issue.Column}," +
+                                       $"'{issue.Text}'";
+                logger.LogWithNewLine(formattedResult);
+            }
         }
     }
 }

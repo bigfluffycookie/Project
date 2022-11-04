@@ -2,12 +2,17 @@
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Composition;
+using System.Windows.Forms;
 
 namespace Exercise
 {
     internal interface ILogger
     {
         void Log(string message);
+
+        void LogWithNewLine(string message);
+
+        void LogMessageSeperator();
     }
 
     [Export(typeof(ILogger))]
@@ -41,6 +46,16 @@ namespace Exercise
         public void Log(string message)
         {
             pane.OutputStringThreadSafe(message);
+        }
+
+        public void LogWithNewLine(string message)
+        {
+            pane.OutputStringThreadSafe($"{message}{System.Environment.NewLine}");
+        }
+
+        public void LogMessageSeperator()
+        {
+            pane.OutputStringThreadSafe($"----------------------------------------------------------------------------{System.Environment.NewLine}");
         }
     }
 }
