@@ -109,12 +109,13 @@ namespace VSIX
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Json (.json)|*.json";
+
             if (openFileDialog.ShowDialog() == DialogResult.Cancel)
             {
                 return;
             }
 
-            configProvider.UpdateConfiguration(openFileDialog.FileName);
+            configProvider?.UpdateConfiguration(openFileDialog.FileName);
         }
     }
 }

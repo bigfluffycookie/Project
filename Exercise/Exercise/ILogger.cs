@@ -50,12 +50,12 @@ namespace Exercise
 
         public void LogWithNewLine(string message)
         {
-            pane.OutputStringThreadSafe($"{message} /n");
+            pane.OutputStringThreadSafe($"{message}{System.Environment.NewLine}");
         }
 
         public void LogMessageSeperator()
         {
-            pane.OutputStringThreadSafe("----------------------------------------------------------------------------\n");
+            pane.OutputStringThreadSafe($"----------------------------------------------------------------------------{System.Environment.NewLine}");
         }
     }
 }
