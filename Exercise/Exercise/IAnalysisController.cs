@@ -60,9 +60,9 @@ namespace Exercise
 
             foreach (var issue in issues)
             {
-                var formattedResult = @$"Line:  {issue.Line} , 
-                                        Column: {issue.Column} ,
-                                        '{issue.Text}'";
+                var formattedResult = @$"Line:  {issue.Line} ," +
+                                       $"Column: {issue.Column}," +
+                                       $"'{issue.Text}'";
                 logger.LogWithNewLine(formattedResult);
             }
         }
