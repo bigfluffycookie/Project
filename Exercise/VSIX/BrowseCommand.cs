@@ -108,6 +108,12 @@ namespace VSIX
         /// <param name="e">Event args.</param>
         private void BrowseFile(object sender, EventArgs e)
         {
+            if (configProvider == null)
+            {
+                logger.LogWithNewLine("Can not update rule configuration as the Configuration Provider is unavailable.");
+                return;
+            }
+
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Json (.json)|*.json";
 
@@ -115,15 +121,8 @@ namespace VSIX
             {
                 return;
             }
-
-            if (configProvider == null)
-            {
-                logger.LogWithNewLine("Can not update rule configuration as the Configuration Provider is unavailable.");
-            }
-            else
-            {
-                configProvider.UpdateConfiguration(openFileDialog.FileName);
-            }
+            
+            configProvider.UpdateConfiguration(openFileDialog.FileName);
         }
     }
 }
