@@ -35,7 +35,7 @@ namespace Exercise
             var file = new File(fileToAnalyzePath);
 
             var configuration = configProvider.GetConfiguration();
-            LogStartMessage(filePath, configuration.ConfigurationPath);
+            LogStartMessage(fileToAnalyzePath, configuration.ConfigurationPath);
 
             var result = Analyzer.Analyze(file, availableRules, configuration);
 
