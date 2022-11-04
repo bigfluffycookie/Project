@@ -9,7 +9,7 @@ namespace Exercise
 {
     internal interface IAnalysisController
     {
-       void AnalyzeAndGetResult();
+       void AnalyzeAndGetResult(string fileToAnalyzePath);
     }
 
     [Export(typeof(IAnalysisController))]
@@ -30,13 +30,12 @@ namespace Exercise
             this.configProvider = configProvider;
         }
 
-        public void AnalyzeAndGetResult()
+        public void AnalyzeAndGetResult(string fileToAnalyzePath)
         {
-            var filePath = "C:\\Junk\\File.txt";
-            var file = new File(filePath);
+            var file = new File(fileToAnalyzePath);
 
             var configuration = configProvider.GetConfiguration();
-            LogStartMessage(filePath, configuration.ConfigurationPath);
+            LogStartMessage(fileToAnalyzePath, configuration.ConfigurationPath);
 
             var result = Analyzer.Analyze(file, availableRules, configuration);
 
