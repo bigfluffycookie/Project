@@ -37,7 +37,7 @@ namespace VSIX.UnitTests
             var dte = new Mock<DTE2>();
 
             var testSubject = new AnalyzeCommand(Mock.Of<IMenuCommandService>(), logger.Object, null, dte.Object);
-            testSubject.Analyze(It.IsAny<object>(), It.IsAny<EventArgs>());
+            testSubject.Analyze();
 
             logger.Verify(p => p.LogWithNewLine("Cannot analyze as the analyzer component is unavailable."), Times.Once);
             dte.Verify(p => p.ActiveDocument, Times.Never);
@@ -52,7 +52,7 @@ namespace VSIX.UnitTests
             var analysisController = new Mock<IAnalysisController>();
 
             var testSubject = new AnalyzeCommand(Mock.Of<IMenuCommandService>(), logger.Object, analysisController.Object, dte.Object);
-            testSubject.Analyze(It.IsAny<object>(), It.IsAny<EventArgs>());
+            testSubject.Analyze();
 
             logger.Verify(p => p.LogWithNewLine("No file is currently active. Please open a document and try again."), Times.Once);
             analysisController.Verify(p => p.AnalyzeAndGetResult(It.IsAny<string>()), Times.Never);
@@ -69,7 +69,7 @@ namespace VSIX.UnitTests
             var analysisController = new Mock<IAnalysisController>();
             
             var testSubject = new AnalyzeCommand(Mock.Of<IMenuCommandService>(), Mock.Of<ILogger>(), analysisController.Object, dte.Object);
-            testSubject.Analyze(It.IsAny<object>(), It.IsAny<EventArgs>());
+            testSubject.Analyze();
             
             analysisController.Verify(p => p.AnalyzeAndGetResult(path), Times.Once);
         }

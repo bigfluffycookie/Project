@@ -44,7 +44,7 @@ namespace VSIX
         {
             var menuCommandID = new CommandID(CommandSet, CommandId);
             
-            var menuItem = new MenuCommand(this.Analyze, menuCommandID);
+            var menuItem = new MenuCommand((object sender, EventArgs e) => { this.Analyze(); }, menuCommandID);
             commandService.AddCommand(menuItem);
 
             this.logger = logger;
@@ -91,7 +91,7 @@ namespace VSIX
             Instance = new AnalyzeCommand(commandService, logger, analysisController, dte);
         }
 
-        internal void Analyze(object sender, EventArgs e)
+        internal void Analyze()
         {
             if (analysisController == null)
             {
