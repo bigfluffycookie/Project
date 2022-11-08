@@ -8,6 +8,7 @@ using Exception = System.Exception;
 using Exercise;
 using EnvDTE80;
 using EnvDTE;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace VSIX
 {
@@ -26,16 +27,11 @@ namespace VSIX
         /// </summary>
         public static readonly Guid CommandSet = new Guid("9d169479-372d-4b21-a855-d4449ad5b742");
 
-        /// <summary>
-        /// VS Package that provides this command, not null.
-        /// </summary>
-        private readonly AsyncPackage package;
+        private readonly IAnalysisController analysisController;
 
-        private IAnalysisController analyzeController;
+        private readonly DTE2 dte;
 
-        private DTE2 dte;
-
-        private ILogger logger;
+        private readonly ILogger logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AnalyzeCommand"/> class.
@@ -43,28 +39,17 @@ namespace VSIX
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
         /// <param name="commandService">Command service to add command to, not null.</param>
-        private AnalyzeCommand(AsyncPackage package, OleMenuCommandService commandService)
+        internal AnalyzeCommand(IMenuCommandService commandService, ILogger logger,
+                                IAnalysisController analysisController, DTE2 dte)
         {
-            this.package = package ?? throw new ArgumentNullException(nameof(package));
-            commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
-
             var menuCommandID = new CommandID(CommandSet, CommandId);
             
             var menuItem = new MenuCommand(this.Analyze, menuCommandID);
             commandService.AddCommand(menuItem);
-           
-            dte = package.GetService<DTE, DTE2>();
 
-            try
-            {
-                var comp = this.package.GetService<SComponentModel, IComponentModel>();
-                analyzeController = comp.GetService<IAnalysisController>();
-                logger = comp.GetService<ILogger>();
-            }
-            catch (Exception exception)
-            {
-                Debug.WriteLine(exception);
-            }
+            this.logger = logger;
+            this.analysisController = analysisController;
+            this.dte = dte;
         }
 
         /// <summary>
@@ -74,17 +59,6 @@ namespace VSIX
         {
             get;
             private set;
-        }
-
-        /// <summary>
-        /// Gets the service provider from the owner package.
-        /// </summary>
-        private Microsoft.VisualStudio.Shell.IAsyncServiceProvider ServiceProvider
-        {
-            get
-            {
-                return this.package;
-            }
         }
 
         /// <summary>
@@ -98,12 +72,28 @@ namespace VSIX
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-            Instance = new AnalyzeCommand(package, commandService);
+
+            var dte = package.GetService<DTE, DTE2>();
+            IAnalysisController analysisController = null;
+            ILogger logger = null;
+
+            try
+            {
+                var comp = package.GetService<SComponentModel, IComponentModel>();
+                analysisController = comp.GetService<IAnalysisController>();
+                logger = comp.GetService<ILogger>();
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception);
+            }
+
+            Instance = new AnalyzeCommand(commandService, logger, analysisController, dte);
         }
 
-        private void Analyze(object sender, EventArgs e)
+        internal void Analyze(object sender, EventArgs e)
         {
-            if (analyzeController == null)
+            if (analysisController == null)
             {
                 logger.LogWithNewLine("Cannot analyze as the analyzer component is unavailable.");
                 return;
@@ -117,7 +107,7 @@ namespace VSIX
                 return;
             }
 
-            analyzeController.AnalyzeAndGetResult(activeDoc.FullName);
+            analysisController.AnalyzeAndGetResult(activeDoc.FullName);
         }
     }
 }
