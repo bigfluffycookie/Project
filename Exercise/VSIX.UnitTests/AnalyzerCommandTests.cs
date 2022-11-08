@@ -54,6 +54,7 @@ namespace VSIX.UnitTests
             var testSubject = new AnalyzeCommand(Mock.Of<IMenuCommandService>(), logger.Object, analysisController.Object, dte.Object);
             testSubject.Analyze();
 
+            dte.Verify(p => p.ActiveDocument, Times.Once);
             logger.Verify(p => p.LogWithNewLine("No file is currently active. Please open a document and try again."), Times.Once);
             analysisController.Verify(p => p.AnalyzeAndGetResult(It.IsAny<string>()), Times.Never);
         }
