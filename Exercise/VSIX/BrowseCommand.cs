@@ -10,7 +10,11 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System.Globalization;
 using System.Windows.Forms;
 using System.Security.Cryptography;
-
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System;
+using System.Reflection;
+using System.Windows.Forms;
 namespace VSIX
 {
     /// <summary>
@@ -28,11 +32,6 @@ namespace VSIX
         /// </summary>
         public static readonly Guid CommandSet = new Guid("9d169479-372d-4b21-a855-d4449ad5b742");
 
-        /// <summary>
-        /// VS Package that provides this command, not null.
-        /// </summary>
-        private readonly AsyncPackage package;
-
         private IConfigProvider configProvider;
 
         private ILogger logger;
@@ -43,26 +42,15 @@ namespace VSIX
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
         /// <param name="commandService">Command service to add command to, not null.</param>
-        private BrowseCommand(AsyncPackage package, OleMenuCommandService commandService)
+        internal BrowseCommand(IMenuCommandService commandService, ILogger logger, IConfigProvider configProvider)
         {
-            this.package = package ?? throw new ArgumentNullException(nameof(package));
-            commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
-
             var menuCommandID = new CommandID(CommandSet, CommandId);
-            
-            var menuItem = new MenuCommand(this.BrowseFile, menuCommandID);
+
+            var menuItem = new MenuCommand((object sender, EventArgs e) => { this.BrowseFile(); }, menuCommandID);
             commandService.AddCommand(menuItem);
 
-            try
-            {
-                var comp = this.package.GetService<SComponentModel, IComponentModel>();
-                configProvider = comp.GetService<IConfigProvider>();
-                logger = comp.GetService<ILogger>();
-            }
-            catch (Exception exception)
-            {
-                Debug.WriteLine(exception);
-            }
+            this.logger = logger;
+            this.configProvider = configProvider;
         }
 
         /// <summary>
@@ -72,17 +60,6 @@ namespace VSIX
         {
             get;
             private set;
-        }
-
-        /// <summary>
-        /// Gets the service provider from the owner package.
-        /// </summary>
-        private Microsoft.VisualStudio.Shell.IAsyncServiceProvider ServiceProvider
-        {
-            get
-            {
-                return this.package;
-            }
         }
 
         /// <summary>
@@ -96,7 +73,22 @@ namespace VSIX
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-            Instance = new BrowseCommand(package, commandService);
+
+            IConfigProvider configProvider = null;
+            ILogger logger = null;
+
+            try
+            {
+                var comp = package.GetService<SComponentModel, IComponentModel>();
+                configProvider = comp.GetService<IConfigProvider>();
+                logger = comp.GetService<ILogger>();
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception);
+            }
+
+            Instance = new BrowseCommand(commandService, logger, configProvider);
         }
 
         /// <summary>
@@ -106,7 +98,7 @@ namespace VSIX
         /// </summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event args.</param>
-        private void BrowseFile(object sender, EventArgs e)
+        internal void BrowseFile(IFileDialogWindow fileDialogWindow = null)
         {
             if (configProvider == null)
             {
@@ -114,15 +106,19 @@ namespace VSIX
                 return;
             }
 
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Json (.json)|*.json";
+            if (fileDialogWindow == null)
+            {
+                fileDialogWindow = new FileDialogWindow();
+            }
 
-            if (openFileDialog.ShowDialog() == DialogResult.Cancel)
+            fileDialogWindow.Filter = "Json (.json)|*.json";
+
+            if (fileDialogWindow.ShowDialog() == DialogResult.Cancel)
             {
                 return;
             }
-            
-            configProvider.UpdateConfiguration(openFileDialog.FileName);
+
+            configProvider.UpdateConfiguration(fileDialogWindow.FileName);
         }
     }
 }
