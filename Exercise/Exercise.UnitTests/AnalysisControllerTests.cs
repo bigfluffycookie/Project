@@ -32,6 +32,7 @@ namespace Exercise.UnitTests
             configProvider.Verify(p => p.GetConfiguration(), Times.Once);
             logger.Verify(p => p.LogWithNewLine($"Analyzing File:  {file.FilePath}"), Times.Once);
             logger.Verify(p => p.LogWithNewLine($"Using rule configuration from path: {configPath}"), Times.Once);
+            logger.Verify(p => p.LogWithNewLine("No Issues found"), Times.Once);
         }
 
         private static Mock<IConfigProvider> SetUpConfigProvider(string configPath)
