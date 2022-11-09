@@ -34,7 +34,7 @@ namespace VSIX.UnitTests
         public void BrowseFile_ConfigProviderIsNull_LogsCorrectMessageAndDoesNotContinue()
         {
             var logger = new Mock<ILogger>();
-            var openFileDialog = new Mock<IFileDialogWindow>();
+            var openFileDialog = new Mock<IOpenFileDialog>();
 
             var testSubject = new BrowseCommand(Mock.Of<IMenuCommandService>(), logger.Object, null);
             testSubject.BrowseFile(openFileDialog.Object);
@@ -46,7 +46,7 @@ namespace VSIX.UnitTests
         [TestMethod]
         public void BrowseFile_OpenFileDialogReturnsCanceled_DoesNotContinue()
         {
-            var openFileDialog = new Mock<IFileDialogWindow>();
+            var openFileDialog = new Mock<IOpenFileDialog>();
             openFileDialog.Setup(p => p.ShowDialog()).Returns(DialogResult.Cancel);
             openFileDialog.SetupProperty(p => p.Filter);
             var configProvider = new Mock<IConfigProvider>();
@@ -62,7 +62,7 @@ namespace VSIX.UnitTests
         [TestMethod]
         public void BrowseFile_OpenFileDialogReturnsOk_CallsUpdateConfiguration()
         {
-            var openFileDialog = new Mock<IFileDialogWindow>();
+            var openFileDialog = new Mock<IOpenFileDialog>();
             openFileDialog.Setup(p => p.ShowDialog()).Returns(DialogResult.OK);
             var fileName = "Test.json";
             openFileDialog.Setup(p => p.FileName).Returns(fileName);

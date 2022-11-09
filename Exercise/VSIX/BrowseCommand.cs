@@ -98,7 +98,7 @@ namespace VSIX
         /// </summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event args.</param>
-        internal void BrowseFile(IFileDialogWindow fileDialogWindow = null)
+        internal void BrowseFile(IOpenFileDialog fileDialogWindow = null)
         {
             if (configProvider == null)
             {
@@ -108,7 +108,7 @@ namespace VSIX
 
             if (fileDialogWindow == null)
             {
-                fileDialogWindow = new FileDialogWindow();
+                fileDialogWindow = new OpenFileDialog();
             }
 
             fileDialogWindow.Filter = "Json (.json)|*.json";
