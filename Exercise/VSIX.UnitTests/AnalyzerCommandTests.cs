@@ -6,6 +6,7 @@ using System.ComponentModel.Design;
 using Exercise;
 using FluentAssertions;
 using EnvDTE;
+using System.IO.Abstractions;
 
 namespace VSIX.UnitTests
 {
@@ -56,7 +57,7 @@ namespace VSIX.UnitTests
 
             dte.Verify(p => p.ActiveDocument, Times.Once);
             logger.Verify(p => p.LogWithNewLine("No file is currently active. Please open a document and try again."), Times.Once);
-            analysisController.Verify(p => p.AnalyzeAndGetResult(It.IsAny<string>()), Times.Never);
+            analysisController.Verify(p => p.AnalyzeAndGetResult(It.IsAny<Exercise.IFile>()), Times.Never);
         }
 
         [TestMethod]
@@ -68,11 +69,14 @@ namespace VSIX.UnitTests
             document.Setup(p => p.FullName).Returns(path);
             dte.Setup(p => p.ActiveDocument).Returns(document.Object);
             var analysisController = new Mock<IAnalysisController>();
-            
-            var testSubject = new AnalyzeCommand(Mock.Of<IMenuCommandService>(), Mock.Of<ILogger>(), analysisController.Object, dte.Object);
+            var fileSystem = new Mock<IFileSystem>();
+            fileSystem.Setup(p => p.File.Exists(path)).Returns(true);
+
+            var testSubject = new AnalyzeCommand(Mock.Of<IMenuCommandService>(), Mock.Of<ILogger>(),
+                                                 analysisController.Object, dte.Object, fileSystem.Object);
             testSubject.Analyze();
             
-            analysisController.Verify(p => p.AnalyzeAndGetResult(path), Times.Once);
+            analysisController.Verify(p => p.AnalyzeAndGetResult(It.IsAny<Exercise.IFile>()), Times.Once);
         }
     }
 }
