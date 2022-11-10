@@ -76,7 +76,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Composition">
       <Version>17.2.41</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.32112.339" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.3.32804.24" ExcludeAssets="runtime">
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.3.2093" />
   </ItemGroup>
   <ItemGroup>
