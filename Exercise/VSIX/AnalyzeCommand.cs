@@ -8,7 +8,6 @@ using Exception = System.Exception;
 using Exercise;
 using EnvDTE80;
 using EnvDTE;
-using Microsoft.VisualStudio.Shell.Interop;
 using System.IO.Abstractions;
 
 namespace VSIX

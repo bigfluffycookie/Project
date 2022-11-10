@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System;
-using System.IO.Abstractions;
-using System.Diagnostics;
+﻿using System.IO.Abstractions;
 
 namespace Exercise
 {

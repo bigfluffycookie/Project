@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using Exercise.Rules;
-using static Microsoft.ServiceHub.Framework.ServiceJsonRpcDescriptor;
 
 namespace Exercise
 {

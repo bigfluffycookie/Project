@@ -57,7 +57,7 @@ namespace Exercise.UnitTests
             return serviceProvider;
         }
 
-        private Mock<IVsOutputWindow> SetupOutputWindow(IVsOutputWindowPane pane = null)
+        private Mock<IVsOutputWindow> SetupOutputWindow(IVsOutputWindowPane? pane = null)
         {
             pane ??= Mock.Of<IVsOutputWindowPane>();
 
