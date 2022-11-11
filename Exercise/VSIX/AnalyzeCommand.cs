@@ -29,35 +29,21 @@ namespace VSIX
 
         private readonly IAnalysisController analysisController;
 
-        private readonly DTE2 dte;
-
         private readonly ILogger logger;
 
-        private readonly IFileSystem fileSystem;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AnalyzeCommand"/> class.
-        /// Adds our command handlers for menu (commands must exist in the command table file)
-        /// </summary>
-        /// <param name="package">Owner package, not null.</param>
-        /// <param name="commandService">Command service to add command to, not null.</param>
-        public AnalyzeCommand(IMenuCommandService commandService, ILogger logger,
-                              IAnalysisController analysisController, DTE2 dte) :
-                              this(commandService, logger, analysisController, dte, new FileSystem())
-        { }
+        private readonly IFileProvider fileProvider;
 
         internal AnalyzeCommand(IMenuCommandService commandService, ILogger logger,
-                                IAnalysisController analysisController, DTE2 dte, IFileSystem fileSystem)
+                                IAnalysisController analysisController, IFileProvider fileProvider)
         {
             var menuCommandID = new CommandID(CommandSet, CommandId);
 
             var menuItem = new MenuCommand((object sender, EventArgs e) => { this.Analyze(); }, menuCommandID);
             commandService.AddCommand(menuItem);
 
-            this.fileSystem = fileSystem;
             this.logger = logger;
             this.analysisController = analysisController;
-            this.dte = dte;
+            this.fileProvider = fileProvider;
         }
 
         /// <summary>
@@ -81,41 +67,41 @@ namespace VSIX
 
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
 
-            var dteService = package.GetService<DTE, DTE2>();
             IAnalysisController analysisControllerComp = null;
             ILogger loggerComp = null;
+            IFileProvider fileProviderComp = null;
 
             try
             {
                 var comp = package.GetService<SComponentModel, IComponentModel>();
                 analysisControllerComp = comp.GetService<IAnalysisController>();
                 loggerComp = comp.GetService<ILogger>();
+                fileProviderComp = comp.GetService<IFileProvider>();
             }
             catch (Exception exception)
             {
                 Debug.WriteLine(exception);
             }
 
-            Instance = new AnalyzeCommand(commandService, loggerComp, analysisControllerComp, dteService);
+            Instance = new AnalyzeCommand(commandService, loggerComp, analysisControllerComp, fileProviderComp);
         }
 
         internal void Analyze()
         {
-            if (analysisController == null)
+            if (analysisController == null || fileProvider == null)
             {
-                logger.LogWithNewLine("Cannot analyze as the analyzer component is unavailable.");
+                logger.LogWithNewLine("Cannot analyze as one of the components was unable to load.");
                 return;
             }
 
-            var activeDoc = dte.ActiveDocument;
+            var file = fileProvider.GetFile();
 
-            if (activeDoc == null)
+            if (file == null)
             {
-                logger.LogWithNewLine("No file is currently active. Please open a document and try again.");
+                logger.LogWithNewLine("Aborting Analyzing as file to analyze is not available");
                 return;
             }
 
-            var file = new File(activeDoc.FullName, fileSystem);
             analysisController.AnalyzeAndGetResult(file);
         }
     }
