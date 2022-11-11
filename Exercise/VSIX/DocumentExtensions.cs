@@ -1,7 +1,7 @@
 ﻿using System;
 using EnvDTE;
 
-namespace FileDiffer
+namespace VSIX
 {
     internal static class DocumentExtensions
     {

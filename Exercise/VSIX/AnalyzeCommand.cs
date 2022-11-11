@@ -9,7 +9,6 @@ using Exercise;
 using EnvDTE80;
 using EnvDTE;
 using System.IO.Abstractions;
-using FileDiffer;
 
 namespace VSIX
 {
