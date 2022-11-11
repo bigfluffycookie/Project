@@ -81,22 +81,22 @@ namespace VSIX
 
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
 
-            var dte = package.GetService<DTE, DTE2>();
-            IAnalysisController analysisController = null;
-            ILogger logger = null;
+            var dteService = package.GetService<DTE, DTE2>();
+            IAnalysisController analysisControllerComp = null;
+            ILogger loggerComp = null;
 
             try
             {
                 var comp = package.GetService<SComponentModel, IComponentModel>();
-                analysisController = comp.GetService<IAnalysisController>();
-                logger = comp.GetService<ILogger>();
+                analysisControllerComp = comp.GetService<IAnalysisController>();
+                loggerComp = comp.GetService<ILogger>();
             }
             catch (Exception exception)
             {
                 Debug.WriteLine(exception);
             }
 
-            Instance = new AnalyzeCommand(commandService, logger, analysisController, dte);
+            Instance = new AnalyzeCommand(commandService, loggerComp, analysisControllerComp, dteService);
         }
 
         internal void Analyze()
