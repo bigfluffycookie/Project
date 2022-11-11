@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="BrowseCommand.cs" />
     <Compile Include="AnalyzeCommand.cs" />
+    <Compile Include="DocumentExtensions.cs" />
     <Compile Include="IOpenFileDialog.cs" />
     <Compile Include="InteralVisibleTo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

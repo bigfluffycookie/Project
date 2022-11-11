@@ -33,28 +33,14 @@ namespace VSIX
 
         private readonly ILogger logger;
 
-        private readonly IFileSystem fileSystem;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AnalyzeCommand"/> class.
-        /// Adds our command handlers for menu (commands must exist in the command table file)
-        /// </summary>
-        /// <param name="package">Owner package, not null.</param>
-        /// <param name="commandService">Command service to add command to, not null.</param>
-        public AnalyzeCommand(IMenuCommandService commandService, ILogger logger,
-                              IAnalysisController analysisController, DTE2 dte) :
-                              this(commandService, logger, analysisController, dte, new FileSystem())
-        { }
-
         internal AnalyzeCommand(IMenuCommandService commandService, ILogger logger,
-                                IAnalysisController analysisController, DTE2 dte, IFileSystem fileSystem)
+                                IAnalysisController analysisController, DTE2 dte)
         {
             var menuCommandID = new CommandID(CommandSet, CommandId);
 
             var menuItem = new MenuCommand((object sender, EventArgs e) => { this.Analyze(); }, menuCommandID);
             commandService.AddCommand(menuItem);
 
-            this.fileSystem = fileSystem;
             this.logger = logger;
             this.analysisController = analysisController;
             this.dte = dte;
@@ -115,7 +101,7 @@ namespace VSIX
                 return;
             }
 
-            var file = new File(activeDoc.FullName, fileSystem);
+            var file = new File(activeDoc.FullName, activeDoc.GetText());
             analysisController.AnalyzeAndGetResult(file);
         }
     }

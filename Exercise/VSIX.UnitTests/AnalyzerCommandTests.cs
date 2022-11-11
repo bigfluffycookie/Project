@@ -1,5 +1,6 @@
 ﻿using EnvDTE80;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using Exercise;
@@ -66,13 +67,12 @@ namespace VSIX.UnitTests
             var path = "TestPath";
             var document = new Mock<Document>();
             document.Setup(p => p.FullName).Returns(path);
+            document.Setup(p => p.GetText()).Returns(Array.Empty<string>());
             dte.Setup(p => p.ActiveDocument).Returns(document.Object);
             var analysisController = new Mock<IAnalysisController>();
-            var fileSystem = new Mock<IFileSystem>();
-            fileSystem.Setup(p => p.File.Exists(path)).Returns(true);
 
             var testSubject = new AnalyzeCommand(Mock.Of<IMenuCommandService>(), Mock.Of<ILogger>(),
-                                                 analysisController.Object, dte.Object, fileSystem.Object);
+                                                 analysisController.Object, dte.Object);
             testSubject.Analyze();
 
             analysisController.Verify(p => p.AnalyzeAndGetResult(It.IsAny<Exercise.IFile>()), Times.Once);
