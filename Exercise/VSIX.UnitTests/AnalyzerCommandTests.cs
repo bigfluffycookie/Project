@@ -1,6 +1,5 @@
 ﻿using EnvDTE80;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using Exercise;

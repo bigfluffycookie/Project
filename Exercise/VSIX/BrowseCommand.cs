@@ -6,15 +6,8 @@ using System.Diagnostics;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Exception = System.Exception;
 using Exercise;
-using Microsoft.VisualStudio.Shell.Interop;
-using System.Globalization;
 using System.Windows.Forms;
-using System.Security.Cryptography;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System;
-using System.Reflection;
-using System.Windows.Forms;
+
 namespace VSIX
 {
     /// <summary>

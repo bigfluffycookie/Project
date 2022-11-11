@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Composition;
-using System.Windows.Forms;
 
 namespace Exercise
 {
@@ -21,7 +20,7 @@ namespace Exercise
     {
         private IVsOutputWindowPane pane;
 
-        internal static readonly Guid PaneId = new Guid("B43B5B29-61EE-4BCF-8C41-6065C5ECF602");
+        internal static readonly Guid PaneId = new("B43B5B29-61EE-4BCF-8C41-6065C5ECF602");
 
         [ImportingConstructor]
         public Logger([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
@@ -45,16 +44,19 @@ namespace Exercise
 
         public void Log(string message)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             pane.OutputStringThreadSafe(message);
         }
 
         public void LogWithNewLine(string message)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             pane.OutputStringThreadSafe($"{message}{System.Environment.NewLine}");
         }
 
         public void LogMessageSeperator()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             pane.OutputStringThreadSafe($"----------------------------------------------------------------------------{System.Environment.NewLine}");
         }
     }

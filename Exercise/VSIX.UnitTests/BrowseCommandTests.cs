@@ -1,12 +1,10 @@
-﻿using EnvDTE80;
-using Moq;
-using System;
+﻿using Moq;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using Exercise;
 using FluentAssertions;
-using EnvDTE;
 using System.Windows.Forms;
+
 namespace VSIX.UnitTests
 {
     [TestClass]
