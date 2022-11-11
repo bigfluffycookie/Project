@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EnvDTE;
+using EnvDTE80;
 using Exercise;
+using Microsoft.VisualStudio.Shell;
 
 namespace VSIX
 {
@@ -18,14 +20,14 @@ namespace VSIX
     [PartCreationPolicy(CreationPolicy.Shared)]
     internal class FileProvider : IFileProvider
     {
-        private readonly DTE dte;
+        private readonly DTE2 dte;
 
         private readonly ILogger logger;
 
         [ImportingConstructor]
-        public FileProvider(DTE dte, ILogger logger)
+        public FileProvider([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider, ILogger logger)
         {
-            this.dte = dte;
+            dte = serviceProvider.GetService(typeof(DTE)) as DTE2;
             this.logger = logger;
         }
 

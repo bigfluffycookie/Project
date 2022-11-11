@@ -39,8 +39,21 @@ namespace VSIX.UnitTests
             var testSubject = new AnalyzeCommand(Mock.Of<IMenuCommandService>(), logger.Object, null, fileProvider.Object);
             testSubject.Analyze();
 
-            logger.Verify(p => p.LogWithNewLine("Cannot analyze as the analyzer component is unavailable."), Times.Once);
+            logger.Verify(p => p.LogWithNewLine("Cannot analyze as one of the components was unable to load."), Times.Once);
             fileProvider.Verify(p => p.GetFile(), Times.Never);
+        }
+
+        [TestMethod]
+        public void Analyze_FileProviderIsNull_LogsCorrectMessageAndDoesNotContinue()
+        {
+            var logger = new Mock<ILogger>();
+            var analysisController = new Mock<IAnalysisController>();
+
+            var testSubject = new AnalyzeCommand(Mock.Of<IMenuCommandService>(), logger.Object, analysisController.Object, null);
+            testSubject.Analyze();
+
+            logger.Verify(p => p.LogWithNewLine("Cannot analyze as one of the components was unable to load."), Times.Once);
+            analysisController.Verify(p => p.AnalyzeAndGetResult(It.IsAny<IFile>()), Times.Never);
         }
 
         [TestMethod]
@@ -64,7 +77,7 @@ namespace VSIX.UnitTests
         {
             var analysisController = new Mock<IAnalysisController>();
             var fileProvider = new Mock<IFileProvider>();
-            var file = new File("", Array.Empty<string>());
+            var file = Mock.Of<IFile>();
 
             fileProvider.Setup(p => p.GetFile()).Returns(file);
 

@@ -88,9 +88,9 @@ namespace VSIX
 
         internal void Analyze()
         {
-            if (analysisController == null)
+            if (analysisController == null || fileProvider == null)
             {
-                logger.LogWithNewLine("Cannot analyze as the analyzer component is unavailable.");
+                logger.LogWithNewLine("Cannot analyze as one of the components was unable to load.");
                 return;
             }
 
