@@ -15,6 +15,12 @@ namespace Exercise
             FileContent = GetFileContent(filePath, fileSystem);
         }
 
+        public File(string filePath, string[] fileContent)
+        {
+            FilePath = filePath;
+            FileContent = fileContent;
+        }
+
         private string[] GetFileContent(string filePath, IFileSystem fileSystem)
         {
             var fileContent = fileSystem.File.ReadAllLines(filePath);

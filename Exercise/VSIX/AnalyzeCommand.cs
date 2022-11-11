@@ -9,6 +9,7 @@ using Exercise;
 using EnvDTE80;
 using EnvDTE;
 using System.IO.Abstractions;
+using FileDiffer;
 
 namespace VSIX
 {
@@ -43,7 +44,7 @@ namespace VSIX
         /// <param name="commandService">Command service to add command to, not null.</param>
         public AnalyzeCommand(IMenuCommandService commandService, ILogger logger,
                               IAnalysisController analysisController, DTE2 dte) :
-                              this(commandService, logger, analysisController, dte, new FileSystem())
+                              this(commandService, logger, analysisController, dte, null)
         { }
 
         internal AnalyzeCommand(IMenuCommandService commandService, ILogger logger,
@@ -115,7 +116,7 @@ namespace VSIX
                 return;
             }
 
-            var file = new File(activeDoc.FullName, fileSystem);
+            var file = fileSystem == null ? new File(activeDoc.FullName, activeDoc.GetText()) : new File(activeDoc.FullName, fileSystem);
             analysisController.AnalyzeAndGetResult(file);
         }
     }
